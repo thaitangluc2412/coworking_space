@@ -1,0 +1,51 @@
+package com.coworkingspace.backend.dao.entity;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import net.bytebuddy.asm.Advice.Local;
+
+import javax.persistence.*;
+import java.time.LocalDateTime;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@Entity
+@Table(name="reservation")
+public class Reservation {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "reservation_id")
+	private Integer reservationId;
+
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(name = "room_id", nullable = false)
+	private Room room;
+
+	@OneToOne(optional = false)
+	@JoinColumn(name = "customer_id", nullable = false)
+	private Customer customer;
+
+	@Column(name = "create_date")
+	private LocalDateTime createDate;
+
+	@Column(name = "start_date")
+	private LocalDateTime startDate;
+
+	@Column(name = "end_date")
+	private LocalDateTime endDate;
+
+	@ManyToOne(optional = false)
+	@JoinColumn(name = "reservation_status_id", nullable = false)
+	private ReservationStatus reservationStatus;
+
+	@Column(name = "total", nullable = false)
+	private Double total;
+
+	@Column(name = "deposit", nullable = false)
+	private Double deposit;
+}
