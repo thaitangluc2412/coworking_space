@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.bytebuddy.asm.Advice.Local;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -18,9 +19,10 @@ import java.time.LocalDateTime;
 public class Reservation {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GenericGenerator(name = "id_gen", strategy = "com.coworkingspace.backend.common.utils.GenerateUUID")
+	@GeneratedValue(generator = "id_gen")
 	@Column(name = "reservation_id")
-	private Integer reservationId;
+	private String id;
 
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "room_id", nullable = false)

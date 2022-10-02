@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
@@ -16,9 +17,10 @@ import javax.persistence.*;
 @Table(name = "price")
 public class Price {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GenericGenerator(name = "id_gen", strategy = "com.coworkingspace.backend.common.utils.GenerateUUID")
+	@GeneratedValue(generator = "id_gen")
 	@Column(name = "price_id", nullable = false)
-	private Integer id;
+	private String id;
 
 	@Column(name = "day_price")
 	private Double dayPrice;

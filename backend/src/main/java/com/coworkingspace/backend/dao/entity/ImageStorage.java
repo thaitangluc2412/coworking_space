@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -18,9 +19,10 @@ import java.util.List;
 public class ImageStorage {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GenericGenerator(name = "id_gen", strategy = "com.coworkingspace.backend.common.utils.GenerateUUID")
+	@GeneratedValue(generator = "id_gen")
 	@Column(name = "image_storage_id", nullable = false)
-	private Integer id;
+	private String id;
 
 	@OneToMany(mappedBy = "imageStorage", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Image> images = new ArrayList<>();

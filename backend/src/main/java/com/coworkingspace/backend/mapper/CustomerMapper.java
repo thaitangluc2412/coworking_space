@@ -9,7 +9,7 @@ import org.mapstruct.Mapping;
 @Mapper
 public interface CustomerMapper {
 
-	// @Mapping(source = "roleId", target = "role.roleId")
+	@Mapping(source = "roleId", target = "role.id")
 	Customer customerDtoToCustomer(CustomerDto customerDto);
 
 	@InheritInverseConfiguration(name = "customerDtoToCustomer")

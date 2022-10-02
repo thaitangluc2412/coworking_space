@@ -16,10 +16,10 @@ import javax.persistence.*;
 @Setter
 public class Customer {
 	@Id
-	@GenericGenerator(name = "id_gen", strategy = "com.coworkingspace.common.utils.GenerateUUID")
+	@GenericGenerator(name = "id_gen", strategy = "com.coworkingspace.backend.common.utils.GenerateUUID")
 	@GeneratedValue(generator = "id_gen")
 	@Column(name = "customer_id")
-	private Integer customerId;
+	private String id;
 
 	@Column(name = "customer_name", nullable = false)
 	private String customerName;
