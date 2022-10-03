@@ -1,7 +1,7 @@
 import React from "react";
 import SearchBox from "../components/searchBox/SearchBox";
 
-const Home = () => {
+const HomePage = () => {
   return (
     <div className="relative">
       <div className="image w-[100%] h-[550px]">
@@ -24,4 +24,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default HomePage;
