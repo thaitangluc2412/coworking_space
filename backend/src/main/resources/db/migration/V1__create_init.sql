@@ -105,6 +105,45 @@ CREATE TABLE `reservation`
     CONSTRAINT `fk_reservation_reservation_status` FOREIGN KEY (reservation_status_id) REFERENCES reservation_status (reservation_status_id)
 );
 
+CREATE TABLE `inbox`
+(
+  inbox_id VARCHAR(15),
+  seller_id VARCHAR(15),
+  customer_id VARCHAR(15),
+  message VARCHAR(255),
+  seller_has_message BOOLEAN,
+  customer_has_message BOOLEAN,
+  CONSTRAINT PRIMARY KEY (inbox_id),
+  CONSTRAINT `fk_inbox_seller` FOREIGN KEY (seller_id) REFERENCES customer (customer_id),
+  CONSTRAINT `fk_inbox_customer` FOREIGN KEY (customer_id) REFERENCES customer (customer_id)
+
+);
+
+CREATE TABLE `message`
+(
+    message_id VARCHAR(15),
+    inbox_id VARCHAR(15),
+    message VARCHAR(255),
+    sender_id VARCHAR(15),
+    receiver_id VARCHAR(15),
+    CONSTRAINT PRIMARY KEY (message_id),
+    CONSTRAINT `fk_message_inbox` FOREIGN KEY (inbox_id) REFERENCES inbox (inbox_id)
+);
+
+CREATE TABLE `room_virtual`
+(
+    room_id          VARCHAR(15),
+    price_id         VARCHAR(15)          NOT NULL,
+    room_name        VARCHAR(255) NOT NULL,
+    size             VARCHAR(255),
+    capacity         VARCHAR(255),
+    room_status_id   VARCHAR(15) NOT NULL,
+    description      TEXT,
+    image_storage_id VARCHAR(15) NOT NULL,
+    customer_id      VARCHAR(15) NOT NULL,
+    CONSTRAINT PRIMARY KEY (room_id)
+);
+
 INSERT INTO `role` VALUES ('IT04ZnPgBYSf3Qm', 'CUSTOMER'), ('ksWaZyhhDon1Niq', 'ADMIN');
 INSERT INTO `room_status` VALUES ('7XdZzxWRzZhBBcb','ACTIVE'),('B3dVfrqwASWSVVb','INACTIVE');
 INSERT INTO `reservation_status` VALUES ('eT4CxDVeDhP4TsF','PENDING'),('tngpi7zVKfwAY0N','APPROVED'),('0KT0vOJ9BzW8w79','PAYING'),('glG2CED3UAYrlHR','CANCELLED');
