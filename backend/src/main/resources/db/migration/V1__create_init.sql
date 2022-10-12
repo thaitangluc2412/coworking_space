@@ -15,6 +15,7 @@ CREATE TABLE `customer`
     password      VARCHAR(255) NOT NULL,
     phone_number  VARCHAR(255) NOT NULL,
     role_id       VARCHAR(15) NOT NULL,
+    enable        BOOLEAN DEFAULT FALSE,
     CONSTRAINT PRIMARY KEY (customer_id),
     CONSTRAINT `fk_customer_role` FOREIGN KEY (role_id) REFERENCES `role` (role_id)
 );

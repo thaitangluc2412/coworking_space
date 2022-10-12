@@ -4,9 +4,42 @@ import Button from "../components/button/Button";
 import Field from "../components/field/Field";
 import Input from "../components/input/Input";
 import Label from "../components/label/Label";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { NavLink } from "react-router-dom";
 
 const RegisterPage = () => {
-  const { handleSubmit, control, formState, watch } = useForm({});
+  const schema = yup
+    .object({
+      username: yup.string().required("Please enter your username"),
+      email: yup
+        .string()
+        .email("Please enter valid email address")
+        .required("Please enter your email address"),
+      password: yup
+        .string()
+        .min(8, "Your password must be at least 8 characters or greater")
+        .required("Please enter your password"),
+      confirmpassword: yup
+        .string()
+        .oneOf([yup.ref("password"), null], "Passwords must match"),
+    })
+    .required();
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+    watch,
+  } = useForm({
+    resolver: yupResolver(schema),
+    mode: "onSubmit",
+    defaultValues: {
+      username: "",
+      email: "",
+      password: "",
+      confirmpassword: "",
+    },
+  });
   const onSubmit = (e) => {
     console.log("sign up");
   };
@@ -21,43 +54,69 @@ const RegisterPage = () => {
           onSubmit={handleSubmit(onSubmit)}
         >
           <Field>
-            <Label name="fullname">Fullname</Label>
+            <Label name="email">Email</Label>
             <Input
               type="text"
-              name="fullname"
-              placeholder="Enter your fullname"
+              name="email"
+              placeholder="Enter your email"
               control={control}
             ></Input>
-          </Field>
-          <Field>
-            <Label name="number">Phone number</Label>
-            <Input
-              type="text"
-              name="number"
-              placeholder="Enter your phone number"
-              control={control}
-            ></Input>
+            {errors.email && (
+              <p className="text-sm text-red-500 color-red">
+                {errors.email.message}
+              </p>
+            )}
           </Field>
           <Field>
             <Label name="username">Username</Label>
             <Input
-              type="email"
+              type="username"
               name="username"
               placeholder="Enter your username"
               control={control}
             ></Input>
+            {errors.username && (
+              <p className="text-sm text-red-500 color-red">
+                {errors.username.message}
+              </p>
+            )}
           </Field>
           <Field>
-            <Label name="password">Password</Label>
+            <Label name="number">Password</Label>
             <Input
               type="password"
               name="password"
               placeholder="Enter your password"
               control={control}
             ></Input>
+            {errors.password && (
+              <p className="text-sm text-red-500 color-red">
+                {errors.password.message}
+              </p>
+            )}
           </Field>
-          <div className="w-full flex justify-center">
-            <Button styleClass="w-[30%]">Submit</Button>
+          <Field>
+            <Label name="number">Confirm password</Label>
+            <Input
+              type="password"
+              name="confirmpassword"
+              placeholder="Enter your confirm password"
+              control={control}
+            ></Input>
+            {errors.confirmpassword && (
+              <p className="text-sm text-red-500 color-red">
+                {errors.confirmpassword.message}
+              </p>
+            )}
+          </Field>
+          <div className="w-full flex justify-center gap-10 mb-4">
+            <Button styleClass={"w-full"}>Submit</Button>
+          </div>
+          <div className="text-sm justify-center flex text-gray">
+            <span className="inline-block mr-1">Already have an account? </span>
+            <NavLink to={"/login"} className="font-semibold cursor-pointer">
+              Sign in
+            </NavLink>
           </div>
         </form>
       </div>

@@ -4,9 +4,36 @@ import Button from "../components/button/Button";
 import Field from "../components/field/Field";
 import Input from "../components/input/Input";
 import Label from "../components/label/Label";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { NavLink } from "react-router-dom";
 
 const LoginPage = () => {
-  const { handleSubmit, control, formState, watch } = useForm({});
+  const schema = yup
+    .object({
+      email: yup
+        .string()
+        .email("Please enter valid email address")
+        .required("Please enter your email address"),
+      password: yup
+        .string()
+        .min(8, "Your password must be at least 8 characters or greater")
+        .required("Please enter your password"),
+    })
+    .required();
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+    watch,
+  } = useForm({
+    resolver: yupResolver(schema),
+    mode: "onSubmit",
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
   const onSubmit = (e) => {
     console.log("login");
   };
@@ -26,13 +53,18 @@ const LoginPage = () => {
           </h1>
           <form onSubmit={handleSubmit(onSubmit)}>
             <Field>
-              <Label name="username">Username</Label>
+              <Label name="username">Email</Label>
               <Input
                 type="text"
-                name="username"
-                placeholder="Enter your username"
+                name="email"
+                placeholder="Enter your email"
                 control={control}
               ></Input>
+              {errors.email && (
+                <p className="text-sm text-red-500 color-red">
+                  {errors.email.message}
+                </p>
+              )}
             </Field>
             <Field>
               <Label name="password">Password</Label>
@@ -42,6 +74,11 @@ const LoginPage = () => {
                 placeholder="Enter your password"
                 control={control}
               ></Input>
+              {errors.password && (
+                <p className="text-sm text-red-500 color-red">
+                  {errors.password.message}
+                </p>
+              )}
             </Field>
             <div className="w-full flex justify-center pb-6">
               <Button styleClass="w-[100%]">Sign In</Button>
@@ -49,7 +86,9 @@ const LoginPage = () => {
           </form>
           <div className="text-sm flex justify-center text-gray">
             <span className="inline-block mr-1">Don't have an account?</span>
-            <span className="font-semibold cursor-pointer">Sign up</span>
+            <NavLink to={"/register"} className="font-semibold cursor-pointer">
+              Sign up
+            </NavLink>
           </div>
         </div>
       </div>
