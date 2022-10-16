@@ -7,6 +7,7 @@ import Label from "../components/label/Label";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { NavLink } from "react-router-dom";
+import axios from "axios";
 
 const LoginPage = () => {
   const schema = yup
@@ -17,7 +18,7 @@ const LoginPage = () => {
         .required("Please enter your email address"),
       password: yup
         .string()
-        .min(8, "Your password must be at least 8 characters or greater")
+        .min(2, "Your password must be at least 8 characters or greater")
         .required("Please enter your password"),
     })
     .required();
@@ -25,7 +26,7 @@ const LoginPage = () => {
     handleSubmit,
     control,
     formState: { errors },
-    watch,
+    // watch,
   } = useForm({
     resolver: yupResolver(schema),
     mode: "onSubmit",
@@ -35,8 +36,34 @@ const LoginPage = () => {
     },
   });
   const onSubmit = (e) => {
-    console.log("login");
+    login(e);
   };
+
+  function login(value) {
+    axios
+      .post("auth/login", value)
+      .then((res) => {
+        console.log("login success: ", res);
+        localStorage.setItem("token", res.data.token);
+      })
+      .catch((err) => {
+        console.log("error: ", err);
+      });
+  }
+
+  // function get  room status when login success!
+  // move this function when UI Success!
+  const getRoomStatus = () => {
+    const token = localStorage.getItem("token");
+    axios
+      .get("roomStatuses", { headers: { Authorization: `Bearer ${token}` } })
+      .then((res) => {
+        console.log("response: ", res);
+      })
+      .catch((err) => {
+        console.log("error: ", err);
+      });
+  }
   return (
     <div className="minH-[100vh] h-[100vh] w-full flex justify-center items-center bg-grayLight">
       <div className="w-[70%] h-[90%] shadow-2xl flex flex-row bg-white">
@@ -89,6 +116,12 @@ const LoginPage = () => {
             <NavLink to={"/register"} className="font-semibold cursor-pointer">
               Sign up
             </NavLink>
+ {/* delete this code when have UI  */}
+            <div className="w-full flex justify-center pb-6">
+              <button onClick={() => getRoomStatus()}>
+                Get Customer
+              </button>
+            </div>
           </div>
         </div>
       </div>

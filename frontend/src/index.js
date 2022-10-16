@@ -6,9 +6,11 @@ import "./index.scss";
 
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
+import axios from "axios";
 const container = document.getElementById("root");
 const root = createRoot(container);
 
+axios.defaults.baseURL ="http://localhost:8080/api/v1/";
 root.render(
   <React.StrictMode>
     <BrowserRouter>
