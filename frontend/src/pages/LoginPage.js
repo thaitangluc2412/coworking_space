@@ -38,6 +38,7 @@ const LoginPage = () => {
   const onSubmit = (e) => {
     login(e);
   };
+<<<<<<< HEAD
 
   function login(value) {
     axios
@@ -64,6 +65,11 @@ const LoginPage = () => {
         console.log("error: ", err);
       });
   }
+=======
+  const test = () => {
+    console.log("test");
+  };
+>>>>>>> 1563d95 (space list UI)
   return (
     <div className="minH-[100vh] h-[100vh] w-full flex justify-center items-center bg-grayLight">
       <div className="w-[70%] h-[90%] shadow-2xl flex flex-row bg-white">

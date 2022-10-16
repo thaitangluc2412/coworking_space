@@ -12,10 +12,12 @@ module.exports = {
       white: "white",
       lightRed: "#e6a0db",
       grayLight: "#E7ECF3",
+      grayText: "#475569",
+      grayLigherText: "#94A3B8",
       gray: "rgb(100 116 139)",
     },
 
     extend: {},
   },
-  plugins: [],
+  plugins: [require("@tailwindcss/line-clamp")],
 };

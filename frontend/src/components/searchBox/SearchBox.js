@@ -7,7 +7,8 @@ const SearchBox = () => {
         <span className="font-bold text-xs">City</span>
         <input
           type="text"
-          className="border-b border-primary outline-none px-1 py-1 caret-primary"
+          className="border-b border-primary outline-none px-1 py-1 caret-primary placeholder:italic placeholder:text-sm"
+          placeholder="Start typing a city"
         />
       </div>
       <button className="py-3 px-7 bg-primary rounded-full text-white">

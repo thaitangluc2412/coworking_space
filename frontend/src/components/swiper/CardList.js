@@ -40,7 +40,7 @@ const cards = [
 const CardList = () => {
   return (
     <div className="movie-list">
-      <Swiper spaceBetween={20} slidesPerView={4.2} grabCursor={true}>
+      <Swiper spaceBetween={20} slidesPerView={4.2}>
         {cards.length > 0 &&
           cards.map((item, index) => {
             return (
