@@ -38,7 +38,6 @@ const LoginPage = () => {
   const onSubmit = (e) => {
     login(e);
   };
-<<<<<<< HEAD
 
   function login(value) {
     axios
@@ -64,12 +63,7 @@ const LoginPage = () => {
       .catch((err) => {
         console.log("error: ", err);
       });
-  }
-=======
-  const test = () => {
-    console.log("test");
   };
->>>>>>> 1563d95 (space list UI)
   return (
     <div className="minH-[100vh] h-[100vh] w-full flex justify-center items-center bg-grayLight">
       <div className="w-[70%] h-[90%] shadow-2xl flex flex-row bg-white">
@@ -122,11 +116,9 @@ const LoginPage = () => {
             <NavLink to={"/register"} className="font-semibold cursor-pointer">
               Sign up
             </NavLink>
- {/* delete this code when have UI  */}
+            {/* delete this code when have UI  */}
             <div className="w-full flex justify-center pb-6">
-              <button onClick={() => getRoomStatus()}>
-                Get Customer
-              </button>
+              <button onClick={() => getRoomStatus()}>Get Customer</button>
             </div>
           </div>
         </div>
