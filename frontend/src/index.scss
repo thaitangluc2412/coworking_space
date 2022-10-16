@@ -9,10 +9,28 @@
     font-family: "Poppins", sans-serif;
   }
 }
+@layer components {
+  .movie-list .swiper-slide {
+    width: 300px;
+    height: auto;
+    
+  }
+  .movie-list .swiper-initialized {
+    height: 600px;
+  }
+  .banner .swiper {
+    height: 100%;
+}
+}
 .dat {
+<<<<<<< HEAD
   color: #e6a0db;
 }
 
 .color-red {
   color: red;
 }
+=======
+  color: #5748de
+}
+>>>>>>> 7784724 (card list)
