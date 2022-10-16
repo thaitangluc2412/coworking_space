@@ -30,4 +30,11 @@ public class Price {
 
 	@Column(name = "year_price")
 	private Double yearPrice;
+
+	public Price(Double dayPrice, Double monthPrice, Double yearPrice) {
+		this.dayPrice = dayPrice;
+		this.monthPrice = monthPrice;
+		this.yearPrice = yearPrice;
+	}
+
 }

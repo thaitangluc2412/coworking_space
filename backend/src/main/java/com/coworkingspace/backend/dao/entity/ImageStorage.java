@@ -24,16 +24,16 @@ public class ImageStorage {
 	@Column(name = "image_storage_id", nullable = false)
 	private String id;
 
-	@OneToMany(mappedBy = "imageStorage", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<Image> images = new ArrayList<>();
-
-	public void addImage(Image image) {
-		images.add(image);
-		image.setImageStorage(this);
-	}
-
-	public void removeImage(Image image) {
-		images.remove(image);
-		image.setImageStorage(null);
-	}
+	// @OneToMany(mappedBy = "imageStorage", cascade = CascadeType.MERGE, orphanRemoval = true)
+	// private List<Image> images = new ArrayList<>();
+	//
+	// public void addImage(Image image) {
+	// 	images.add(image);
+	// 	image.setImageStorage(this);
+	// }
+	//
+	// public void removeImage(Image image) {
+	// 	images.remove(image);
+	// 	image.setImageStorage(null);
+	// }
 }

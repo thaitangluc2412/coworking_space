@@ -19,6 +19,6 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 	                     AuthenticationException authException) throws IOException, ServletException {
 		log.info("Entering CustomAuthenticationEntryPoint");
 
-		response.sendError(HttpServletResponse.SC_ACCEPTED, "Error -> Unauthorized");
+		response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Error -> Unauthorized");
 	}
 }

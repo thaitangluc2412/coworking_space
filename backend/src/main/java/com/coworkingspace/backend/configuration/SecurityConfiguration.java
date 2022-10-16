@@ -23,6 +23,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 
 import java.util.List;
 
@@ -72,21 +73,4 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 		http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 	}
-		// @Bean
-	// public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-	// 	http.cors().and()
-	// 			.csrf().disable()
-	// 			.authorizeRequests()
-	// 			.antMatchers(PUBLIC_MATCHERS).permitAll()
-	// 			.anyRequest().authenticated()
-	// 			.and()
-	// 			.exceptionHandling()
-	// 			.and()
-	// 			.sessionManagement()
-	// 			.sessionCreationPolicy(STATELESS);
-	//
-	// 	http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-	//
-	// 	return http.build();
-	// }
 }

@@ -29,7 +29,7 @@ public class Image {
 	@Column(name = "thumbnail", nullable = false)
 	private String thumbnail;
 
-	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-	@JoinColumn(name = "image_storage_id", nullable = false)
-	private ImageStorage imageStorage;
+	// @ManyToOne(fetch = FetchType.LAZY, optional = false)
+	// @JoinColumn(name = "image_storage_id", nullable = false)
+	// private ImageStorage imageStorage;
 }

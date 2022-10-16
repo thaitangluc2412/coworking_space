@@ -36,7 +36,7 @@ public class Room {
 	@JoinColumn(name = "room_status_id", nullable = false)
 	private RoomStatus roomStatus;
 
-	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	@JoinColumn(name = "image_storage_id", nullable = false)
 	private ImageStorage imageStorage;
 
