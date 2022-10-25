@@ -15,7 +15,7 @@ import javax.persistence.*;
 @Setter
 @Entity
 @Table(name = "image")
-public class Image {
+public class Image extends BaseEntity{
 	@Id
 	@GenericGenerator(name = "id_gen", strategy = "com.coworkingspace.backend.common.utils.GenerateUUID")
 	@GeneratedValue(generator = "id_gen")
@@ -29,7 +29,7 @@ public class Image {
 	@Column(name = "thumbnail", nullable = false)
 	private String thumbnail;
 
-	// @ManyToOne(fetch = FetchType.LAZY, optional = false)
-	// @JoinColumn(name = "image_storage_id", nullable = false)
-	// private ImageStorage imageStorage;
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(name = "image_storage_id", nullable = false)
+	private ImageStorage imageStorage;
 }

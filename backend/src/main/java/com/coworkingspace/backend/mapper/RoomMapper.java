@@ -7,6 +7,7 @@ import org.mapstruct.DecoratedWith;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 
 @Mapper
 @DecoratedWith(RoomMapperDecorator.class)
@@ -22,10 +23,11 @@ public interface RoomMapper {
 	RoomDto roomToRoomDto(Room room);
 
 	@Mapping(source = "customerId", target = "customer.id")
+	@Mapping(source = "priceId", target = "price.id")
 	@Mapping(source = "roomStatusId", target = "roomStatus.id")
 	@Mapping(source = "imageStorageId", target = "imageStorage.id")
-	Room roomCreateDtoToRoom(RoomCreateDto roomCreateDto);
+	Room roomCreateDtoToRoom(RoomCreateDto roomCreateDto) throws NotFoundException;
 
 	@InheritInverseConfiguration(name = "roomCreateDtoToRoom")
-	RoomCreateDto roomToRoomCreateDto(Room room);
+	RoomCreateDto roomToRoomCreateDto(Room room) throws NotFoundException;
 }

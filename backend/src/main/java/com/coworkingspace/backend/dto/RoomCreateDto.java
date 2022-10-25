@@ -1,7 +1,9 @@
 package com.coworkingspace.backend.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @AllArgsConstructor
@@ -12,14 +14,17 @@ import java.util.List;
 public class RoomCreateDto {
 	private String id;
 	private String customerId;
-	private String dayPrice;
-	private String monthPrice;
-	private String yearPrice;
+	private String priceId;
+	private Double dayPrice;
+	private Double monthPrice;
+	private Double yearPrice;
 	private String roomStatusId;
-	private String imageStorageId = "8f6gnEUDqrxvFDS";
+	private String imageStorageId;
 	private String roomName;
 	private String size;
 	private String capacity;
 	private String description;
 	private List<ImageDto> images;
+	private LocalDateTime timeCreate;
+	private LocalDateTime timeUpdate;
 }

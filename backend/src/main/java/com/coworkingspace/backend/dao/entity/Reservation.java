@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import net.bytebuddy.asm.Advice.Local;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -15,8 +14,8 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
-@Table(name="reservation")
-public class Reservation {
+@Table(name = "reservation")
+public class Reservation extends BaseEntity{
 
 	@Id
 	@GenericGenerator(name = "id_gen", strategy = "com.coworkingspace.backend.common.utils.GenerateUUID")
@@ -32,18 +31,15 @@ public class Reservation {
 	@JoinColumn(name = "customer_id", nullable = false)
 	private Customer customer;
 
-	@Column(name = "create_date")
-	private LocalDateTime createDate;
+	@ManyToOne(optional = false)
+	@JoinColumn(name = "reservation_status_id", nullable = false)
+	private ReservationStatus reservationStatus;
 
 	@Column(name = "start_date")
 	private LocalDateTime startDate;
 
 	@Column(name = "end_date")
 	private LocalDateTime endDate;
-
-	@ManyToOne(optional = false)
-	@JoinColumn(name = "reservation_status_id", nullable = false)
-	private ReservationStatus reservationStatus;
 
 	@Column(name = "total", nullable = false)
 	private Double total;

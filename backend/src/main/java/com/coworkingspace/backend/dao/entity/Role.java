@@ -13,7 +13,7 @@ import javax.persistence.*;
 @Table(name = "role")
 @Getter
 @Setter
-public class Role {
+public class Role extends BaseEntity{
 
 	@Id
 	@GenericGenerator(name = "id_gen", strategy = "com.coworkingspace.backend.common.utils.GenerateUUID")

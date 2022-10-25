@@ -6,6 +6,7 @@ import com.coworkingspace.backend.dto.PriceDto;
 import com.coworkingspace.backend.mapper.PriceMapper;
 import com.coworkingspace.backend.service.PriceService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,5 +22,10 @@ public class PriceServiceImpl implements PriceService {
 	public void createPrice(PriceDto priceDto) {
 		Price price = priceMapper.priceDtoToPrice(priceDto);
 		priceRepository.save(price);
+	}
+
+	@Override
+	public Price findById(String id) throws NotFoundException {
+		return priceRepository.findById(id).orElseThrow(NotFoundException::new);
 	}
 }

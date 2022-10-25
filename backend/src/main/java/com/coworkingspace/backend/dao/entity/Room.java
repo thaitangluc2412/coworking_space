@@ -16,7 +16,7 @@ import javax.persistence.*;
 @Setter
 @Entity
 @Table(name = "room")
-public class Room {
+public class Room extends BaseEntity{
 	@Id
 	@GenericGenerator(name = "id_gen", strategy = "com.coworkingspace.backend.common.utils.GenerateUUID")
 	@GeneratedValue(generator = "id_gen")
@@ -36,7 +36,7 @@ public class Room {
 	@JoinColumn(name = "room_status_id", nullable = false)
 	private RoomStatus roomStatus;
 
-	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "image_storage_id", nullable = false)
 	private ImageStorage imageStorage;
 

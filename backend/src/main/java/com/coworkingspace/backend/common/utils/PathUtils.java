@@ -21,25 +21,11 @@ public class PathUtils {
     }
 
     public static String getParentFolder(String originPath){
-        String prefRegex="^https?:\\/\\/res.cloudinary.com\\/tri-tranvan\\/image\\/upload\\/([a-zA-Z0-9])+\\/";
+        String prefRegex="^https?:\\/\\/res.cloudinary.com\\/dpom2eaqn\\/image\\/upload\\/([a-zA-Z0-9])+\\/";
+        //http://res.cloudinary.com/dpom2eaqn/image/upload/v1666022260/coworking-spacerooms/3b876076-1050-4ccf-bb64-15150718c53c/image_1.jpg
         String suffRegex="\\/image_([0-9]+).([a-z]+)$";
         originPath=originPath.replaceFirst(prefRegex, "");
         originPath=originPath.replaceAll(suffRegex, "");
         return originPath;
     }
-
-//    public static void main(String[] args) {
-//        String originPath="https://res.cloudinary.com/tri-tranvan/image/upload/v1654848076/working-space/images/test/6/6/1654848074855/image_0.jpg";
-////        String path="working-space/images/test/";
-//        String path=PATH.replaceAll("/","\\\\/");
-//        String prefRegex="^https:\\/\\/res.cloudinary.com\\/tri-tranvan\\/image\\/upload\\/([a-zA-Z0-9])+\\/"+path+"([0-9])+\\/([0-9])\\/";
-//        String suffRegex="\\/image_([0-9]+).([a-z]+)$";
-//        originPath=originPath.replaceFirst(prefRegex, "");
-////        System.out.println("originPath : "+originPath);
-//        originPath=originPath.replaceAll(suffRegex, "");
-//        System.out.println("after format : "+originPath);
-//
-////        System.out.println("path : "+path);
-////        String res=path.replaceFirst("^$")
-//    }
 }

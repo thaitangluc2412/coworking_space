@@ -2,12 +2,8 @@ package com.coworkingspace.backend.configuration;
 
 import com.coworkingspace.backend.filter.JwtAuthenticationFilter;
 import com.coworkingspace.backend.security.CustomAuthenticationEntryPoint;
-import com.coworkingspace.backend.security.CustomPasswordEncoder;
-import com.coworkingspace.backend.security.CustomerUserDetails;
-import com.coworkingspace.backend.service.CustomerService;
 import com.coworkingspace.backend.service.CustomerUserDetailsService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,14 +14,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-
-import java.util.List;
 
 import static com.coworkingspace.backend.common.constant.SecurityConstant.PUBLIC_MATCHERS;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
@@ -42,7 +31,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
 	@Override
-	public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception{
+	public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
 		authenticationManagerBuilder.userDetailsService(customerUserDetailsService).passwordEncoder(passwordEncoder());
 	}
 
@@ -53,7 +42,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Bean
 	@Override
-	public AuthenticationManager authenticationManager() throws Exception{
+	public AuthenticationManager authenticationManager() throws Exception {
 		return super.authenticationManager();
 	}
 

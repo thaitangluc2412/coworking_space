@@ -14,7 +14,7 @@ import javax.persistence.*;
 @Table(name = "customer")
 @Getter
 @Setter
-public class Customer {
+public class Customer extends BaseEntity{
 	@Id
 	@GenericGenerator(name = "id_gen", strategy = "com.coworkingspace.backend.common.utils.GenerateUUID")
 	@GeneratedValue(generator = "id_gen")

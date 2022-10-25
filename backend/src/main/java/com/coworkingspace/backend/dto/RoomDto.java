@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @AllArgsConstructor
@@ -20,10 +21,12 @@ public class RoomDto {
 	private String customerId;
 	private String priceId;
 	private String roomStatusId;
-	private String imageStorageId = "8f6gnEUDqrxvFDS";
+	private String imageStorageId;
 	private String roomName;
 	private String size;
 	private String capacity;
 	private String description;
 	private List<ImageDto> images;
+	private LocalDateTime timeCreate;
+	private LocalDateTime timeUpdate;
 }

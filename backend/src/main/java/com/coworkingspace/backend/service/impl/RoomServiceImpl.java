@@ -4,35 +4,33 @@ import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.coworkingspace.backend.common.utils.PathUtils;
 import com.coworkingspace.backend.configuration.CloudinaryConfig;
+import com.coworkingspace.backend.dao.entity.Image;
+import com.coworkingspace.backend.dao.entity.ImageStorage;
 import com.coworkingspace.backend.dao.entity.Room;
 import com.coworkingspace.backend.dao.repository.RoomRepository;
 import com.coworkingspace.backend.dto.ImageDto;
 import com.coworkingspace.backend.dto.RoomCreateDto;
+import com.coworkingspace.backend.mapper.ImageMapper;
 import com.coworkingspace.backend.mapper.RoomMapper;
 import com.coworkingspace.backend.service.RoomService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
+@AllArgsConstructor
 @Service
 public class RoomServiceImpl implements RoomService {
 	private final String FOLDER_PATH = "rooms";
-
 	private Cloudinary cloudinary;
-
 	private CloudinaryConfig cloudinaryConfig;
-	@Autowired
 	private RoomRepository roomRepository;
-
-	@Autowired
 	private RoomMapper roomMapper;
+	private ImageMapper imageMapper;
 
 	@Transactional
 	@Override
@@ -46,15 +44,73 @@ public class RoomServiceImpl implements RoomService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		Room room = roomMapper.roomCreateDtoToRoom(roomCreateDto);
-		roomRepository.save(room);
+	}
+
+	@Override
+	public List<RoomCreateDto> getAll() {
+		return roomRepository.findAll()
+				.stream()
+				.map(room -> {
+					try {
+						return roomMapper.roomToRoomCreateDto(room);
+					} catch (NotFoundException e) {
+						throw new RuntimeException(e);
+					}
+				})
+				.collect(
+						Collectors.toList());
+	}
+
+	@Override
+	public Room findById(String id) throws NotFoundException {
+		return roomRepository.findById(id).orElseThrow(NotFoundException::new);
+	}
+
+	@Override
+	public RoomCreateDto updateRoom(String id,
+	                                RoomCreateDto roomCreateDto,
+	                                MultipartFile[] files) throws NotFoundException {
+		Room room = findById(id);
+		roomCreateDto.setId(id);
+		boolean needUpdate = files != null;
+		if (needUpdate) {
+			deleteFolderCloudinary(room);
+			List<ImageDto> imageDtos = new ArrayList<>();
+			imageDtos.addAll(saveImage(files));
+			roomCreateDto.setImages(imageDtos);
+		} else {
+			roomCreateDto.setImages(room.getImageStorage().getImages().parallelStream().map(en -> imageMapper.imageToImageDto(en)).collect(
+					Collectors.toList()));
+		}
+		roomCreateDto.setImageStorageId(room.getImageStorage().getId());
+		roomRepository.save(roomMapper.roomCreateDtoToRoom(roomCreateDto));
+		return roomCreateDto;
+	}
+
+	public void deleteFolderCloudinary(Room room) {
+		if (room.getImageStorage() != null) {
+			ImageStorage imageStorage = room.getImageStorage();
+			if (imageStorage.getImages() != null) {
+				List<Image> images = imageStorage.getImages();
+				if (images.size() > 0) {
+					String folderPath = PathUtils.getParentFolder(images.get(0).getUrl());
+					try {
+						System.out.println("folder Path : " + folderPath);
+						cloudinary.api().deleteResourcesByPrefix(folderPath, Map.of());
+						cloudinary.api().deleteFolder(folderPath, Map.of());
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
 	}
 
 	private List<ImageDto> saveImage(MultipartFile[] files) {
-		final LocalDateTime now = LocalDateTime.now();
-		final String path = String.format("%s/%s", FOLDER_PATH, now.getNano());
+		UUID uuid = UUID.randomUUID();
+		String uuidAsString = uuid.toString();
+		final String path = String.format("%s/%s", FOLDER_PATH, uuidAsString);
 		final String folderPath = PathUtils.decoratePath(path);
-
 		int[] idx = new int[1];
 		idx[0] = 0;
 		List<ImageDto> imageDtos = new ArrayList<>();
