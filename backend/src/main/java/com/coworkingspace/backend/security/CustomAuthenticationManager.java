@@ -21,6 +21,9 @@ public class CustomAuthenticationManager implements AuthenticationManager {
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 		final UserDetails customerDetails = customerUserDetailsService.loadUserByUsername(authentication.getName());
+		if (!passwordEncoder.matches(authentication.getCredentials().toString(), userDetails.getPassword())) {
+			throw new BadCredentialsException(BAD_CREDENTIALS_MSG);
+		}
 		return new UsernamePasswordAuthenticationToken(customerDetails.getUsername(), customerDetails.getPassword(), customerDetails.getAuthorities());
 	}
 }
