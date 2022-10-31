@@ -8,8 +8,8 @@ const Layout = () => {
       <Header></Header>
       <div className="w-[100%] h-[100%] overflow-y-auto">
         <Outlet />
+        <Footer></Footer>
       </div>
-      <Footer></Footer>
     </div>
   );
 };

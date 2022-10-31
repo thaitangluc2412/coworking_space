@@ -22,7 +22,7 @@ public class RoomStatusController {
 	@Autowired
 	private RoomStatusService roomStatusService;
 
-	// @PreAuthorize("hasAnyAuthority('ADMIN')")
+	@PreAuthorize("hasAnyAuthority('ADMIN')")
 	@GetMapping
 	public ResponseEntity<List<RoomStatus>> getAllCustomer() {
 		List<RoomStatus> roomStatuses = roomStatusService.getAll();
