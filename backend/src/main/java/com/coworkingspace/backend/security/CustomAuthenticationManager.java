@@ -9,6 +9,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -18,11 +19,17 @@ public class CustomAuthenticationManager implements AuthenticationManager {
 	@Autowired
 	private CustomerUserDetailsService customerUserDetailsService;
 
+	@Autowired
+		private PasswordEncoder passwordEncoder;
+
+	@Autowired
+	private AuthenticationManager authenticationManager;
+
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 		final UserDetails customerDetails = customerUserDetailsService.loadUserByUsername(authentication.getName());
-		if (!passwordEncoder.matches(authentication.getCredentials().toString(), userDetails.getPassword())) {
-			throw new BadCredentialsException(BAD_CREDENTIALS_MSG);
+		if (!passwordEncoder.matches(authentication.getCredentials().toString(), customerDetails.getPassword())) {
+			throw new UsernameNotFoundException("Incorrect email or password.");
 		}
 		return new UsernamePasswordAuthenticationToken(customerDetails.getUsername(), customerDetails.getPassword(), customerDetails.getAuthorities());
 	}

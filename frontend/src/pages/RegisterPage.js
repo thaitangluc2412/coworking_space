@@ -6,9 +6,11 @@ import Input from "../components/input/Input";
 import Label from "../components/label/Label";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import http from "../config/axiosConfig";
 
 const RegisterPage = () => {
+  const navigate = useNavigate();
   const schema = yup
     .object({
       username: yup.string().required("Please enter your username"),
@@ -36,12 +38,26 @@ const RegisterPage = () => {
     defaultValues: {
       username: "",
       email: "",
+      phoneNumber: "",
       password: "",
       confirmpassword: "",
     },
   });
-  const onSubmit = (e) => {
-    console.log("sign up");
+  const onSubmit = (data) => {
+    console.log(data);
+    const customer = {
+      email: data.email,
+      customerName: data.username,
+      phoneNumber: data.phoneNumber,
+      password: data.password,
+      roleId: "IT04ZnPgBYSf3Qm",
+    };
+    console.log(customer);
+    http
+      .post("customers", customer)
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
+    navigate("/");
   };
   return (
     <div className="minH-[100vh] h-[100vh] w-[100%]  pt-10">
@@ -73,6 +89,20 @@ const RegisterPage = () => {
               type="username"
               name="username"
               placeholder="Enter your username"
+              control={control}
+            ></Input>
+            {errors.username && (
+              <p className="text-sm text-red-500 color-red">
+                {errors.username.message}
+              </p>
+            )}
+          </Field>
+          <Field>
+            <Label name="phoneNumber">Phone number</Label>
+            <Input
+              type="text"
+              name="phoneNumber"
+              placeholder="Enter your phone number"
               control={control}
             ></Input>
             {errors.username && (

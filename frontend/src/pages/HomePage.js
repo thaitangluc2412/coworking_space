@@ -1,9 +1,14 @@
 import React from "react";
+import { useEffect } from "react";
 import SearchBox from "../components/searchBox/SearchBox";
 import Card from "../components/swiper/Card";
 import CardList from "../components/swiper/CardList";
+import http from "../config/axiosConfig";
 
 const HomePage = () => {
+  useEffect(() => {
+    http.get("roomStatuses").then((res) => console.log(res));
+  }, []);
   return (
     <div>
       <section className="mb-[100px]">

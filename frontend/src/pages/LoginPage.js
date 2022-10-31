@@ -6,10 +6,12 @@ import Input from "../components/input/Input";
 import Label from "../components/label/Label";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import axios from "axios";
+import http from "../config/axiosConfig";
 
 const LoginPage = () => {
+  const navigate = useNavigate();
   const schema = yup
     .object({
       email: yup
@@ -40,11 +42,12 @@ const LoginPage = () => {
   };
 
   function login(value) {
-    axios
+    http
       .post("auth/login", value)
       .then((res) => {
         console.log("login success: ", res);
-        localStorage.setItem("token", res.data.token);
+        localStorage.setItem("token", res.token);
+        navigate("/");
       })
       .catch((err) => {
         console.log("error: ", err);
