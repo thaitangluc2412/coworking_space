@@ -3,12 +3,10 @@ import { useEffect } from "react";
 import SearchBox from "../components/searchBox/SearchBox";
 import Card from "../components/swiper/Card";
 import CardList from "../components/swiper/CardList";
+import TypeRoom from "../components/typeRoom/TypeRoom";
 import http from "../config/axiosConfig";
 
 const HomePage = () => {
-  useEffect(() => {
-    http.get("roomStatuses").then((res) => console.log(res));
-  }, []);
   return (
     <div>
       <section className="mb-[100px]">
@@ -33,17 +31,7 @@ const HomePage = () => {
           </div>
         </div>
       </section>
-      <section className="mb-10 pl-[70px]">
-        <h1 className="mb-2 text-3xl font-semibold">
-          Find the space that fits your bussiness
-        </h1>
-        <h2 className="mb-[80px] text-lg font-light text-gray">
-          We have a solution for every needs
-        </h2>
-        <div className="ml-5">
-          <CardList></CardList>
-        </div>
-      </section>
+      <TypeRoom></TypeRoom>
       <section className="mb-10 pl-[70px]">
         <h1 className="mb-2 text-3xl font-semibold">
           Find the space that fits your bussiness

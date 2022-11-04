@@ -1,4 +1,5 @@
 import axios from "axios";
+import { toast } from "react-toastify";
 
 class Http {
   constructor() {
@@ -11,17 +12,17 @@ class Http {
     });
     this.instance.interceptors.response.use(
       (response) => {
-        const result = { ...response.data, status: response.status };
+        const result = { data: response.data, status: response.status };
         return result;
       },
       ({ response }) => {
         if (response.status === 401) {
-          // toast.error(response.data.message, {
-          //   position: "top-right",
-          //   autoClose: 3000,
-          // });
+          toast.error(response.data.message, {
+            position: "top-right",
+            autoClose: 3000,
+          });
         }
-        const result = { ...response.data, status: response.status };
+        const result = { data: response.data, status: response.status };
         return Promise.reject(result);
       }
     );
