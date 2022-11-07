@@ -4,10 +4,6 @@ import "swiper/css";
 import Card from "./Card";
 
 const CardList = ({ data }) => {
-  const onClick = () => {
-    // Redirect;
-  };
-
   if (!data) data = [];
   return (
     <div className="movie-list">
@@ -20,7 +16,7 @@ const CardList = ({ data }) => {
                   roomTypeName={item.roomTypeName}
                   description={item.description}
                   url={item.url}
-                  onClick={onClick}
+                  id={item.id}
                 ></Card>
               </SwiperSlide>
             );

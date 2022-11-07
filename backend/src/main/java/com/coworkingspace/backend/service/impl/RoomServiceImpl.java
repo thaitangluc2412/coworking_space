@@ -87,6 +87,17 @@ public class RoomServiceImpl implements RoomService {
 		return roomCreateDto;
 	}
 
+	@Override
+	public List<RoomCreateDto> getByRoomTypeId(String id) {
+		return roomRepository.getByRoomTypeId(id).stream().map(room -> {
+			try {
+				return roomMapper.roomToRoomCreateDto(room);
+			} catch (NotFoundException e) {
+				throw new RuntimeException(e);
+			}
+		}).collect(Collectors.toList());
+	}
+
 	public void deleteFolderCloudinary(Room room) {
 		if (room.getImageStorage() != null) {
 			ImageStorage imageStorage = room.getImageStorage();

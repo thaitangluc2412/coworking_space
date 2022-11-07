@@ -67,7 +67,9 @@ public abstract class RoomMapperDecorator implements RoomMapper {
 				imageMapper
 		);
 		roomCreateDto.setImages(imageDtos);
-		room.setPrice(priceService.findById(roomCreateDto.getPriceId()));
+		roomCreateDto.setDayPrice(room.getPrice().getDayPrice());
+		roomCreateDto.setMonthPrice(room.getPrice().getMonthPrice());
+		roomCreateDto.setYearPrice(room.getPrice().getYearPrice());
 		return roomCreateDto;
 	}
 }

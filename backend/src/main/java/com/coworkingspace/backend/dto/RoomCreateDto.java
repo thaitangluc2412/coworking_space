@@ -19,6 +19,7 @@ public class RoomCreateDto {
 	private Double monthPrice;
 	private Double yearPrice;
 	private String roomStatusId;
+	private String roomTypeId;
 	private String imageStorageId;
 	private String roomName;
 	private String size;

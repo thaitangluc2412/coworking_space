@@ -16,6 +16,7 @@ public interface RoomMapper {
 	@Mapping(source = "customerId", target = "customer.id")
 	@Mapping(source = "priceId", target = "price.id")
 	@Mapping(source = "roomStatusId", target = "roomStatus.id")
+	@Mapping(source = "roomTypeId", target = "roomType.id")
 	@Mapping(source = "imageStorageId", target = "imageStorage.id")
 	Room roomDtoToRoom(RoomDto roomDto);
 
@@ -25,6 +26,7 @@ public interface RoomMapper {
 	@Mapping(source = "customerId", target = "customer.id")
 	@Mapping(source = "priceId", target = "price.id")
 	@Mapping(source = "roomStatusId", target = "roomStatus.id")
+	@Mapping(source = "roomTypeId", target = "roomType.id")
 	@Mapping(source = "imageStorageId", target = "imageStorage.id")
 	Room roomCreateDtoToRoom(RoomCreateDto roomCreateDto) throws NotFoundException;
 

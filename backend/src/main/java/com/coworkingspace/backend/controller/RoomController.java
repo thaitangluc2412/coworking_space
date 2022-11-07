@@ -38,4 +38,10 @@ public class RoomController {
 		RoomCreateDto roomCreateDto1 = roomService.updateRoom(id, roomCreateDto, files);
 		return ResponseEntity.status(HttpStatus.OK).body(roomCreateDto1);
 	}
+
+	@GetMapping("/roomType/{id}")
+	public ResponseEntity<List<RoomCreateDto>> getByRoomTypeId(@PathVariable String id) {
+		List<RoomCreateDto> rooms = roomService.getByRoomTypeId(id);
+		return new ResponseEntity<>(rooms, HttpStatus.OK);
+	}
 }

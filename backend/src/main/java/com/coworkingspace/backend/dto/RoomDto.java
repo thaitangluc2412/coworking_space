@@ -22,6 +22,7 @@ public class RoomDto {
 	private String priceId;
 	private String roomStatusId;
 	private String imageStorageId;
+	private String roomTypeId;
 	private String roomName;
 	private String size;
 	private String capacity;

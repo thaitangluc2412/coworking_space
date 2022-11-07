@@ -10,6 +10,7 @@ const TypeRoom = () => {
       setData(res.data);
     });
   }, []);
+
   return (
     <section className="mb-10 pl-[70px]">
       <h1 className="mb-2 text-3xl font-semibold">

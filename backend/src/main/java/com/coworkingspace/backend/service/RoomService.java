@@ -13,4 +13,5 @@ public interface RoomService {
 	Room findById(String id) throws NotFoundException;
 	RoomCreateDto updateRoom(String id, RoomCreateDto roomCreateDto, MultipartFile[] files) throws NotFoundException;
 
+	List<RoomCreateDto> getByRoomTypeId(String id);
 }

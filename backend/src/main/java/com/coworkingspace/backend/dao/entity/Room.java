@@ -36,6 +36,10 @@ public class Room extends BaseEntity{
 	@JoinColumn(name = "room_status_id", nullable = false)
 	private RoomStatus roomStatus;
 
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(name = "room_type_id", nullable = false)
+	private RoomType roomType;
+
 	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "image_storage_id", nullable = false)
 	private ImageStorage imageStorage;
@@ -52,4 +56,7 @@ public class Room extends BaseEntity{
 	@Lob
 	@Column(name = "description")
 	private String description;
+
+	@Column(name = "enable")
+	private Boolean enable = true;
 }

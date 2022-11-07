@@ -88,6 +88,7 @@ CREATE TABLE `room`
     description      TEXT,
     image_storage_id VARCHAR(15)  NOT NULL,
     customer_id      VARCHAR(15)  NOT NULL,
+    enable           BOOLEAN,
     time_create      DATETIME DEFAULT CURRENT_TIMESTAMP,
     time_update      DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     CONSTRAINT PRIMARY KEY (room_id),
