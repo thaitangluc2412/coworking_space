@@ -36,8 +36,9 @@ const SpaceList = () => {
               <SpaceItem
                 key={space.id}
                 url={space.images[0].url}
-                address={"Quang Tri Hue"}
+                address={`${space.address}, ${space.city}`}
                 roomName={space.roomName}
+                roomTypeName={space.roomTypeName}
                 dayPrice={space.dayPrice}
                 id={space.id}
               />

@@ -9,6 +9,7 @@ import com.coworkingspace.backend.dao.repository.ImageRepository;
 import com.coworkingspace.backend.dto.ImageDto;
 import com.coworkingspace.backend.dto.PriceDto;
 import com.coworkingspace.backend.dto.RoomCreateDto;
+import com.coworkingspace.backend.dto.RoomListDto;
 import com.coworkingspace.backend.service.PriceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -71,5 +72,18 @@ public abstract class RoomMapperDecorator implements RoomMapper {
 		roomCreateDto.setMonthPrice(room.getPrice().getMonthPrice());
 		roomCreateDto.setYearPrice(room.getPrice().getYearPrice());
 		return roomCreateDto;
+	}
+
+	@Override
+	public RoomListDto roomToRoomListDto(Room room){
+		RoomListDto roomListDto = delegate.roomToRoomListDto(room);
+		List<ImageDto> imageDtos = ImageStorageUtils.getImageDtos(
+				imageRepository,
+				room.getImageStorage().getId(),
+				imageMapper
+		);
+		roomListDto.setImages(imageDtos);
+
+		return roomListDto;
 	}
 }

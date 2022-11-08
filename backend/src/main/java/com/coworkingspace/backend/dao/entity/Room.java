@@ -47,6 +47,12 @@ public class Room extends BaseEntity{
 	@Column(name = "room_name", nullable = false)
 	private String roomName;
 
+	@Column(name = "address", nullable = false)
+	private String address;
+
+	@Column(name = "city", nullable = false)
+	private String city;
+
 	@Column(name = "size")
 	private String size;
 

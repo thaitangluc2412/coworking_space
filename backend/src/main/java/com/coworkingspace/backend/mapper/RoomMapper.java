@@ -3,6 +3,7 @@ package com.coworkingspace.backend.mapper;
 import com.coworkingspace.backend.dao.entity.Room;
 import com.coworkingspace.backend.dto.RoomCreateDto;
 import com.coworkingspace.backend.dto.RoomDto;
+import com.coworkingspace.backend.dto.RoomListDto;
 import org.mapstruct.DecoratedWith;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
@@ -32,4 +33,11 @@ public interface RoomMapper {
 
 	@InheritInverseConfiguration(name = "roomCreateDtoToRoom")
 	RoomCreateDto roomToRoomCreateDto(Room room) throws NotFoundException;
+
+	@Mapping(source = "price.dayPrice", target = "dayPrice")
+	@Mapping(source = "roomType.roomTypeName", target = "roomTypeName")
+	RoomListDto roomToRoomListDto(Room room);
+
+	@InheritInverseConfiguration(name = "roomToRoomListDto")
+	Room roomListDtoToRoom(RoomListDto roomListDto);
 }

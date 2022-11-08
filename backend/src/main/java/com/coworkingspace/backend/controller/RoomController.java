@@ -1,6 +1,7 @@
 package com.coworkingspace.backend.controller;
 
 import com.coworkingspace.backend.dto.RoomCreateDto;
+import com.coworkingspace.backend.dto.RoomListDto;
 import com.coworkingspace.backend.service.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
@@ -40,8 +41,8 @@ public class RoomController {
 	}
 
 	@GetMapping("/roomType/{id}")
-	public ResponseEntity<List<RoomCreateDto>> getByRoomTypeId(@PathVariable String id) {
-		List<RoomCreateDto> rooms = roomService.getByRoomTypeId(id);
+	public ResponseEntity<List<RoomListDto>> getByRoomTypeId(@PathVariable String id) {
+		List<RoomListDto> rooms = roomService.getByRoomTypeId(id);
 		return new ResponseEntity<>(rooms, HttpStatus.OK);
 	}
 }

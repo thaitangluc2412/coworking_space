@@ -82,6 +82,8 @@ CREATE TABLE `room`
     room_type_id     VARCHAR(15),
     price_id         VARCHAR(15)  NOT NULL,
     room_name        VARCHAR(255) NOT NULL,
+    address          VARCHAR(255) NOT NULL,
+    city             VARCHAR(255) NOT NULL,
     size             VARCHAR(255),
     capacity         VARCHAR(255),
     room_status_id   VARCHAR(15)  NOT NULL,

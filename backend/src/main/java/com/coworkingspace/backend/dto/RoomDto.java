@@ -24,6 +24,8 @@ public class RoomDto {
 	private String imageStorageId;
 	private String roomTypeId;
 	private String roomName;
+	private String address;
+	private String city;
 	private String size;
 	private String capacity;
 	private String description;

@@ -1,6 +1,6 @@
 import React from "react";
 
-const SpaceItem = ({ url, roomTypeId, address, roomName, dayPrice, id }) => {
+const SpaceItem = ({ url, roomTypeName, address, roomName, dayPrice, id }) => {
   return (
     <div className="w-[420px] h-[350px]">
       <div className="w-full h-[200px] relative">
@@ -10,7 +10,7 @@ const SpaceItem = ({ url, roomTypeId, address, roomName, dayPrice, id }) => {
         </div>
       </div>
       <div className="flex w-full h-[150px] flex-col px-1 py-1">
-        <h3 className="type text-sm text-grayText mb-1">{roomTypeId}</h3>
+        <h3 className="type text-sm text-grayText mb-1">{roomTypeName}</h3>
         <h1 className="name text-xl font-medium text-ellipsis line-clamp-2 overflow-hidden ">
           {roomName}
         </h1>
@@ -20,7 +20,7 @@ const SpaceItem = ({ url, roomTypeId, address, roomName, dayPrice, id }) => {
         <div className="flex w-full justify-between text-primary mt-auto">
           <span className="text-2xl">
             {dayPrice}
-            <sub className="text-xs">/month</sub>
+            <sub className="text-xs">/Day</sub>
           </span>
           <button className="px-3 py-1 rounded-full bg-white shadow-xl button-animation">
             Rent now

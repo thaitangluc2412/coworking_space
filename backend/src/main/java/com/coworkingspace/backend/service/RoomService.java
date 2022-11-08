@@ -2,6 +2,7 @@ package com.coworkingspace.backend.service;
 
 import com.coworkingspace.backend.dao.entity.Room;
 import com.coworkingspace.backend.dto.RoomCreateDto;
+import com.coworkingspace.backend.dto.RoomListDto;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -13,5 +14,5 @@ public interface RoomService {
 	Room findById(String id) throws NotFoundException;
 	RoomCreateDto updateRoom(String id, RoomCreateDto roomCreateDto, MultipartFile[] files) throws NotFoundException;
 
-	List<RoomCreateDto> getByRoomTypeId(String id);
+	List<RoomListDto> getByRoomTypeId(String id);
 }
