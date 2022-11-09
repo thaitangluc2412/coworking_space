@@ -2,7 +2,7 @@ import React from "react";
 
 const Footer = () => {
   return (
-    <div style={{ backgroundColor: "rgb(245 245 245)" }}>
+    <div style={{ backgroundColor: "rgb(245 245 245)", marginTop: "30px" }}>
       <div className="w-11/12 m-auto flex grid grid-cols-1 md:grid-cols-3 md:gap-20 py-20">
         <div>
           <p className="text-xl font-bold mb-3 ">Roomless</p>

@@ -13,6 +13,7 @@ import java.util.List;
 public class RoomListDto {
 	private String id;
 	private Double dayPrice;
+	private String roomTypeId;
 	private String roomTypeName;
 	private String roomName;
 	private String address;

@@ -40,6 +40,12 @@ public class RoomController {
 		return ResponseEntity.status(HttpStatus.OK).body(roomCreateDto1);
 	}
 
+	@GetMapping("/{id}")
+	public ResponseEntity<RoomListDto> updateRoom(@PathVariable String id) throws NotFoundException {
+		RoomListDto roomListDto = roomService.findByRoomId(id);
+		return ResponseEntity.status(HttpStatus.OK).body(roomListDto);
+	}
+
 	@GetMapping("/roomType/{id}")
 	public ResponseEntity<List<RoomListDto>> getByRoomTypeId(@PathVariable String id) {
 		List<RoomListDto> rooms = roomService.getByRoomTypeId(id);

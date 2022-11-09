@@ -36,6 +36,7 @@ public interface RoomMapper {
 
 	@Mapping(source = "price.dayPrice", target = "dayPrice")
 	@Mapping(source = "roomType.roomTypeName", target = "roomTypeName")
+	@Mapping(source = "roomType.id", target = "roomTypeId")
 	RoomListDto roomToRoomListDto(Room room);
 
 	@InheritInverseConfiguration(name = "roomToRoomListDto")

@@ -41,6 +41,7 @@ const SpaceList = () => {
                 roomTypeName={space.roomTypeName}
                 dayPrice={space.dayPrice}
                 id={space.id}
+                typeRoomId={space.typeRoomId}
               />
             ))}
         </div>

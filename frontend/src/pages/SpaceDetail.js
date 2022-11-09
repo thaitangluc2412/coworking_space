@@ -1,17 +1,32 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
-
+import React, { useState } from "react";
+import { useEffect } from "react";
+import { NavLink, useParams } from "react-router-dom";
+import http from "../config/axiosConfig";
+import Carousel from "react-elastic-carousel";
 const SpaceDetail = () => {
+  const { id } = useParams();
+  const [data, setData] = useState([]);
+  const [listImages, setListImages] = useState([]);
+  useEffect(() => {
+    http.get(`rooms/${id}`).then((res) => {
+      setData(res.data);
+      setListImages(res.data.images);
+    });
+  }, []);
   return (
     <div className="px-8 py-6 flex flex-row gap-6">
       <div className="w-[65%]">
-        <div className="image w-full h-[500px] shadow-sm mb-1">
-          <img
-            className="w-full h-full object-cover "
-            src="https://images.unsplash.com/photo-1664770052936-221f47b78b70?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"
-            alt=""
-          />
-        </div>
+        <Carousel>
+          {listImages.map((image) => (
+            <div className="w-full h-[500px] mb-4">
+              <img
+                className="w-full h-full object-cover "
+                src={image.url}
+                alt=""
+              />
+            </div>
+          ))}
+        </Carousel>
         <div className="flex gap-3 items-center px-2">
           <NavLink to={"/"} className=" image-cover w-5 h-5 inline-block">
             <img
@@ -21,9 +36,9 @@ const SpaceDetail = () => {
             />
           </NavLink>
           <span className="text-2xl"> {">"} </span>
-          <NavLink to={"/space-list"}>Listings</NavLink>
+          <NavLink to={`/space-list/${data.roomTypeId}`}>Listings</NavLink>
           <span className="text-2xl"> {">"} </span>
-          <NavLink to={"/space-list"}>Write your own component</NavLink>
+          <span to={"/space-list"}>{data.roomName}</span>
         </div>
         <div className="px-5 py-8">
           <h2 className="font-bold text-2xl pb-4">Property features</h2>
@@ -59,26 +74,29 @@ const SpaceDetail = () => {
               <span>1 Kitchens</span>
             </div>
           </div>
+          <h3 className="font-bold text-2xl pb-4 mt-10">Description</h3>
+          <div>{data.description}</div>
         </div>
       </div>
+      <div className="px-5 py-8"></div>
       <div className="flex flex-col w-[35%]">
         <div className="flex flex-col w-full shadow-lg rounded-md p-5">
           <h1 className="name text-2xl font-semibold text-ellipsis line-clamp-2 overflow-hidden text-grayText">
             {" "}
-            Spacious double bedroom with Balcony near Jonio metro station{" "}
+            {data.roomName}{" "}
           </h1>
           <p className="address text-sm font-light text-grayLigherText mb-4">
-            Viale Jonio Roma, Italia{" "}
+            {`${data.address}, ${data.city}`}{" "}
           </p>
           <h3 className="type text-base font-medium text-grayText mb-1">
-            Private room
+            {data.roomTypeName}
           </h3>
           <div className="text-grayText font-medium mb-1">
             Available from <span className="font-semibold"> 22 Jan 2023 </span>
           </div>
           <div className="flex flex-col text-primary pt-5 pb-7">
             <span className="text-5xl">
-              600$<sub className="text-sm">/month</sub>
+              {data.dayPrice}$<sub className="text-sm">/Day</sub>
             </span>
             <span className="text-sm">Utilities Included</span>
           </div>

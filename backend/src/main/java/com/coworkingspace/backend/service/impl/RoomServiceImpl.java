@@ -68,6 +68,11 @@ public class RoomServiceImpl implements RoomService {
 	}
 
 	@Override
+	public RoomListDto findByRoomId(String id) throws NotFoundException {
+		return roomMapper.roomToRoomListDto(findById(id));
+	}
+
+	@Override
 	public RoomCreateDto updateRoom(String id,
 	                                RoomCreateDto roomCreateDto,
 	                                MultipartFile[] files) throws NotFoundException {

@@ -1,6 +1,10 @@
 import React from "react";
-
+import { useNavigate } from "react-router";
 const SpaceItem = ({ url, roomTypeName, address, roomName, dayPrice, id }) => {
+  const navigate = useNavigate();
+  const handleClick = () => {
+    navigate(`/space/${id}`);
+  };
   return (
     <div className="w-[420px] h-[350px]">
       <div className="w-full h-[200px] relative">
@@ -19,10 +23,12 @@ const SpaceItem = ({ url, roomTypeName, address, roomName, dayPrice, id }) => {
         </p>
         <div className="flex w-full justify-between text-primary mt-auto">
           <span className="text-2xl">
-            {dayPrice}
-            <sub className="text-xs">/Day</sub>
+            {dayPrice}$<sub className="text-xs">/Day</sub>
           </span>
-          <button className="px-3 py-1 rounded-full bg-white shadow-xl button-animation">
+          <button
+            className="px-3 py-1 rounded-full bg-white shadow-xl button-animation"
+            onClick={() => handleClick()}
+          >
             Rent now
           </button>
         </div>
