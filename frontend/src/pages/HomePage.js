@@ -1,5 +1,6 @@
 import React from "react";
 import { useEffect } from "react";
+import City from "../components/city/City";
 import SearchBox from "../components/searchBox/SearchBox";
 import Card from "../components/swiper/Card";
 import CardList from "../components/swiper/CardList";
@@ -43,6 +44,7 @@ const HomePage = () => {
           <CardList></CardList>
         </div>
       </section>
+      <City />
     </div>
   );
 };

@@ -6,6 +6,7 @@ import RegisterPage from "./pages/RegisterPage";
 import SpaceDetail from "./pages/SpaceDetail";
 import SpaceList from "./pages/SpaceList";
 import ModalPayment from "./components/modal/ModalPayment";
+import ModalRent from "./components/modal/ModalRent";
 function App() {
   return (
     <>
@@ -15,6 +16,7 @@ function App() {
           <Route path="/space-list/:id" element={<SpaceList />} />
           <Route path="/space/:id" element={<SpaceDetail />} />
           <Route path="/payment/:id" element={<ModalPayment />} />
+          <Route path="/rent/:id" element={<ModalRent />} />
         </Route>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />

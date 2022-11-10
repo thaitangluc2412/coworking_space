@@ -1,10 +1,12 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
 import { NavLink, useParams } from "react-router-dom";
+import Map from "../components/map/Map";
 import SpaceItem from "../components/space-list/SpaceItem";
 import http from "../config/axiosConfig";
 
 const SpaceList = () => {
+  const locations = require("../components/map/locations.json");
   const { id } = useParams();
   const [listSpace, setListSpace] = useState([]);
   useEffect(() => {
@@ -46,7 +48,9 @@ const SpaceList = () => {
             ))}
         </div>
       </div>
-      <div className="w-[40%] right-0 h-full shadow-lg"></div>
+      <div className="w-[40%] right-0 h-full shadow-lg">
+        <Map locations={locations} />
+      </div>
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import ReactDOM from "react-dom";
-import classes from "./ModalPayment.css";
+import "./ModalPayment.css";
 
 import { useState, useRef, useContext, useEffect } from "react";
 import {
@@ -11,50 +11,22 @@ import {
 
 const ModalPayment = (props) => {
   const [customer, setCustomer] = useState({});
-
+  console.log("asdasdasds");
   const exitRegister = (event) => {
     // NotificationManager.info('Info message');
     event.preventDefault();
     props.onExitModalPayment();
   };
 
-  const handleSendRequest = () => {
-    fetch("http://localhost:8080/api/reservation", {
-      method: "POST",
-      body: JSON.stringify({
-        roomId: props.reservation.roomId,
-        customerId: props.reservation.customerId,
-        createDate: props.reservation.createDate,
-        startDate: props.reservation.startDate,
-        endDate: props.reservation.endDate,
-        quantity: props.reservation.quantity,
-        reservationStatusId: 1,
-        total: props.reservation.total,
-        deposit: props.reservation.deposit,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => {
-        return res.json();
-      })
-      .then((data) => {
-        console.log("Yeu cau thanh cong");
-        props.onExitModalPayment();
-      });
-
-    // props.onExitModalPayment();
-  };
-  return ReactDOM.createPortal(
-    <div className={classes.modal}>
-      <header className={classes.modal__header}>
-        <a href="#" onClick={exitRegister} className={classes.close} />
+  return (
+    <div className="modal">
+      <header className="modal__header">
+        <a href="#" onClick={exitRegister} className="close" />
         <h3>Rent request information</h3>
       </header>
-      <div className={classes.container}>
-        <div className={classes.inner_container}>
-          <div className={classes.control}>
+      <div className="container">
+        <div className="inner_container">
+          <div className="control">
             <label htmlFor="name">Your Name:</label>
             <input
               type="text"
@@ -63,7 +35,7 @@ const ModalPayment = (props) => {
               disabled={true}
             />
           </div>
-          <div className={classes.control}>
+          <div className="control">
             <label htmlFor="email">Email:</label>
             <input
               type="text"
@@ -72,7 +44,7 @@ const ModalPayment = (props) => {
               disabled={true}
             />
           </div>
-          <div className={classes.control}>
+          <div className="control">
             <label htmlFor="phone">Your Phone:</label>
             <input
               type="text"
@@ -81,51 +53,48 @@ const ModalPayment = (props) => {
               disabled={true}
             />
           </div>
-          <div className={classes.rentInfo}>
+          <div className="rentInfo">
             <p>
               <span>
                 <BsCheckCircle />
               </span>{" "}
-              Daily rent booked: <span>{props.reservation.quantity}</span>
+              Daily rent booked: <span>"props.reservation.quantity"</span>
             </p>
           </div>
-          <div className={classes.rentInfo}>
+          <div className="rentInfo">
             <p>
               <span>
                 <BsPaypal />
               </span>{" "}
-              Amount: <span>{props.reservation.total} $</span>
+              Amount: <span>"props.reservation.total" $</span>
             </p>
           </div>
-          <div className={classes.rentInfo}>
+          <div className="rentInfo">
             <p>
               <span>
                 <BsFillCalendar2CheckFill />
               </span>{" "}
-              Check-in: <span>{props.reservation.startDate}</span>{" "}
+              Check-in: <span>"props.reservation.startDate"</span>{" "}
             </p>
           </div>
-          <div className={classes.rentInfo}>
+          <div className="rentInfo">
             <p>
               <span>
                 <BsFillCalendarXFill />
               </span>{" "}
-              Check-out: <span>{props.reservation.endDate}</span>
+              Check-out: <span>"props.reservation.endDate"</span>
             </p>
           </div>
           <p>
             Checking carefully the information about rent request to make sure
             you don't send them wrong.
           </p>
-          <div className={classes.btnContainer}>
-            <button className={classes.btnRent} onClick={handleSendRequest}>
-              Request
-            </button>
+          <div className="btnContainer">
+            <button className="btnRent">Request</button>
           </div>
         </div>
       </div>
-    </div>,
-    document.getElementById("modal-root")
+    </div>
   );
 };
 
