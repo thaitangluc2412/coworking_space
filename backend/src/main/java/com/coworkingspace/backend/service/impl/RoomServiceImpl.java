@@ -10,6 +10,7 @@ import com.coworkingspace.backend.dao.entity.Room;
 import com.coworkingspace.backend.dao.repository.RoomRepository;
 import com.coworkingspace.backend.dto.ImageDto;
 import com.coworkingspace.backend.dto.RoomCreateDto;
+import com.coworkingspace.backend.dto.RoomListDto;
 import com.coworkingspace.backend.mapper.ImageMapper;
 import com.coworkingspace.backend.mapper.RoomMapper;
 import com.coworkingspace.backend.service.RoomService;
@@ -67,6 +68,11 @@ public class RoomServiceImpl implements RoomService {
 	}
 
 	@Override
+	public RoomListDto findByRoomId(String id) throws NotFoundException {
+		return roomMapper.roomToRoomListDto(findById(id));
+	}
+
+	@Override
 	public RoomCreateDto updateRoom(String id,
 	                                RoomCreateDto roomCreateDto,
 	                                MultipartFile[] files) throws NotFoundException {
@@ -79,12 +85,25 @@ public class RoomServiceImpl implements RoomService {
 			imageDtos.addAll(saveImage(files));
 			roomCreateDto.setImages(imageDtos);
 		} else {
-			roomCreateDto.setImages(room.getImageStorage().getImages().parallelStream().map(en -> imageMapper.imageToImageDto(en)).collect(
-					Collectors.toList()));
+			roomCreateDto.setImages(room.getImageStorage()
+					                        .getImages()
+					                        .parallelStream()
+					                        .map(en -> imageMapper.imageToImageDto(en))
+					                        .collect(
+							                        Collectors.toList()));
 		}
 		roomCreateDto.setImageStorageId(room.getImageStorage().getId());
 		roomRepository.save(roomMapper.roomCreateDtoToRoom(roomCreateDto));
 		return roomCreateDto;
+	}
+
+	@Override
+	public List<RoomListDto> getByRoomTypeId(String id) {
+		return roomRepository.getByRoomTypeId(id)
+				.stream()
+				.map(room ->
+						     roomMapper.roomToRoomListDto(room))
+				.collect(Collectors.toList());
 	}
 
 	public void deleteFolderCloudinary(Room room) {

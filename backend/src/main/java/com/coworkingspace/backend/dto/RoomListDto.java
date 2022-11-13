@@ -1,13 +1,7 @@
 package com.coworkingspace.backend.dto;
 
-import com.coworkingspace.backend.dao.entity.Customer;
-import com.coworkingspace.backend.dao.entity.ImageStorage;
-import com.coworkingspace.backend.dao.entity.Price;
-import com.coworkingspace.backend.dao.entity.RoomStatus;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -16,13 +10,11 @@ import java.util.List;
 @Getter
 @Setter
 @Data
-public class RoomDto {
+public class RoomListDto {
 	private String id;
-	private String customerId;
-	private String priceId;
-	private String roomStatusId;
-	private String imageStorageId;
+	private Double dayPrice;
 	private String roomTypeId;
+	private String roomTypeName;
 	private String roomName;
 	private String address;
 	private String city;

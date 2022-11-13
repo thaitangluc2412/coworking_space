@@ -3,49 +3,21 @@ import { SwiperSlide, Swiper } from "swiper/react";
 import "swiper/css";
 import Card from "./Card";
 
-const cards = [
-  {
-    header: "Luxury",
-    desc: "High-level, recently renovated properties in central locations. Perfect solutions for enjoying every city.",
-  },
-  {
-    header: "Luxury",
-    desc: "High-level, recently renovated properties in central locations. Perfect solutions for enjoying every city.",
-  },
-  {
-    header: "Luxury",
-    desc: "High-level, recently renovated properties in central locations. Perfect solutions for enjoying every city.",
-  },
-  {
-    header: "Luxury",
-    desc: "High-level, recently renovated properties in central locations. Perfect solutions for enjoying every city.",
-  },
-  {
-    header: "Luxury",
-    desc: "High-level, recently renovated properties in central locations. Perfect solutions for enjoying every city.",
-  },
-  {
-    header: "Luxury",
-    desc: "High-level, recently renovated properties in central locations. Perfect solutions for enjoying every city.",
-  },
-  {
-    header: "Luxury",
-    desc: "High-level, recently renovated properties in central locations. Perfect solutions for enjoying every city.",
-  },
-  {
-    header: "Luxury",
-    desc: "High-level, recently renovated properties in central locations. Perfect solutions for enjoying every city.",
-  },
-];
-const CardList = () => {
+const CardList = ({ data }) => {
+  if (!data) data = [];
   return (
     <div className="movie-list">
       <Swiper spaceBetween={20} slidesPerView={4.2}>
-        {cards.length > 0 &&
-          cards.map((item, index) => {
+        {data.length > 0 &&
+          data.map((item, index) => {
             return (
               <SwiperSlide key={index}>
-                <Card desc={item.desc} header={item.header}></Card>
+                <Card
+                  roomTypeName={item.roomTypeName}
+                  description={item.description}
+                  url={item.url}
+                  id={item.id}
+                ></Card>
               </SwiperSlide>
             );
           })}

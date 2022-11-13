@@ -36,4 +36,7 @@ public class Customer extends BaseEntity{
 	@ManyToOne
 	@JoinColumn(name = "role_id")
 	private Role role;
+
+	@Column(name = "enable")
+	private Boolean enable = false;
 }

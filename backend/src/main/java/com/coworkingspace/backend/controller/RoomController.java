@@ -1,6 +1,7 @@
 package com.coworkingspace.backend.controller;
 
 import com.coworkingspace.backend.dto.RoomCreateDto;
+import com.coworkingspace.backend.dto.RoomListDto;
 import com.coworkingspace.backend.service.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
@@ -37,5 +38,17 @@ public class RoomController {
 	                                                      @RequestPart("files") MultipartFile[] files) throws NotFoundException {
 		RoomCreateDto roomCreateDto1 = roomService.updateRoom(id, roomCreateDto, files);
 		return ResponseEntity.status(HttpStatus.OK).body(roomCreateDto1);
+	}
+
+	@GetMapping("/{id}")
+	public ResponseEntity<RoomListDto> updateRoom(@PathVariable String id) throws NotFoundException {
+		RoomListDto roomListDto = roomService.findByRoomId(id);
+		return ResponseEntity.status(HttpStatus.OK).body(roomListDto);
+	}
+
+	@GetMapping("/roomType/{id}")
+	public ResponseEntity<List<RoomListDto>> getByRoomTypeId(@PathVariable String id) {
+		List<RoomListDto> rooms = roomService.getByRoomTypeId(id);
+		return new ResponseEntity<>(rooms, HttpStatus.OK);
 	}
 }
