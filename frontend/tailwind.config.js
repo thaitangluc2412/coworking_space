@@ -1,6 +1,7 @@
 /** @type {import('tailwindcss').Config} */
+const colors = require("tailwindcss/colors");
 module.exports = {
-  content: ["./src/**/*.{html,js}"],
+  content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     fontFamily: {
       bungee: ["Bungee", "sans-serif"],
@@ -9,12 +10,20 @@ module.exports = {
       primary: "#6a5af9",
       primaryHover: "#5748de",
       noColor: "transparent",
-      white: "white",
+      grayCustom: "rgb(100 116 139)",
       lightRed: "#e6a0db",
       grayLight: "#E7ECF3",
       grayText: "#475569",
       grayLigherText: "#94A3B8",
-      gray: "rgb(100 116 139)",
+      cyan: colors.cyan,
+      orange: colors.orange,
+      white: "#FFFFFF",
+      slate: colors.slate,
+      black: colors.black,
+      red: colors.red,
+      purple: colors.purple,
+      gray: colors.gray,
+      pink: colors.pink,
     },
 
     extend: {},

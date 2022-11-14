@@ -142,7 +142,7 @@ const RegisterPage = () => {
           <div className="w-full flex justify-center gap-10 mb-4">
             <Button styleClass={"w-full"}>Submit</Button>
           </div>
-          <div className="text-sm justify-center flex text-gray">
+          <div className="text-sm justify-center flex text-grayCustom">
             <span className="inline-block mr-1">Already have an account? </span>
             <NavLink to={"/login"} className="font-semibold cursor-pointer">
               Sign in

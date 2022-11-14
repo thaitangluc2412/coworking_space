@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 class Http {
   constructor() {
     this.instance = axios.create({
-      baseURL: process.env.REACT_APP_API,
+      baseURL: "http://192.168.10.23:8080/api/v1/",
       timeout: 10000,
       headers: {
         "Content-Type": "application/json",
@@ -30,7 +30,7 @@ class Http {
       (config) => {
         const accessToken = localStorage.getItem("token");
         if (accessToken) {
-          config.headers.authorization = accessToken;
+          config.headers.authorization = `Bearer ${accessToken}`;
         }
         return config;
       },

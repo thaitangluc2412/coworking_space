@@ -9,9 +9,11 @@ import * as yup from "yup";
 import { NavLink, useNavigate } from "react-router-dom";
 import axios from "axios";
 import http from "../config/axiosConfig";
+import { useAuth } from "../context/auth-context";
 
 const LoginPage = () => {
   const navigate = useNavigate();
+  const { setUser } = useAuth();
   const schema = yup
     .object({
       email: yup
@@ -46,7 +48,8 @@ const LoginPage = () => {
       .post("auth/login", value)
       .then((res) => {
         console.log("login success: ", res);
-        localStorage.setItem("token", res.token);
+        localStorage.setItem("token", res.data.token);
+        setUser(res?.data.customerResponseDto);
         navigate("/");
       })
       .catch((err) => {
@@ -56,17 +59,7 @@ const LoginPage = () => {
 
   // function get  room status when login success!
   // move this function when UI Success!
-  const getRoomStatus = () => {
-    const token = localStorage.getItem("token");
-    axios
-      .get("roomStatuses", { headers: { Authorization: `Bearer ${token}` } })
-      .then((res) => {
-        console.log("response: ", res);
-      })
-      .catch((err) => {
-        console.log("error: ", err);
-      });
-  };
+
   return (
     <div className="minH-[100vh] h-[100vh] w-full flex justify-center items-center bg-grayLight">
       <div className="w-[70%] h-[90%] shadow-2xl flex flex-row bg-white">
@@ -114,15 +107,11 @@ const LoginPage = () => {
               <Button styleClass="w-[100%]">Sign In</Button>
             </div>
           </form>
-          <div className="text-sm flex justify-center text-gray">
+          <div className="text-sm flex justify-center text-grayCustom">
             <span className="inline-block mr-1">Don't have an account?</span>
             <NavLink to={"/register"} className="font-semibold cursor-pointer">
               Sign up
             </NavLink>
-            {/* delete this code when have UI  */}
-            <div className="w-full flex justify-center pb-6">
-              <button onClick={() => getRoomStatus()}>Get Customer</button>
-            </div>
           </div>
         </div>
       </div>

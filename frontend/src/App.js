@@ -7,6 +7,9 @@ import SpaceDetail from "./pages/SpaceDetail";
 import SpaceList from "./pages/SpaceList";
 import ModalPayment from "./components/modal/ModalPayment";
 import ModalRent from "./components/modal/ModalRent";
+import LayoutMange from "./components/manageLayout/LayoutMange";
+import SpaceAdd from "./module/space/SpaceAdd";
+import SpaceManage from "./module/space/SpaceManage";
 function App() {
   return (
     <>
@@ -17,6 +20,11 @@ function App() {
           <Route path="/space/:id" element={<SpaceDetail />} />
           <Route path="/payment/:id" element={<ModalPayment />} />
           <Route path="/rent/:id" element={<ModalRent />} />
+        </Route>
+        <Route path="/manage" element={<LayoutMange />}>
+          <Route path="/manage/space" element={<SpaceManage />} />
+          <Route path="/manage/users" element={<div>user</div>} />
+          <Route path="/manage/add-space" element={<SpaceAdd />} />
         </Route>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />

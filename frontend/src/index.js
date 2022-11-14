@@ -7,14 +7,21 @@ import "./index.scss";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import axios from "axios";
+import { AuthProvider } from "./context/auth-context";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const container = document.getElementById("root");
 const root = createRoot(container);
 
-axios.defaults.baseURL ="http://localhost:8080/api/v1/";
+axios.defaults.baseURL = "http://localhost:8080/api/v1/";
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <App />
+      <AuthProvider>
+        <App />
+        <ToastContainer></ToastContainer>
+      </AuthProvider>
     </BrowserRouter>
   </React.StrictMode>
 );

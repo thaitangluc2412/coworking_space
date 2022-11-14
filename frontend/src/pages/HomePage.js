@@ -1,11 +1,10 @@
 import React from "react";
-import { useEffect } from "react";
+
 import City from "../components/city/City";
 import SearchBox from "../components/searchBox/SearchBox";
-import Card from "../components/swiper/Card";
+
 import CardList from "../components/swiper/CardList";
 import TypeRoom from "../components/typeRoom/TypeRoom";
-import http from "../config/axiosConfig";
 
 const HomePage = () => {
   return (
@@ -37,7 +36,7 @@ const HomePage = () => {
         <h1 className="mb-2 text-3xl font-semibold">
           Find the space that fits your bussiness
         </h1>
-        <h2 className="mb-[80px] text-lg font-light text-gray">
+        <h2 className="mb-[80px] text-lg font-light text-grayCustom">
           We have a solution for every needs
         </h2>
         <div className="ml-5">

@@ -6,7 +6,7 @@ import SpaceItem from "../components/space-list/SpaceItem";
 import http from "../config/axiosConfig";
 
 const SpaceList = () => {
-  const locations = require("../components/map/locations.json");
+  // const locations = require("../components/map/locations.json");
   const { id } = useParams();
   const [listSpace, setListSpace] = useState([]);
   useEffect(() => {
@@ -49,7 +49,7 @@ const SpaceList = () => {
         </div>
       </div>
       <div className="w-[40%] right-0 h-full shadow-lg">
-        <Map locations={locations} />
+        {/* <Map locations={locations} /> */}
       </div>
     </div>
   );
