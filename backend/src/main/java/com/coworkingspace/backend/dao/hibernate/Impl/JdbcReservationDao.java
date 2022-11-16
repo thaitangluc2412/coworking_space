@@ -1,6 +1,7 @@
 package com.coworkingspace.backend.dao.hibernate.Impl;
 
 import com.coworkingspace.backend.dao.hibernate.ReservationDao;
+import com.coworkingspace.backend.mapper.DateMapper;
 import com.coworkingspace.backend.mapper.DateStatusMapper;
 import com.coworkingspace.backend.sdo.DateStatus;
 import com.coworkingspace.backend.service.ReservationStatusService;
@@ -11,7 +12,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -31,7 +34,7 @@ public class JdbcReservationDao implements ReservationDao {
 
 	@Override
 	public String getFurthestValidDate(String roomId, String from) throws NotFoundException {
-		String reservationStatusId = reservationStatusService.findByReservationStatusName("APPROVED").getId();
+		String reservationStatusId = reservationStatusService.findByReservationStatusName("PENDING").getId();
 		final String GET_FURTHEST_VALID_DATE = "SELECT DATE(start_date) - INTERVAL 1 DAY AS furthest_date FROM reservation \n" +
 		                                       "WHERE room_id = '" + roomId + "'\n" +
 		                                       "AND DATE('" + from + "') < DATE(start_date)\n" +
@@ -67,6 +70,31 @@ public class JdbcReservationDao implements ReservationDao {
 		                   ")\n" +
 		                   "ORDER BY day\n";
 		ret.addAll(jdbcTemplateObject.query(sql, new DateStatusMapper()));
+		return ret;
+	}
+
+	@Override
+	public List<LocalDate> getAllInvalidDates(String roomId) throws NotFoundException {
+		String reservationStatusId = reservationStatusService.findByReservationStatusName("PENDING").getId();
+		List<LocalDate> ret = new ArrayList<>();
+		final String sql = "SELECT DISTINCT gen_date AS date FROM \n" +
+				"(SELECT ADDDATE('1970-01-01',t4*10000 + t3*1000 + t2*100 + t1*10 + t0) gen_date FROM\n" +
+				" (SELECT 0 t0 UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9) t0,\n" +
+				" (SELECT 0 t1 UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9) t1,\n" +
+				" (SELECT 0 t2 union SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9) t2,\n" +
+				" (SELECT 0 t3 union SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9) t3,\n" +
+				" (SELECT 0 t4 UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9) t4) v\n" +
+				"JOIN reservation ON \n" +
+				"gen_date >= DATE(start_date) AND gen_date <= DATE(end_date)\n" +
+				"AND room_id = '" + roomId + "'\n" +
+				"AND reservation_status_id = '" + reservationStatusId + "'\n" +
+				"ORDER BY date";
+		System.out.println(sql);
+		try {
+			ret.addAll(jdbcTemplateObject.query(sql, new DateMapper()));
+		} catch (Exception e) {
+			System.out.println("error : " + e.getMessage());
+		}
 		return ret;
 	}
 }

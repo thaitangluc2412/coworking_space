@@ -73,6 +73,18 @@ public class RoomServiceImpl implements RoomService {
 	}
 
 	@Override
+	public List<RoomListDto> findByCustomerId(String id) {
+		return roomRepository.getByCustomerIdAndEnableIsTrue(id).stream().map(room -> roomMapper.roomToRoomListDto(room)).collect(Collectors.toList());
+	}
+
+	@Override
+	public void deleteRoom(String id) throws NotFoundException {
+		Room room = findById(id);
+		room.setEnable(false);
+		roomRepository.save(room);
+	}
+
+	@Override
 	public RoomCreateDto updateRoom(String id,
 	                                RoomCreateDto roomCreateDto,
 	                                MultipartFile[] files) throws NotFoundException {

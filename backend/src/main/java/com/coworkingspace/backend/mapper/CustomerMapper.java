@@ -16,7 +16,7 @@ public interface CustomerMapper {
 	@InheritInverseConfiguration(name = "customerDtoToCustomer")
 	CustomerDto customerToCustomerDto(Customer customer);
 
-	@Mapping(source = "roleId", target = "role.id")
+	@Mapping(source = "roleName", target = "role.roleName")
 	Customer customerResponseDtoToCustomer(CustomerResponseDto customerResponseDto);
 
 	@InheritInverseConfiguration(name = "customerResponseDtoToCustomer")

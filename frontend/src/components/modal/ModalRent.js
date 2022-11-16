@@ -2,11 +2,12 @@ import React, { useState, useRef, useEffect } from "react";
 import ReactDOM from "react-dom";
 import "./ModalRent.css";
 import DatePicker from "react-datetime";
-
+import { useParams } from "react-router-dom";
 import "react-datetime/css/react-datetime.css";
 import { IoIosCalendar, IoIosArrowRoundForward } from "react-icons/io";
 import Carousel from "react-elastic-carousel";
 import { useContext } from "react";
+import http from "../../config/axiosConfig";
 
 const convertDateToString = (date) => {
   const dateObj = new Date(date);
@@ -17,27 +18,31 @@ const convertDateToString = (date) => {
   return rs;
 };
 
-const ModalRent = (props) => {
+const ModalRent = () => {
   const iconArrow = "IoIosArrowRoundForward";
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [limitDate, setLimitDate] = useState(new Date());
-  const [quantityDays, setQuantityDays] = useState(1);
+  const [quantityDays, setQuantityDays] = useState(0);
   const [validDates, setValidDates] = useState([]);
   const [price, setPrice] = useState(0);
+  const { id } = useParams();
+  const [data, setData] = useState([]);
+  const [listImages, setListImages] = useState([]);
 
   useEffect(() => {
-    fetch(
-      "http://localhost:8080/api/reservation/get_invalid_date/" +
-        props.room?.roomId
-    )
+    http.get(`rooms/${id}`).then((res) => {
+      setData(res.data);
+      setListImages(res.data.images);
+    });
+  }, []);
+  useEffect(() => {
+    http
+      .get(`http://localhost:8080/api/v1/reservations/get_invalid_date/${id}`)
       .then((res) => {
-        return res.json();
-      })
-      .then((data) => {
-        setValidDates(data.data);
+        setValidDates(res.data);
       });
-  }, [validDates]);
+  }, []);
 
   const disableCustomDt = (current) => {
     if (validDates) {
@@ -49,39 +54,14 @@ const ModalRent = (props) => {
   };
   useEffect(() => {
     const date = convertDateToString(startDate);
-
-    console.log(date);
-    fetch(
-      `http://localhost:8080/api/reservation/furthest_valid_date/${props.room?.roomId}?from=${date}`
-    )
+    http
+      .get(
+        `http://localhost:8080/api/v1/reservations/furthest_valid_date/${id}?from=${date}`
+      )
       .then((res) => {
-        return res.json();
-      })
-      .then((data) => {
-        // console.log("Ngay limit ne" + data.data);
-        setLimitDate(data.data);
-        // setLimitDate("2022-05-29");
+        setLimitDate(res.data);
       });
   }, [startDate]);
-
-  useEffect(() => {
-    let headers = new Headers();
-
-    headers.append("Content-Type", "application/json");
-    headers.append("Accept", "application/json");
-
-    headers.append("Access-Control-Allow-Origin", "http://localhost:3000");
-    headers.append("Access-Control-Allow-Credentials", "true");
-    fetch("http://localhost:8080/api/price/" + props.room?.priceId, {
-      method: "GET",
-      headers: headers,
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setPrice(data.data.dayPrice);
-      })
-      .catch((err) => console.log(err));
-  }, []);
 
   const disableEndDate = (current) => {
     return (
@@ -125,9 +105,6 @@ const ModalRent = (props) => {
 
   return (
     <div className="modal_rent">
-      <header className="modal__header">
-        <h3>Rent request</h3>
-      </header>
       <div className="container">
         <div className="containerLeft">
           <div className="top">
@@ -200,7 +177,7 @@ const ModalRent = (props) => {
                 <input type="checkbox"></input></p>
                
             </div> */}
-            <h4>"props.room.name"</h4>
+            <h4>{data.roomName}</h4>
             {/* <div
               className="imageRoom}
               style={{
@@ -233,29 +210,15 @@ const ModalRent = (props) => {
             {/* ))} */}
             {/* </Carousel> */}
             <Carousel>
-              {/* {listImages.map((image) => ( */}
-              <div className="w-full h-[500px] mb-4">
-                <img
-                  className="w-full h-full object-cover "
-                  src="https://www.fohlio.com/hs-fs/hubfs/Imported_Blog_Media/The-Anatomy-of-Good-Coworking-Space-Design-In-Pictures-Fohlio-Product-Specification-and-Materials-Budget-Calculator-The-Assemblage-1.jpg?width=2048&height=1365&name=The-Anatomy-of-Good-Coworking-Space-Design-In-Pictures-Fohlio-Product-Specification-and-Materials-Budget-Calculator-The-Assemblage-1.jpg"
-                  alt=""
-                />
-              </div>
-              <div className="w-full h-[500px] mb-4">
-                <img
-                  className="w-full h-full object-cover "
-                  src="https://www.fohlio.com/hs-fs/hubfs/Imported_Blog_Media/The-Anatomy-of-Good-Coworking-Space-Design-In-Pictures-Fohlio-Product-Specification-and-Materials-Budget-Calculator-The-Assemblage-1.jpg?width=2048&height=1365&name=The-Anatomy-of-Good-Coworking-Space-Design-In-Pictures-Fohlio-Product-Specification-and-Materials-Budget-Calculator-The-Assemblage-1.jpg"
-                  alt=""
-                />
-              </div>
-              <div className="w-full h-[500px] mb-4">
-                <img
-                  className="w-full h-full object-cover "
-                  src="https://www.fohlio.com/hs-fs/hubfs/Imported_Blog_Media/The-Anatomy-of-Good-Coworking-Space-Design-In-Pictures-Fohlio-Product-Specification-and-Materials-Budget-Calculator-The-Assemblage-1.jpg?width=2048&height=1365&name=The-Anatomy-of-Good-Coworking-Space-Design-In-Pictures-Fohlio-Product-Specification-and-Materials-Budget-Calculator-The-Assemblage-1.jpg"
-                  alt=""
-                />
-              </div>
-              {/* ))} */}
+              {listImages.map((image) => (
+                <div className="w-full h-[500px] mb-4" key={image.id}>
+                  <img
+                    className="w-full h-full object-cover "
+                    src={image.url}
+                    alt=""
+                  />
+                </div>
+              ))}
             </Carousel>
           </div>
         </div>
@@ -264,7 +227,7 @@ const ModalRent = (props) => {
             <h4>Total</h4>
             <div className="pricePerMonth">
               <p>
-                Price/Day: <span>{price} $</span>
+                Price/Day: <span>{data.dayPrice} $</span>
               </p>
               <p>
                 Days rent: <span>X {quantityDays}</span>
@@ -273,7 +236,7 @@ const ModalRent = (props) => {
             <hr />
             <div className="pricePerMonth">
               <p>
-                Total to confirm: <span>{price * quantityDays} $</span>
+                Total to confirm: <span>{data.dayPrice * quantityDays} $</span>
               </p>
             </div>
           </div>

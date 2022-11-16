@@ -1,5 +1,6 @@
 package com.coworkingspace.backend.dao.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,6 +8,7 @@ import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @AllArgsConstructor
@@ -36,10 +38,12 @@ public class Reservation extends BaseEntity{
 	private ReservationStatus reservationStatus;
 
 	@Column(name = "start_date")
-	private LocalDateTime startDate;
+	@JsonFormat(pattern = "yyyy-MM-dd")
+	private LocalDate startDate;
 
 	@Column(name = "end_date")
-	private LocalDateTime endDate;
+	@JsonFormat(pattern = "yyyy-MM-dd")
+	private LocalDate endDate;
 
 	@Column(name = "total", nullable = false)
 	private Double total;
