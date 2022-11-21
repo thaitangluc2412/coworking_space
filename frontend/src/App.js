@@ -18,7 +18,6 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/space-list/:id" element={<SpaceList />} />
           <Route path="/space/:id" element={<SpaceDetail />} />
-          <Route path="/payment/:id" element={<ModalPayment />} />
           <Route path="/rent/:id" element={<ModalRent />} />
         </Route>
         <Route path="/manage" element={<LayoutMange />}>

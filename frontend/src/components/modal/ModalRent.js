@@ -29,6 +29,7 @@ const ModalRent = () => {
   const { id } = useParams();
   const [data, setData] = useState([]);
   const [listImages, setListImages] = useState([]);
+  const [isModalPayment, setModalPayment] = useState(false);
 
   useEffect(() => {
     http.get(`rooms/${id}`).then((res) => {
@@ -104,89 +105,90 @@ const ModalRent = () => {
   };
 
   return (
-    <div className="modal_rent">
-      <div className="container">
-        <div className="containerLeft">
-          <div className="top">
-            <h4>Booking details</h4>
-            <div className="bookDetails">
-              <div className="datePickerWrapper">
-                <p>Check-in</p>
-                <div className="date_picker_wrapper">
-                  <DatePicker
-                    // selected={startDate}
-                    // placeholderText="Pick day..."
-                    onChange={(date) => chooseStartDate(date)}
-                    wrapperClassName="datePicker"
-                    value={startDate}
-                    minDate={new Date()}
-                    dateFormat="YYYY-MM-DD"
-                    isValidDate={disableCustomDt}
-                    timeFormat={false}
-                    // onNavigateBack={(amount, type) =>
-                    //   console.log(amount + "  " + type)
-                    // }
-                    // onNavigateForward={(month, year) =>
-                    //   console.log(month + "  " + year)
-                    // }
+    <>
+      <div className="modal_rent">
+        <div className="container">
+          <div className="containerLeft">
+            <div className="top">
+              <h4>Booking details</h4>
+              <div className="bookDetails">
+                <div className="datePickerWrapper">
+                  <p>Check-in</p>
+                  <div className="date_picker_wrapper">
+                    <DatePicker
+                      // selected={startDate}
+                      // placeholderText="Pick day..."
+                      onChange={(date) => chooseStartDate(date)}
+                      wrapperClassName="datePicker"
+                      value={startDate}
+                      minDate={new Date()}
+                      dateFormat="YYYY-MM-DD"
+                      isValidDate={disableCustomDt}
+                      timeFormat={false}
+                      // onNavigateBack={(amount, type) =>
+                      //   console.log(amount + "  " + type)
+                      // }
+                      // onNavigateForward={(month, year) =>
+                      //   console.log(month + "  " + year)
+                      // }
 
-                    // ref={startDateRef}
-                  />
-                  <span>
-                    <IoIosCalendar className="iconCarlendar" />
-                  </span>
+                      // ref={startDateRef}
+                    />
+                    <span>
+                      <IoIosCalendar className="iconCarlendar" />
+                    </span>
+                  </div>
+                </div>
+                <div className="arrow">
+                  <p>
+                    <span>
+                      <IoIosArrowRoundForward />
+                    </span>
+                  </p>
+                </div>
+                <div className="datePickerWrapper">
+                  <p>Check-out</p>
+                  <div className="date_picker_wrapper">
+                    <DatePicker
+                      onChange={(date) => chooseEndDate(date)}
+                      wrapperClassName="datePicker"
+                      value={endDate}
+                      minDate={startDate}
+                      dateFormat="YYYY-MM-DD"
+                      isValidDate={disableEndDate}
+                      timeFormat={false}
+                    />
+                    <span>
+                      <IoIosCalendar className="iconCarlendar" />
+                    </span>
+                  </div>
                 </div>
               </div>
-              <div className="arrow">
+              <div className="underInfo">
                 <p>
-                  <span>
-                    <IoIosArrowRoundForward />
-                  </span>
+                  Enter your <b>actual check-out date.</b>
+                </p>
+                <p>
+                  If you book for a shorter period you are not guaranteed to be
+                  able to renew!
                 </p>
               </div>
-              <div className="datePickerWrapper">
-                <p>Check-out</p>
-                <div className="date_picker_wrapper">
-                  <DatePicker
-                    onChange={(date) => chooseEndDate(date)}
-                    wrapperClassName="datePicker"
-                    value={endDate}
-                    minDate={startDate}
-                    dateFormat="YYYY-MM-DD"
-                    isValidDate={disableEndDate}
-                    timeFormat={false}
-                  />
-                  <span>
-                    <IoIosCalendar className="iconCarlendar" />
-                  </span>
-                </div>
-              </div>
-            </div>
-            <div className="underInfo">
-              <p>
-                Enter your <b>actual check-out date.</b>
-              </p>
-              <p>
-                If you book for a shorter period you are not guaranteed to be
-                able to renew!
-              </p>
-            </div>
-            {/* <h4>Request amentities</h4>
+              {/* <h4>Request amentities</h4>
             <div className="amentity}>
                 <p> <span><IoArrowForwardCircle /> </span>Desk 
                 <input type="checkbox"></input></p>
                
             </div> */}
-            <h4>{data.roomName}</h4>
-            {/* <div
+              <h4>{data.roomName}</h4>
+              {/* <div
               className="imageRoom}
               style={{
                 backgroundImage: `url('${props.room.image}')`,
               }}
             ></div> */}
-            {/* <Carousel className="carouse" slide={false} controls={true}> */}
-            {/* {props.room.images?.map((image) => ( */}
-            {/* <Carousel.Item className="item">
+              {/* <Carousel className="carouse" slide={false} controls={true}> */}
+              {/* {props.room.images?.map((image) => ( */}
+              {/* <Carousel.Item className="item">
                 <img
                   className="imageRoom"
                   src="https://www.fohlio.com/hs-fs/hubfs/Imported_Blog_Media/The-Anatomy-of-Good-Coworking-Space-Design-In-Pictures-Fohlio-Product-Specification-and-Materials-Budget-Calculator-The-Assemblage-1.jpg?width=2048&height=1365&name=The-Anatomy-of-Good-Coworking-Space-Design-In-Pictures-Fohlio-Product-Specification-and-Materials-Budget-Calculator-The-Assemblage-1.jpg"
@@ -207,45 +209,48 @@ const ModalRent = () => {
                   alt="First slide"
                 />
               </Carousel.Item> */}
-            {/* ))} */}
-            {/* </Carousel> */}
-            <Carousel>
-              {listImages.map((image) => (
-                <div className="w-full h-[500px] mb-4" key={image.id}>
-                  <img
-                    className="w-full h-full object-cover "
-                    src={image.url}
-                    alt=""
-                  />
-                </div>
-              ))}
-            </Carousel>
-          </div>
-        </div>
-        <div className="containerRight">
-          <div className="top">
-            <h4>Total</h4>
-            <div className="pricePerMonth">
-              <p>
-                Price/Day: <span>{data.dayPrice} $</span>
-              </p>
-              <p>
-                Days rent: <span>X {quantityDays}</span>
-              </p>
-            </div>
-            <hr />
-            <div className="pricePerMonth">
-              <p>
-                Total to confirm: <span>{data.dayPrice * quantityDays} $</span>
-              </p>
+              {/* ))} */}
+              {/* </Carousel> */}
+              <Carousel>
+                {listImages.map((image) => (
+                  <div className="w-full h-[500px] mb-4" key={image.id}>
+                    <img
+                      className="w-full h-full object-cover "
+                      src={image.url}
+                      alt=""
+                    />
+                  </div>
+                ))}
+              </Carousel>
             </div>
           </div>
-          <div className="btnContainer">
-            <button className="btnRent">Next step</button>
+          <div className="containerRight">
+            <div className="top">
+              <h4>Total</h4>
+              <div className="pricePerMonth">
+                <p>
+                  Price/Day: <span>{data.dayPrice} $</span>
+                </p>
+                <p>
+                  Days rent: <span>X {quantityDays}</span>
+                </p>
+              </div>
+              <hr />
+              <div className="pricePerMonth">
+                <p>
+                  Total to confirm:{" "}
+                  <span>{data.dayPrice * quantityDays} $</span>
+                </p>
+              </div>
+            </div>
+            <div className="btnContainer">
+              <button className="btnRent">Next step</button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+      <div id="modal-root"></div>
+    </>
   );
 };
 
