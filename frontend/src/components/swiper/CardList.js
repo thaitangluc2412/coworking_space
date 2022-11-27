@@ -5,6 +5,7 @@ import Card from "./Card";
 
 const CardList = ({ data }) => {
   if (!data) data = [];
+  console.log(data);
   return (
     <div className="movie-list">
       <Swiper spaceBetween={20} slidesPerView={4.2}>
