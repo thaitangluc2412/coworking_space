@@ -18,7 +18,7 @@ const ModalPayment = (props) => {
     props.onExitModalPayment();
   };
 
-  return (
+  return ReactDOM.createPortal(
     <div className="modal">
       <header className="modal__header">
         <a href="#" onClick={exitRegister} className="close" />
@@ -94,7 +94,8 @@ const ModalPayment = (props) => {
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.getElementById("modal-root")
   );
 };
 

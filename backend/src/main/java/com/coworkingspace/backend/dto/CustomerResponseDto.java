@@ -16,7 +16,7 @@ public class CustomerResponseDto {
 	private String customerName;
 	private String email;
 	private String phoneNumber;
-	private String roleId;
+	private String roleName;
 	private LocalDateTime timeCreate;
 	private LocalDateTime timeUpdate;
 }

@@ -6,6 +6,7 @@ import com.coworkingspace.backend.service.CustomerUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -69,7 +70,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Bean
 	CorsConfigurationSource corsConfigurationSource() {
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-		source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
+		CorsConfiguration corsConfiguration = new CorsConfiguration().applyPermitDefaultValues();
+		corsConfiguration.addAllowedMethod(HttpMethod.DELETE);
+		corsConfiguration.addAllowedMethod(HttpMethod.PATCH);
+		source.registerCorsConfiguration("/**", corsConfiguration);
+
 		return source;
 	}
 }

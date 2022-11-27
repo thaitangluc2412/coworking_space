@@ -13,7 +13,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -25,7 +27,7 @@ public class ReservationController {
 	private ReservationService reservationService;
 
 	@PostMapping
-	public ResponseEntity<ReservationDto> createReservations(@RequestBody ReservationDto reservationDto) {
+	public ResponseEntity<ReservationDto> createReservations(@RequestBody ReservationDto reservationDto) throws NotFoundException {
 		ReservationDto reservationDto1 = reservationService.createReservation(reservationDto);
 		return new ResponseEntity<>(reservationDto1, HttpStatus.OK);
 	}
@@ -41,5 +43,11 @@ public class ReservationController {
 	public ResponseEntity<List<DateStatus>> getDateStatus(@PathVariable String roomId, @RequestParam int month, @RequestParam int year) throws NotFoundException {
 		List<DateStatus> dateStatus = reservationService.getDateStatus(roomId, month, year);
 		return new ResponseEntity<>(dateStatus, HttpStatus.OK);
+	}
+
+	@GetMapping(value = "/get_invalid_date/{roomId}")
+	public ResponseEntity<?> getAllInvalidDates(@PathVariable String roomId) throws NotFoundException {
+		List<LocalDate> dates = new ArrayList<>(reservationService.getAllInvalidDate(roomId));
+		return new ResponseEntity<>(dates, HttpStatus.OK);
 	}
 }

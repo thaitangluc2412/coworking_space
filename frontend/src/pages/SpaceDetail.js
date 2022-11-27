@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
-import { NavLink, useParams } from "react-router-dom";
+import { NavLink, useParams, useNavigate } from "react-router-dom";
 import http from "../config/axiosConfig";
 import Carousel from "react-elastic-carousel";
 const SpaceDetail = () => {
+  const navigate = useNavigate();
   const { id } = useParams();
   const [data, setData] = useState([]);
   const [listImages, setListImages] = useState([]);
@@ -13,12 +14,15 @@ const SpaceDetail = () => {
       setListImages(res.data.images);
     });
   }, []);
+  const handleRent = () => {
+    navigate(`/rent/${id}`);
+  };
   return (
     <div className="px-8 py-6 flex flex-row gap-6">
       <div className="w-[65%]">
         <Carousel>
           {listImages.map((image) => (
-            <div className="w-full h-[500px] mb-4">
+            <div className="w-full h-[500px] mb-4" key={image.id}>
               <img
                 className="w-full h-full object-cover "
                 src={image.url}
@@ -101,7 +105,10 @@ const SpaceDetail = () => {
             <span className="text-sm">Utilities Included</span>
           </div>
           <div className="flex flex-col gap-3">
-            <button className="px-3 py-2 text leading-8 rounded-full bg-primary shadow-lg w-full text-white">
+            <button
+              className="px-3 py-2 text leading-8 rounded-full bg-primary shadow-lg w-full text-white"
+              onClick={() => handleRent()}
+            >
               Rent now
             </button>
             <button className="px-3 py-2 rounded-full leading-8 bg-white shadow-lg w-full text-primary">

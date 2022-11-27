@@ -13,8 +13,8 @@ public interface RoomService {
 	List<RoomCreateDto> getAll();
 	Room findById(String id) throws NotFoundException;
 	RoomCreateDto updateRoom(String id, RoomCreateDto roomCreateDto, MultipartFile[] files) throws NotFoundException;
-
 	List<RoomListDto> getByRoomTypeId(String id);
-
 	RoomListDto findByRoomId(String id) throws NotFoundException;
+	List<RoomListDto> findByCustomerId(String id);
+	void deleteRoom(String id) throws NotFoundException;
 }

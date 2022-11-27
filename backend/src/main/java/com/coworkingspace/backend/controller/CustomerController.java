@@ -10,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
@@ -31,5 +32,10 @@ public class CustomerController {
 	public ResponseEntity<List<CustomerResponseDto>> getAllCustomer() {
 		List<CustomerResponseDto> customerResponseDtos = customerService.getAllCustomers();
 		return new ResponseEntity<>(customerResponseDtos, HttpStatus.OK);
+	}
+	@GetMapping("/me")
+	public ResponseEntity<CustomerResponseDto> getCurrentUser(HttpServletRequest request) {
+		CustomerResponseDto customerResponseDto = customerService.getCurrentUser(request);
+		return ResponseEntity.status(HttpStatus.OK).body(customerResponseDto);
 	}
 }

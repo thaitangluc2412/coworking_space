@@ -51,4 +51,16 @@ public class RoomController {
 		List<RoomListDto> rooms = roomService.getByRoomTypeId(id);
 		return new ResponseEntity<>(rooms, HttpStatus.OK);
 	}
+
+	@GetMapping("/getByCustomerId/{id}")
+	public ResponseEntity<List<RoomListDto>> getByCustomerId(@PathVariable String id) {
+		List<RoomListDto> rooms = roomService.findByCustomerId(id);
+		return new ResponseEntity<>(rooms, HttpStatus.OK);
+	}
+
+	@DeleteMapping("/delete/{id}")
+	public ResponseEntity<Void> deleteRoom(@PathVariable String id) throws NotFoundException {
+		roomService.deleteRoom(id);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
 }
