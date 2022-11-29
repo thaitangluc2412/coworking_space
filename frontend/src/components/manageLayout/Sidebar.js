@@ -3,6 +3,7 @@ import { MdOutlineMapsHomeWork } from "react-icons/md";
 import { HiOutlineUsers } from "react-icons/hi";
 import { MdOutlineBusinessCenter } from "react-icons/md";
 import { NavLink, useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/auth-context";
 
 const items = [
   {
@@ -23,6 +24,8 @@ const items = [
 ];
 const Sidebar = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
+
   return (
     <div className="w-[300px] h-full shadow-lg flex flex-col pt-5  items-center text-slate-500">
       <div
@@ -60,8 +63,8 @@ const Sidebar = () => {
           />
         </div>
         <div className="flex flex-col text-slate-600">
-          <span className="font-semibold">Thai Tang Luc</span>
-          <span className="text-sm">Admin</span>
+          <span className="font-semibold">{user?.customerName || ""}</span>
+          <span className="text-sm">{user?.roleName}</span>
         </div>
       </div>
     </div>

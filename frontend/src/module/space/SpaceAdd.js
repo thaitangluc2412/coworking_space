@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -12,6 +12,10 @@ import Option from "../../components/dropdown/Option";
 import useUtilities from "../../hooks/useUtilities";
 import { AiFillMinusCircle } from "react-icons/ai";
 import Button from "../../components/button/Button";
+import http from "../../config/axiosConfig";
+import axios from "axios";
+import UploadImage from "../../components/uploadImage/UploadImage";
+import { toast } from "react-toastify";
 
 const schema = yup
   .object({
@@ -36,9 +40,111 @@ const SpaceAdd = () => {
   });
   const { utilities, handleAddUtility, handleClearUtility } =
     useUtilities(unregister);
+  const [cities, setCites] = useState([]);
+  const [districts, setDistricts] = useState([]);
+  const [wards, setWards] = useState([]);
+  const [roomTypes, setRoomTypes] = useState([]);
+  const [roomTypesName, setRoomTypesName] = useState();
+  const [cityName, setCityName] = useState("");
+  const [districtName, setDistrictName] = useState("");
+  const [wardsName, setWardsName] = useState("");
 
-  const onSubmit = (values) => {
-    console.log("values ", values);
+  const [imageFiles, setImageFiles] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get(`https://provinces.open-api.vn/api/p/`)
+      .then((res) => {
+        setCites(res?.data);
+      })
+      .catch((err) => {
+        console.error("cities err", err);
+      });
+    http
+      .get(`roomTypes`)
+      .then((res) => {
+        console.log(res);
+        setRoomTypes(res?.data);
+      })
+      .catch((err) => {
+        console.error("roomTypes err", err);
+      });
+  }, []);
+
+  const handleClickRoomType = (room) => {
+    setRoomTypesName(room.roomTypeName);
+    setValue("roomTypeId", room.id);
+  };
+  useEffect(() => {
+    const errorsList = Object.values(errors);
+    if (errorsList.length > 0) {
+      toast.error(errorsList[0]?.message);
+    }
+  }, [errors]);
+
+  const handleClickCity = async (city) => {
+    setValue("city", city.code);
+    setCityName(city.name);
+    const res = await axios.get(
+      `https://provinces.open-api.vn/api/d/${city.code}`
+    );
+    setDistricts(res?.data);
+  };
+  const handleClickDistrict = async (district) => {
+    setValue("district", district.code);
+    setDistrictName(district.name);
+    const res = await axios.get(
+      `https://provinces.open-api.vn/api/w/${district.code}`
+    );
+    setWards(res?.data);
+  };
+  const handleClickWard = async (ward) => {
+    setWardsName(wards.name);
+    setValue("wards", wards.code);
+  };
+
+  const onSubmit = (value) => {
+    console.log("values ", value);
+    let checkError = false;
+
+    for (let i = 0; i < utilities.length; i++) {
+      const name = getValues(`${utilities[i].name}`);
+      const price = getValues(`${utilities[i].price}`);
+      if (!name || !price || isNaN(price)) {
+        checkError = !checkError;
+        break;
+      }
+    }
+    if (checkError) {
+      toast.error("Utility name required and price must be number");
+      return;
+    }
+    const utilitiesAdd = [];
+    utilities.forEach((item) => {
+      utilitiesAdd.push({
+        name: getValues(`${item.name}`),
+        value: getValues(`${item.price}`),
+      });
+    });
+    const roomsAdd = {
+      address: `${value.address}, ${value.wards}, ${value.district}`,
+      city: value.city,
+      name: value.name,
+      dayPrice: value.dayPrice,
+      monthPrice: value.monthPrice,
+      yearPrice: value.yearPrice,
+      description: value.desc,
+      utilities: utilitiesAdd,
+      roomTypeId: value.roomTypeId,
+    };
+    console.log(roomsAdd);
+    // http
+    //   .post("rooms", roomsAdd)
+    //   .then((res) => {
+    //     console.log(res);
+    //     toast.success("success");
+    //   })
+    //   .catch((err) => console.error("err", err));
   };
   return (
     <div>
@@ -62,38 +168,38 @@ const SpaceAdd = () => {
           <Field>
             <Label name="address">Address</Label>
             <Dropdown>
-              <Select placeholder={"City"}></Select>
+              <Select placeholder={cityName || "City"}></Select>
               <List>
-                {/* {cities.map((city) => (
-                <Option key={city.id} onClick={() => handleClickCity(city)}>
-                  {city.name}
-                </Option>
-              ))} */}
+                {cities.map((city) => (
+                  <Option key={city.code} onClick={() => handleClickCity(city)}>
+                    {city.name}
+                  </Option>
+                ))}
                 <Option>Da Nang</Option>
               </List>
             </Dropdown>
             <Dropdown>
-              <Select placeholder={"District"}></Select>
+              <Select placeholder={districtName || "District"}></Select>
               <List>
-                {/* {districts.map((district) => (
-                <Option
-                  key={district.id}
-                  onClick={() => handleClickDistrict(district)}
-                >
-                  {district.name}
-                </Option>
-              ))} */}
+                {districts.map((district) => (
+                  <Option
+                    key={district.code}
+                    onClick={() => handleClickDistrict(district)}
+                  >
+                    {district.name}
+                  </Option>
+                ))}
               </List>
             </Dropdown>
             <Dropdown>
               <Select placeholder={"Wards"}></Select>
-              {/* <List>
-              {wards.map((ward) => (
-                <Option key={ward.id} onClick={() => handleClickWard(ward)}>
-                  {ward.name}
-                </Option>
-              ))}
-            </List> */}
+              <List>
+                {wards.map((ward) => (
+                  <Option key={ward.code} onClick={() => handleClickWard(ward)}>
+                    {ward.name}
+                  </Option>
+                ))}
+              </List>
             </Dropdown>
             <Input
               type="text"
@@ -118,8 +224,32 @@ const SpaceAdd = () => {
               <Input type="text" name="dayPrice" control={control}></Input>
             </Field>
           </div>
+          <div className="w-full h-[400px]">
+            <UploadImage
+              imageFiles={imageFiles}
+              setImageFiles={setImageFiles}
+            />
+          </div>
         </div>
-        <div className="pt-[100px]">
+        <div className="">
+          <div className="max-w-[500px]">
+            <Field>
+              <Label>Room Type</Label>
+              <Dropdown>
+                <Select placeholder={roomTypesName || "Room Types"}></Select>
+                <List>
+                  {roomTypes.map((room) => (
+                    <Option
+                      key={room.id}
+                      onClick={() => handleClickRoomType(room)}
+                    >
+                      {room.roomTypeName}
+                    </Option>
+                  ))}
+                </List>
+              </Dropdown>
+            </Field>
+          </div>
           <Field>
             <Label name="desc">Description</Label>
             <textarea
