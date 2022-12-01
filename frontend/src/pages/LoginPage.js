@@ -50,7 +50,7 @@ const LoginPage = () => {
         console.log("login success: ", res);
         localStorage.setItem("token", res.data.token);
         setUser(res?.data.customerResponseDto);
-        navigate("/");
+        navigate(-1);
       })
       .catch((err) => {
         console.log("error: ", err);

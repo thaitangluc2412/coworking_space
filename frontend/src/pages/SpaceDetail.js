@@ -3,7 +3,10 @@ import { useEffect } from "react";
 import { NavLink, useParams, useNavigate } from "react-router-dom";
 import http from "../config/axiosConfig";
 import Carousel from "react-elastic-carousel";
+import { useAuth } from "../context/auth-context";
+
 const SpaceDetail = () => {
+  const { user } = useAuth();
   const navigate = useNavigate();
   const { id } = useParams();
   const [data, setData] = useState([]);
@@ -15,7 +18,11 @@ const SpaceDetail = () => {
     });
   }, []);
   const handleRent = () => {
-    navigate(`/rent/${id}`);
+    if (user.id) {
+      navigate(`/rent/${id}`);
+    } else {
+      navigate("/login");
+    }
   };
   return (
     <div className="px-8 py-6 flex flex-row gap-6">

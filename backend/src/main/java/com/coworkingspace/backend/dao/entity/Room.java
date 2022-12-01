@@ -33,10 +33,6 @@ public class Room extends BaseEntity{
 	private Price price;
 
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-	@JoinColumn(name = "room_status_id", nullable = false)
-	private RoomStatus roomStatus;
-
-	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "room_type_id", nullable = false)
 	private RoomType roomType;
 
@@ -44,20 +40,19 @@ public class Room extends BaseEntity{
 	@JoinColumn(name = "image_storage_id", nullable = false)
 	private ImageStorage imageStorage;
 
+	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinColumn(name = "utility_storage_id", nullable = false)
+	private UtilityStorage utilityStorage;
+
 	@Column(name = "room_name", nullable = false)
 	private String roomName;
 
 	@Column(name = "address", nullable = false)
 	private String address;
 
-	@Column(name = "city", nullable = false)
-	private String city;
-
-	@Column(name = "size")
-	private String size;
-
-	@Column(name = "capacity")
-	private String capacity;
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(name = "province_id", nullable = false)
+	private Province province;
 
 	@Lob
 	@Column(name = "description")

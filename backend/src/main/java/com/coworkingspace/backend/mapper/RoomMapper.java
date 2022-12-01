@@ -16,9 +16,10 @@ public interface RoomMapper {
 
 	@Mapping(source = "customerId", target = "customer.id")
 	@Mapping(source = "priceId", target = "price.id")
-	@Mapping(source = "roomStatusId", target = "roomStatus.id")
 	@Mapping(source = "roomTypeId", target = "roomType.id")
+	@Mapping(source = "provinceId", target = "province.code")
 	@Mapping(source = "imageStorageId", target = "imageStorage.id")
+	@Mapping(source = "utilityStorageId", target = "utilityStorage.id")
 	Room roomDtoToRoom(RoomDto roomDto);
 
 	@InheritInverseConfiguration(name = "roomDtoToRoom")
@@ -26,9 +27,10 @@ public interface RoomMapper {
 
 	@Mapping(source = "customerId", target = "customer.id")
 	@Mapping(source = "priceId", target = "price.id")
-	@Mapping(source = "roomStatusId", target = "roomStatus.id")
 	@Mapping(source = "roomTypeId", target = "roomType.id")
+	@Mapping(source = "provinceId", target = "province.code")
 	@Mapping(source = "imageStorageId", target = "imageStorage.id")
+	@Mapping(source = "utilityStorageId", target = "utilityStorage.id")
 	Room roomCreateDtoToRoom(RoomCreateDto roomCreateDto) throws NotFoundException;
 
 	@InheritInverseConfiguration(name = "roomCreateDtoToRoom")

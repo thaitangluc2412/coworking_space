@@ -35,15 +35,6 @@ CREATE TABLE `price`
     CONSTRAINT PRIMARY KEY (price_id)
 );
 
-CREATE TABLE `room_status`
-(
-    room_status_id   VARCHAR(15),
-    room_status_name VARCHAR(255) NOT NULL,
-    time_create      DATETIME DEFAULT CURRENT_TIMESTAMP,
-    time_update      DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    CONSTRAINT PRIMARY KEY (room_status_id)
-);
-
 CREATE TABLE `image_storage`
 (
     image_storage_id VARCHAR(15),
@@ -57,11 +48,31 @@ CREATE TABLE `image`
     image_id         VARCHAR(15),
     image_storage_id VARCHAR(15)  NOT NULL,
     url              TEXT         NOT NULL,
-    thumbnail        VARCHAR(255) NOT NULL,
+    thumbnail        VARCHAR(255),
     time_create      DATETIME DEFAULT CURRENT_TIMESTAMP,
     time_update      DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     CONSTRAINT PRIMARY KEY (image_id),
     CONSTRAINT `fk_image_image_storage` FOREIGN KEY (image_storage_id) REFERENCES `image_storage` (image_storage_id)
+);
+
+CREATE TABLE `utility_storage`
+(
+    utility_storage_id VARCHAR(15),
+    time_create      DATETIME DEFAULT CURRENT_TIMESTAMP,
+    time_update      DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    CONSTRAINT PRIMARY KEY (utility_storage_id)
+);
+
+CREATE TABLE `utility`
+(
+    utility_id         VARCHAR(15),
+    utility_storage_id VARCHAR(15),
+    name               VARCHAR(255) NOT NULL,
+    value              VARCHAR(255) NOT NULL,
+    time_create        DATETIME DEFAULT CURRENT_TIMESTAMP,
+    time_update        DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    CONSTRAINT PRIMARY KEY (utility_id),
+    CONSTRAINT `fk_utility_utility_storage` FOREIGN KEY (utility_storage_id) REFERENCES `utility_storage` (utility_storage_id)
 );
 
 CREATE TABLE `room_type`
@@ -83,12 +94,10 @@ CREATE TABLE `room`
     price_id         VARCHAR(15)  NOT NULL,
     room_name        VARCHAR(255) NOT NULL,
     address          VARCHAR(255) NOT NULL,
-    city             VARCHAR(255) NOT NULL,
-    size             VARCHAR(255),
-    capacity         VARCHAR(255),
-    room_status_id   VARCHAR(15)  NOT NULL,
+    province_id      INT NOT NULL,
     description      TEXT,
     image_storage_id VARCHAR(15)  NOT NULL,
+    utility_storage_id  VARCHAR(15)  NOT NULL,
     customer_id      VARCHAR(15)  NOT NULL,
     enable           BOOLEAN,
     time_create      DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -96,7 +105,6 @@ CREATE TABLE `room`
     CONSTRAINT PRIMARY KEY (room_id),
     CONSTRAINT `fk_room_room_type` FOREIGN KEY (room_type_id) REFERENCES room_type (room_type_id),
     CONSTRAINT `fk_room_price` FOREIGN KEY (price_id) REFERENCES price (price_id),
-    CONSTRAINT `fk_room_room_status` FOREIGN KEY (room_status_id) REFERENCES room_status (room_status_id),
     CONSTRAINT `fk_room_image_storage` FOREIGN KEY (image_storage_id) REFERENCES image_storage (image_storage_id),
     CONSTRAINT `fk_room_customer` FOREIGN KEY (customer_id) REFERENCES customer (customer_id)
 );
@@ -189,9 +197,6 @@ CREATE TABLE `room_virtual`
 INSERT INTO `role`
 VALUES ('IT04ZnPgBYSf3Qm', 'CUSTOMER', '2020-01-01 10:10:10', '2020-01-01 10:10:10'),
        ('ksWaZyhhDon1Niq', 'ADMIN', '2020-01-01 10:10:10', '2020-01-01 10:10:10');
-INSERT INTO `room_status`
-VALUES ('7XdZzxWRzZhBBcb', 'ACTIVE', '2020-01-01 10:10:10', '2020-01-01 10:10:10'),
-       ('B3dVfrqwASWSVVb', 'INACTIVE', '2020-01-01 10:10:10', '2020-01-01 10:10:10');
 INSERT INTO `reservation_status`
 VALUES ('eT4CxDVeDhP4TsF', 'PENDING', '2020-01-01 10:10:10', '2020-01-01 10:10:10'),
        ('tngpi7zVKfwAY0N', 'APPROVED', '2020-01-01 10:10:10', '2020-01-01 10:10:10'),

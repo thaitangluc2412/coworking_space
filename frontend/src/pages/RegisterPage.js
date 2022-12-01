@@ -44,7 +44,6 @@ const RegisterPage = () => {
     },
   });
   const onSubmit = (data) => {
-    console.log(data);
     const customer = {
       email: data.email,
       customerName: data.username,
@@ -52,7 +51,6 @@ const RegisterPage = () => {
       password: data.password,
       roleId: "IT04ZnPgBYSf3Qm",
     };
-    console.log(customer);
     http
       .post("customers", customer)
       .then((res) => console.log(res))

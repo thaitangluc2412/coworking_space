@@ -21,9 +21,9 @@ public class RoomController {
 
 	@PostMapping
 	public ResponseEntity<RoomCreateDto> createRoom(@RequestPart RoomCreateDto roomCreateDto,
-	                                                  @RequestPart("files") MultipartFile[] files) {
+	                                                  @RequestPart(value = "files", required = false) MultipartFile[] files) {
 		roomService.createRoom(roomCreateDto, files);
-		return new ResponseEntity<>(roomCreateDto, HttpStatus.OK);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	@GetMapping
@@ -46,9 +46,10 @@ public class RoomController {
 		return ResponseEntity.status(HttpStatus.OK).body(roomListDto);
 	}
 
-	@GetMapping("/roomType/{id}")
-	public ResponseEntity<List<RoomListDto>> getByRoomTypeId(@PathVariable String id) {
-		List<RoomListDto> rooms = roomService.getByRoomTypeId(id);
+	@GetMapping("/roomFilter")
+	public ResponseEntity<List<RoomListDto>> getWithFilter(@RequestParam(required = false) String typeRoomId,
+		@RequestParam(required = false) String provinceId, @RequestParam(required = false) String roomName, @RequestParam(required = false) String cityName) {
+		List<RoomListDto> rooms = roomService.getWithFilter(typeRoomId, provinceId, roomName, cityName);
 		return new ResponseEntity<>(rooms, HttpStatus.OK);
 	}
 

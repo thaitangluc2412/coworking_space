@@ -7,6 +7,7 @@ import com.coworkingspace.backend.configuration.CloudinaryConfig;
 import com.coworkingspace.backend.dao.entity.Image;
 import com.coworkingspace.backend.dao.entity.ImageStorage;
 import com.coworkingspace.backend.dao.entity.Room;
+import com.coworkingspace.backend.dao.hibernate.RoomDao;
 import com.coworkingspace.backend.dao.repository.RoomRepository;
 import com.coworkingspace.backend.dto.ImageDto;
 import com.coworkingspace.backend.dto.RoomCreateDto;
@@ -32,6 +33,7 @@ public class RoomServiceImpl implements RoomService {
 	private RoomRepository roomRepository;
 	private RoomMapper roomMapper;
 	private ImageMapper imageMapper;
+	private RoomDao roomDao;
 
 	@Transactional
 	@Override
@@ -110,12 +112,8 @@ public class RoomServiceImpl implements RoomService {
 	}
 
 	@Override
-	public List<RoomListDto> getByRoomTypeId(String id) {
-		return roomRepository.getByRoomTypeId(id)
-				.stream()
-				.map(room ->
-						     roomMapper.roomToRoomListDto(room))
-				.collect(Collectors.toList());
+	public List<RoomListDto> getWithFilter(String typeRoomId, String provinceId, String roomName, String cityName) {
+		return roomDao.getWithFilter(typeRoomId, provinceId, roomName, cityName).stream().map(room -> roomMapper.roomToRoomListDto(room)).collect(Collectors.toList());
 	}
 
 	public void deleteFolderCloudinary(Room room) {
@@ -145,6 +143,7 @@ public class RoomServiceImpl implements RoomService {
 		int[] idx = new int[1];
 		idx[0] = 0;
 		List<ImageDto> imageDtos = new ArrayList<>();
+		if (files == null) { return Collections.emptyList(); }
 		Arrays.asList(files).stream().forEach(file -> {
 			String fileName = "image_" + idx[0];
 			try {
