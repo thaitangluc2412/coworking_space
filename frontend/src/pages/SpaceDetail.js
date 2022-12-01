@@ -20,7 +20,7 @@ const SpaceDetail = () => {
   return (
     <div className="px-8 py-6 flex flex-row gap-6">
       <div className="w-[65%]">
-        <Carousel>
+        <Carousel showArrows={true}>
           {listImages.map((image) => (
             <div className="w-full h-[500px] mb-4" key={image.id}>
               <img

@@ -4,7 +4,7 @@ import { useNavigate } from "react-router";
 const Card = ({ roomTypeName, description, url, id }) => {
   const navigate = useNavigate();
   const handleClick = () => {
-    navigate(`/space-list/${id}`);
+    navigate(`/space-list?typeRoomId=${id}`);
   };
   return (
     <div
@@ -12,7 +12,7 @@ const Card = ({ roomTypeName, description, url, id }) => {
       onClick={handleClick}
     >
       <div className="w-full h-[300px] mb-4">
-        <img src={url} className="w-full h-full object-cover" />
+        <img src={url} alt="" className="w-full h-full object-cover" />
       </div>
       <div className="flex flex-col px-4 overflow-y-auto gap-3">
         <h1 className="font-medium text-lg">{roomTypeName}</h1>

@@ -1,20 +1,41 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
-import { NavLink, useParams } from "react-router-dom";
-import Map from "../components/map/Map";
+import { NavLink, useParams, useSearchParams } from "react-router-dom";
+
 import SpaceItem from "../components/space-list/SpaceItem";
 import http from "../config/axiosConfig";
 
 const SpaceList = () => {
-  // const locations = require("../components/map/locations.json");
-  const { id } = useParams();
+  // const { id } = useParams();
+  const [params] = useSearchParams();
+  const cityName = params.get("cityName");
+  const typeRoomId = params.get("typeRoomId");
+
   const [listSpace, setListSpace] = useState([]);
+  const filter = (cityName, typeRoomId) => {
+    let filterList = "rooms/roomFilter";
+    const urlString = [];
+    if (cityName) {
+      urlString.push(`cityName=${cityName}`);
+    }
+    if (typeRoomId) {
+      urlString.push(`typeRoomId=${typeRoomId}`);
+    }
+    if (urlString.length !== 0) {
+      filterList = filterList.concat(`?${urlString.join("&")}`);
+    }
+    return filterList;
+  };
   useEffect(() => {
     http
-      .get(`/rooms/roomType/${id}`)
-      .then((response) => setListSpace(response.data))
+      .get(filter(cityName, typeRoomId))
+      .then((response) => {
+        console.log(response.data);
+        setListSpace(response.data);
+      })
+
       .catch((e) => console.log(e));
-  }, []);
+  }, [cityName, typeRoomId]);
   return (
     <div className="flex flex-row w-full min-h-full h-full pl-8">
       <div className="w-[60%] pt-10 overflow-y-auto scrollbar">

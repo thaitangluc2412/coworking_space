@@ -16,7 +16,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route path="/" element={<HomePage />} />
-          <Route path="/space-list/:id" element={<SpaceList />} />
+          <Route path="/space-list" element={<SpaceList />} />
           <Route path="/space/:id" element={<SpaceDetail />} />
           <Route path="/rent/:id" element={<ModalRent />} />
         </Route>

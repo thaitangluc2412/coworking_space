@@ -13,13 +13,13 @@ import useUtilities from "../../hooks/useUtilities";
 import { AiFillMinusCircle } from "react-icons/ai";
 import Button from "../../components/button/Button";
 import http from "../../config/axiosConfig";
-import axios from "axios";
+import { useAuth } from "../../context/auth-context";
 import UploadImage from "../../components/uploadImage/UploadImage";
 import { toast } from "react-toastify";
 
 const schema = yup
   .object({
-    name: yup.string().required("Please enter your name location"),
+    roomName: yup.string().required("Please enter your name location"),
     address: yup.string().required("Please enter your address of location"),
   })
   .required();
@@ -32,13 +32,14 @@ const SpaceAdd = () => {
     formState: { errors },
     unregister,
     register,
+    reset,
     watch,
   } = useForm({
     resolver: yupResolver(schema),
     mode: "onSubmit",
     defaultValues: {},
   });
-  const { utilities, handleAddUtility, handleClearUtility } =
+  const { utilities, handleAddUtility, handleClearUtility, setUtilities } =
     useUtilities(unregister);
   const [cities, setCites] = useState([]);
   const [districts, setDistricts] = useState([]);
@@ -48,12 +49,14 @@ const SpaceAdd = () => {
   const [cityName, setCityName] = useState("");
   const [districtName, setDistrictName] = useState("");
   const [wardsName, setWardsName] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const [imageFiles, setImageFiles] = useState([]);
 
+  const { user } = useAuth();
   useEffect(() => {
-    axios
-      .get(`https://provinces.open-api.vn/api/p/`)
+    http
+      .get(`address/provinces`)
       .then((res) => {
         setCites(res?.data);
       })
@@ -85,22 +88,19 @@ const SpaceAdd = () => {
   const handleClickCity = async (city) => {
     setValue("city", city.code);
     setCityName(city.name);
-    const res = await axios.get(
-      `https://provinces.open-api.vn/api/d/${city.code}`
-    );
+    const res = await http.get(`address/districts/${city.code}`);
     setDistricts(res?.data);
   };
   const handleClickDistrict = async (district) => {
     setValue("district", district.code);
     setDistrictName(district.name);
-    const res = await axios.get(
-      `https://provinces.open-api.vn/api/w/${district.code}`
-    );
+    const res = await http.get(`address/wards/${district.code}`);
     setWards(res?.data);
   };
-  const handleClickWard = async (ward) => {
-    setWardsName(wards.name);
-    setValue("wards", wards.code);
+  const handleClickWard = (ward) => {
+    console.log(ward);
+    setWardsName(ward.name);
+    setValue("wards", ward.code);
   };
 
   const onSubmit = (value) => {
@@ -126,25 +126,65 @@ const SpaceAdd = () => {
         value: getValues(`${item.price}`),
       });
     });
+
     const roomsAdd = {
-      address: `${value.address}, ${value.wards}, ${value.district}`,
-      city: value.city,
-      name: value.name,
+      address: `${value.address}, ${wardsName}, ${districtName}`,
+      provinceId: value.city,
+      roomName: value.roomName,
       dayPrice: value.dayPrice,
       monthPrice: value.monthPrice,
       yearPrice: value.yearPrice,
       description: value.desc,
       utilities: utilitiesAdd,
       roomTypeId: value.roomTypeId,
+      customerId: user.id,
     };
-    console.log(roomsAdd);
-    // http
-    //   .post("rooms", roomsAdd)
-    //   .then((res) => {
-    //     console.log(res);
-    //     toast.success("success");
-    //   })
-    //   .catch((err) => console.error("err", err));
+    const formData = new FormData();
+
+    formData.append(
+      "roomCreateDto",
+      new Blob([JSON.stringify(roomsAdd)], {
+        type: "application/json",
+      })
+    );
+    imageFiles.forEach((item) => formData.append("files", item.file));
+    setIsLoading(true);
+    http
+      .post("rooms", formData)
+      .then((res) => {
+        console.log(res);
+        toast.success("success");
+        reset({
+          address: "",
+          roomName: "",
+          dayPrice: "",
+          monthPrice: "",
+          yearPrice: "",
+          desc: "",
+          roomTypeId: "",
+          city: "",
+          district: "",
+          wards: "",
+        });
+        setWardsName("");
+        setDistrictName("");
+        setCityName("");
+        setUtilities([
+          {
+            name: `nameUtility0`,
+            price: `priceUtility0`,
+            index: 0,
+          },
+        ]);
+        setRoomTypesName("");
+        setImageFiles([]);
+        setIsLoading(false);
+      })
+
+      .catch((err) => {
+        setIsLoading(false);
+        console.error("err", err);
+      });
   };
   return (
     <div>
@@ -155,12 +195,12 @@ const SpaceAdd = () => {
       >
         <div className="">
           <Field>
-            <Label name="name" className="name">
-              Name
+            <Label name="roomName" className="name">
+              Room Name
             </Label>
             <Input
               type="text"
-              name="name"
+              name="roomName"
               placeholder="Enter name location"
               control={control}
             ></Input>
@@ -175,7 +215,6 @@ const SpaceAdd = () => {
                     {city.name}
                   </Option>
                 ))}
-                <Option>Da Nang</Option>
               </List>
             </Dropdown>
             <Dropdown>
@@ -192,7 +231,7 @@ const SpaceAdd = () => {
               </List>
             </Dropdown>
             <Dropdown>
-              <Select placeholder={"Wards"}></Select>
+              <Select placeholder={wardsName || "Wards"}></Select>
               <List>
                 {wards.map((ward) => (
                   <Option key={ward.code} onClick={() => handleClickWard(ward)}>
@@ -312,7 +351,9 @@ const SpaceAdd = () => {
           </div>
         </div>
         <div className="text-center">
-          <Button type="submit">Submit</Button>
+          <Button type="submit" isLoading={isLoading}>
+            Submit
+          </Button>
         </div>
       </form>
     </div>

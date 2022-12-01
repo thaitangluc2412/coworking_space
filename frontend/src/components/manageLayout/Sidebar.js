@@ -27,13 +27,13 @@ const Sidebar = () => {
   const { user } = useAuth();
 
   return (
-    <div className="w-[300px] h-full shadow-lg flex flex-col pt-5  items-center text-slate-500">
-      <div
+    <div className="w-[300px] h-full shadow-lg flex flex-col pt-5  items-center  text-slate-500 ">
+      {/* <div
         className="font-bungee text-xl text-primary "
         onClick={() => navigate("/")}
       >
         Coworking Space
-      </div>
+      </div> */}
       <div className="flex flex-col w-full items-center mt-10 px-3">
         {items.map((item) => {
           return (
