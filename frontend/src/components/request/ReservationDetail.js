@@ -36,49 +36,23 @@ const ReservationDetail = () => {
   }, []);
 
   const handleCancelRequest = () => {
-    fetch(
-      `http://localhost:8080/api/reservation/reservation_status/${reservation.reservationId}?reservationStatus=4`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        const newReservation = {
-          ...reservation,
-          reservationStatusId: 4,
-        };
-        setReservation(newReservation);
-        // window.location.reload();
-        toast.error("You cancelled the request");
-      })
-      .catch((err) => console.log(err));
+    http
+      .put(`reservations/${id}?reservationStatusName=CANCELLED`)
+      .then((res) => {
+        console.log("new reservation: ", res.data);
+        setReservation(res.data);
+        toast.success("You cancelled the request");
+      });
   };
 
   const handleCompleteRequest = () => {
-    fetch(
-      `http://localhost:8080/api/reservation/reservation_status/${reservation.reservationId}?reservationStatus=2`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        const newReservation = {
-          ...reservation,
-          reservationStatusId: 2,
-        };
-        setReservation(newReservation);
-        // window.location.reload();
-        toast.success("You rent the room successfully!");
-      })
-      .catch((err) => console.log(err));
+    http
+      .put(`reservations/${id}?reservationStatusName=APPROVED`)
+      .then((res) => {
+        console.log("new reservation: ", res.data);
+        setReservation(res.data);
+        toast.success("You cancelled the request");
+      });
   };
   const onNavigate = () => {
     navigate(-1);
@@ -298,7 +272,6 @@ const ReservationDetail = () => {
                         {
                           amount: {
                             currency_code: "USD",
-                            // value: "" + props.reservation.total,
                             value: "" + reservation.total,
                             showSpinner: true,
                           },

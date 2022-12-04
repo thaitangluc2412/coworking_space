@@ -16,7 +16,7 @@ import com.coworkingspace.backend.dao.hibernate.AddressDao;
 public class AddressDaoImpl implements AddressDao {
 	private static final String GET_DISTRICT = "SELECT * FROM District WHERE province_code = ?1";
 	private static final String GET_WARD = "SELECT * FROM Ward WHERE district_code = ?1";
-
+	private static final String GET_WARD_BY_ID = "SELECT * FROM Ward WHERE code = ?1";
 	@Autowired
 	private EntityManager entityManager;
 
@@ -28,5 +28,10 @@ public class AddressDaoImpl implements AddressDao {
 	@Override public List<Ward> getWard(Integer districtCode) {
 		Session session = entityManager.unwrap((Session.class));
 		return session.createNativeQuery(GET_WARD, Ward.class).setParameter(1, districtCode).getResultList();
+	}
+
+	@Override public Ward getWardById(Integer code) {
+		Session session = entityManager.unwrap((Session.class));
+		return session.createNativeQuery(GET_WARD_BY_ID, Ward.class).setParameter(1, code).getSingleResult();
 	}
 }

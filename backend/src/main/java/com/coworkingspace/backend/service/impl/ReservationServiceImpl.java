@@ -76,4 +76,8 @@ public class ReservationServiceImpl implements ReservationService {
 		reservationRepository.save(reservation);
 		return reservationMapper.reservationToReservationListDto(reservation);
 	}
+
+	@Override public List<ReservationDto> getBySellerId(String sellerId) {
+		return reservationDao.getBySellerId(sellerId);
+	}
 }

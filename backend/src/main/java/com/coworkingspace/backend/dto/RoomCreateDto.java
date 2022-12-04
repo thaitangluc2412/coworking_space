@@ -20,6 +20,7 @@ public class RoomCreateDto {
 	private Double yearPrice;
 	private String roomStatusId;
 	private String roomTypeId;
+	private String roomTypeName;
 	private String imageStorageId;
 	private String utilityStorageId;
 	private String roomName;
@@ -29,7 +30,6 @@ public class RoomCreateDto {
 	private Integer districtId;
 	private String districtName;
 	private Integer wardId;
-	private String wardName;
 	private String description;
 	private List<ImageDto> images;
 	private List<UtilityDto> utilities;

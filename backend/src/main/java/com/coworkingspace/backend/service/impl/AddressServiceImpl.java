@@ -36,4 +36,8 @@ public class AddressServiceImpl implements AddressService {
 	@Override public Province findByCode(Integer code) {
 		return provinceRepository.findByCode(code).orElseThrow(() -> new RuntimeException("No province code"));
 	}
+
+	@Override public Ward getByWardId(Integer code) {
+		return addressDao.getWardById(code);
+	}
 }

@@ -10,6 +10,7 @@ import ModalRent from "./components/modal/ModalRent";
 import LayoutMange from "./components/manageLayout/LayoutMange";
 import SpaceAdd from "./module/space/SpaceAdd";
 import SpaceManage from "./module/space/SpaceManage";
+import SpaceBusiness from "./module/space/SpaceBusiness";
 import { useState, Fragment, useContext } from "react";
 import Backdrop from "./components/backdrop/Backdrop";
 import { useAuth } from "./context/auth-context";
@@ -71,6 +72,7 @@ function App() {
           <Route path="/manage/users" element={<div>user</div>} />
           <Route path="/manage/add-space" element={<SpaceAdd />} />
           <Route path="/manage/update-space/:id" element={<SpaceUpdate />} />
+          <Route path="/manage/business" element={<SpaceBusiness />} />
         </Route>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />

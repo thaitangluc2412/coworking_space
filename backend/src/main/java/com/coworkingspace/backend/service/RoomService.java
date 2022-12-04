@@ -14,7 +14,8 @@ public interface RoomService {
 	Room findById(String id);
 	RoomCreateDto updateRoom(String id, RoomCreateDto roomCreateDto, MultipartFile[] files) throws NotFoundException;
 	List<RoomListDto> getWithFilter(String typeRoomId, String provinceId, String roomName, String cityName, String minPrice, String maxPrice);
-	RoomListDto findByRoomId(String id);
+	RoomCreateDto findByRoomId(String id) throws NotFoundException;
 	List<RoomListDto> findByCustomerId(String id);
 	void deleteRoom(String id);
+
 }
