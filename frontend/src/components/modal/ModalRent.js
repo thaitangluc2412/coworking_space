@@ -39,11 +39,9 @@ const ModalRent = (props) => {
     });
   }, []);
   useEffect(() => {
-    http
-      .get(`http://localhost:8080/api/v1/reservations/get_invalid_date/${id}`)
-      .then((res) => {
-        setValidDates(res.data);
-      });
+    http.get(`reservations/get_invalid_date/${id}`).then((res) => {
+      setValidDates(res.data);
+    });
   }, []);
 
   const disableCustomDt = (current) => {
@@ -57,9 +55,7 @@ const ModalRent = (props) => {
   useEffect(() => {
     const date = convertDateToString(startDate);
     http
-      .get(
-        `http://localhost:8080/api/v1/reservations/furthest_valid_date/${id}?from=${date}`
-      )
+      .get(`reservations/furthest_valid_date/${id}?from=${date}`)
       .then((res) => {
         setLimitDate(res.data);
       });

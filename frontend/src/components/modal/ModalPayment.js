@@ -1,7 +1,6 @@
 import ReactDOM from "react-dom";
 import classes from "./ModalPayment.module.css";
 import http from "../../config/axiosConfig";
-import { useState, useRef, useContext, useEffect } from "react";
 import {
   BsCheckCircle,
   BsPaypal,
@@ -9,18 +8,22 @@ import {
   BsFillCalendarXFill,
 } from "react-icons/bs";
 import { useAuth } from "../../context/auth-context";
+import { useNavigate } from "react-router-dom";
 
 const ModalPayment = (props) => {
+  const navigate = useNavigate();
   const { user } = useAuth();
   const exitRegister = (event) => {
     event.preventDefault();
     props.onExitModalPayment();
   };
   const onSubmit = () => {
-    console.log("onSubmit: ", props.reservation);
     http
       .post("reservations", props.reservation)
-      .then((res) => console.log(res))
+      .then((res) => {
+        props.onExitModalPayment();
+        navigate("/myreservation");
+      })
       .catch((err) => console.log(err));
   };
 

@@ -8,4 +8,5 @@ import com.coworkingspace.backend.dao.entity.Ward;
 public interface AddressDao {
 	List<District> getDistrict(Integer provinceCode);
 	List<Ward> getWard(Integer districtCode);
+	Ward getWardById(Integer code);
 }

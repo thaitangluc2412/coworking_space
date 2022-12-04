@@ -80,8 +80,8 @@ public class RoomServiceImpl implements RoomService {
 	}
 
 	@Override
-	public RoomListDto findByRoomId(String id) {
-		return roomMapper.roomToRoomListDto(findById(id));
+	public RoomCreateDto findByRoomId(String id) throws NotFoundException {
+		return roomMapper.roomToRoomCreateDto(findById(id));
 	}
 
 	@Override

@@ -11,4 +11,5 @@ public interface AddressService {
 	List<District> getByProvinceCode(Integer code);
 	List<Ward> getByDistrictCode(Integer code);
 	Province findByCode(Integer code);
+	Ward getByWardId(Integer code);
 }

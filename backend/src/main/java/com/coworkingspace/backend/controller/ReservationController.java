@@ -69,4 +69,10 @@ public class ReservationController {
 		ReservationListDto reservationListDto = reservationService.updateReservation(id, reservationStatusName);
 		return new ResponseEntity<>(reservationListDto, HttpStatus.OK);
 	}
+
+	@GetMapping("/get-by-seller-id/{id}")
+	public ResponseEntity<List<ReservationDto>> getBySellerId(@PathVariable String id){
+		List<ReservationDto> reservationDtos = reservationService.getBySellerId(id);
+		return new ResponseEntity<>(reservationDtos, HttpStatus.OK);
+	}
 }

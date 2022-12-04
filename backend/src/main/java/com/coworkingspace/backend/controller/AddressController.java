@@ -39,4 +39,10 @@ public class AddressController {
 		List<Ward> districts = addressService.getByDistrictCode(code);
 		return new ResponseEntity<>(districts, HttpStatus.OK);
 	}
+
+	@GetMapping("/wards/get-by-ward-id/{code}")
+	public ResponseEntity<Ward> getByWardCode(@PathVariable Integer code) {
+		Ward ward = addressService.getByWardId(code);
+		return new ResponseEntity<>(ward, HttpStatus.OK);
+	}
 }
