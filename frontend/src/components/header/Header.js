@@ -51,6 +51,7 @@ const Header = () => {
         {items.map((item) => (
           <NavLink
             to={item.url}
+            key={item.name}
             className={({ isActive }) =>
               `text-base cursor-pointer hover:text-primary border-b-noColor border-b hover:border-primary ${
                 isActive ? "text-primary" : ""

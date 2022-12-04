@@ -16,6 +16,7 @@ import http from "../../config/axiosConfig";
 import { useAuth } from "../../context/auth-context";
 import UploadImage from "../../components/uploadImage/UploadImage";
 import { toast } from "react-toastify";
+import { useNavigate, useParams } from "react-router";
 
 const schema = yup
   .object({
@@ -33,7 +34,6 @@ const SpaceUpdate = () => {
     unregister,
     register,
     reset,
-    watch,
   } = useForm({
     resolver: yupResolver(schema),
     mode: "onSubmit",
@@ -41,6 +41,7 @@ const SpaceUpdate = () => {
   });
   const { utilities, handleAddUtility, handleClearUtility, setUtilities } =
     useUtilities(unregister);
+  const [space, setSpace] = useState();
   const [cities, setCites] = useState([]);
   const [districts, setDistricts] = useState([]);
   const [wards, setWards] = useState([]);
@@ -52,7 +53,8 @@ const SpaceUpdate = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const [imageFiles, setImageFiles] = useState([]);
-
+  const { id } = useParams();
+  const navigate = useNavigate();
   const { user } = useAuth();
   useEffect(() => {
     http
@@ -72,7 +74,61 @@ const SpaceUpdate = () => {
       .catch((err) => {
         console.error("roomTypes err", err);
       });
-  }, []);
+    http
+      .get(`rooms/${id}`)
+      .then((res) => {
+        console.log("rooms", res.data);
+        const roomDetail = res.data;
+        const addressRoomDetailIndex = roomDetail.address.indexOf(",");
+        const addressRoomDetail = roomDetail.address.slice(
+          0,
+          addressRoomDetailIndex
+        );
+        setSpace(res.data);
+        reset({
+          desc: roomDetail.description,
+          monthPrice: roomDetail.monthPrice,
+          yearPrice: roomDetail.yearPrice,
+          dayPrice: roomDetail.dayPrice,
+          roomName: roomDetail.roomName,
+          address: addressRoomDetail,
+          city: roomDetail.provinceId,
+          district: roomDetail.districtId,
+          wards: roomDetail.wardId,
+          roomTypeId: roomDetail.roomTypeId,
+        });
+        const utilityResponses = [];
+        roomDetail.utilities.forEach((item, index) => {
+          utilityResponses.push({
+            name: `nameUtility${index}`,
+            price: `priceUtility${index}`,
+            index: index,
+          });
+          setValue(`nameUtility${index}`, item.name);
+          setValue(`priceUtility${index}`, item.value);
+        });
+        const listImageUpdate = [];
+        roomDetail.images.map((image) =>
+          listImageUpdate.push({
+            file: {
+              name: "",
+            },
+            url: image.url,
+          })
+        );
+        setImageFiles(listImageUpdate);
+        setRoomTypesName(roomDetail.roomTypeName);
+        setUtilities(utilityResponses);
+        setCityName(roomDetail.provinceName);
+        setDistrictName(roomDetail.districtName);
+        return roomDetail.wardId;
+      })
+      .then((wardId) => {
+        http.get(`address/wards/get-by-ward-id/${wardId}`).then((res) => {
+          setWardsName(res.data?.name);
+        });
+      });
+  }, [id, reset, setValue, setUtilities]);
 
   const handleClickRoomType = (room) => {
     setRoomTypesName(room.roomTypeName);
@@ -132,6 +188,8 @@ const SpaceUpdate = () => {
       provinceId: value.city,
       roomName: value.roomName,
       dayPrice: value.dayPrice,
+      districtId: value.district,
+      wardId: value.wards,
       monthPrice: value.monthPrice,
       yearPrice: value.yearPrice,
       description: value.desc,
@@ -150,35 +208,11 @@ const SpaceUpdate = () => {
     imageFiles.forEach((item) => formData.append("files", item.file));
     setIsLoading(true);
     http
-      .post("rooms", formData)
+      .put(`rooms/${id}`, formData)
       .then((res) => {
         console.log(res);
         toast.success("success");
-        reset({
-          address: "",
-          roomName: "",
-          dayPrice: "",
-          monthPrice: "",
-          yearPrice: "",
-          desc: "",
-          roomTypeId: "",
-          city: "",
-          district: "",
-          wards: "",
-        });
-        setWardsName("");
-        setDistrictName("");
-        setCityName("");
-        setUtilities([
-          {
-            name: `nameUtility0`,
-            price: `priceUtility0`,
-            index: 0,
-          },
-        ]);
-        setRoomTypesName("");
-        setImageFiles([]);
-        setIsLoading(false);
+        navigate("/manage/space");
       })
 
       .catch((err) => {

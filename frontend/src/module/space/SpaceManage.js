@@ -1,6 +1,7 @@
-import axios from "axios";
 import React, { useEffect, useState, useRef } from "react";
+import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
+import Button from "../../components/button/Button";
 import Table from "../../components/table/Table";
 import http from "../../config/axiosConfig";
 import { useAuth } from "../../context/auth-context";
@@ -10,7 +11,7 @@ const SpaceManage = () => {
   const userId = user.id;
   const [spaces, setSpaces] = useState([]);
   const getListRoom = useRef({});
-
+  const navigate = useNavigate();
   getListRoom.current = () => {
     http
       .get(`rooms/getByCustomerId/${userId}`)
@@ -49,26 +50,23 @@ const SpaceManage = () => {
       .catch((err) => {
         console.log("err: ", err);
       });
-    // const token = localStorage.getItem("token");
-    // axios
-    //   .get(`rooms/delete/${roomId}`, {
-    //     headers: { Authorization: `Bearer ${token}` },
-    //   })
-    //   .then((res) => {
-    //     console.log("response: ", res);
-    //   })
-    //   .catch((err) => {
-    //     console.log("error: ", err);
-    //   });
   };
   const head = ["Name", "Room Type", "Adress", "Description"];
   return (
     <div>
-      <h1 className="text-2xl font-bold text-primary mb-10">
-        Manage Your Spaces
-      </h1>
+      <div className="w-full flex flex-row justify-between">
+        <h1 className="text-2xl font-bold text-primary mb-10">
+          Manage Your Spaces
+        </h1>
+        <Button onClick={() => navigate("/manage/add-space")}>Add Space</Button>
+      </div>
       <div className="w-full h-full max-w-[1400px] p-16">
-        <Table head={head} data={spaces} handleDelete={handleDelete}></Table>
+        <Table
+          head={head}
+          data={spaces}
+          linkTo={"/manage/update-space/"}
+          handleDelete={handleDelete}
+        ></Table>
       </div>
     </div>
   );

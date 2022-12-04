@@ -16,6 +16,7 @@ import { useAuth } from "./context/auth-context";
 import { NavLink, useParams, useNavigate } from "react-router-dom";
 import MyReservation from "./components/modal/MyReservation";
 import ReservationDetail from "./components/request/ReservationDetail";
+import SpaceUpdate from "./module/space/SpaceUpdate";
 
 function App() {
   const navigate = useNavigate();
@@ -69,6 +70,7 @@ function App() {
           <Route path="/manage/space" element={<SpaceManage />} />
           <Route path="/manage/users" element={<div>user</div>} />
           <Route path="/manage/add-space" element={<SpaceAdd />} />
+          <Route path="/manage/update-space/:id" element={<SpaceUpdate />} />
         </Route>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />

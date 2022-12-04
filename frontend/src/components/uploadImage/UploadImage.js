@@ -3,8 +3,6 @@ import { MdAddAPhoto } from "react-icons/md";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 
 const UploadImage = ({ imageFiles, setImageFiles }) => {
-  // const [imageFiles, setImageFiles] = useState([]);
-
   const handleFileInput = (e) => {
     if (imageFiles.length >= 4) return;
     const filesList = e.target.files;
@@ -18,14 +16,15 @@ const UploadImage = ({ imageFiles, setImageFiles }) => {
     setImageFiles([...imageFiles, ...list]);
   };
   console.log(
-    "🚀 ~ file: UploadImage.js ~ line 10 ~ handleFileInput ~ imageFiles",
+    "🚀 ~ file: UploadImage.js:18 ~ handleFileInput ~ imageFiles",
     imageFiles
   );
+
   const handleDeleteImage = (item) => {
     let listImage = [];
-    listImage = imageFiles.filter(
-      (image) => image.file.name !== item.file.name
-    );
+    listImage = imageFiles.filter((image) => {
+      return image.file.name !== item.file.name;
+    });
     setImageFiles(listImage);
   };
 

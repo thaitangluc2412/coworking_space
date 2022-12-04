@@ -1,12 +1,14 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import classes from "./ModalRent.module.css";
 import DatePicker from "react-datetime";
 import { useParams } from "react-router-dom";
 import "react-datetime/css/react-datetime.css";
 import { IoIosCalendar, IoIosArrowRoundForward } from "react-icons/io";
-import Carousel from "react-elastic-carousel";
-import { useContext } from "react";
+import { SwiperSlide, Swiper } from "swiper/react";
+import { Navigation, Pagination } from "swiper";
+import "swiper/css";
+import "swiper/css/navigation";
 import http from "../../config/axiosConfig";
 import { useAuth } from "../../context/auth-context";
 import { format } from "date-fns";
@@ -162,7 +164,7 @@ const ModalRent = (props) => {
               </p>
             </div>
             <h4>{data.roomName}</h4>
-            <Carousel>
+            {/* <Carousel>
               {listImages.map((image) => (
                 <div className="w-full h-[500px] mb-4" key={image.id}>
                   <img
@@ -172,7 +174,29 @@ const ModalRent = (props) => {
                   />
                 </div>
               ))}
-            </Carousel>
+            </Carousel> */}
+
+            <div>
+              <Swiper
+                slidesPerView={1}
+                modules={[Navigation, Pagination]}
+                navigation={true}
+                pagination={{ clickable: true }}
+                parallax={true}
+              >
+                {listImages.map((image) => (
+                  <SwiperSlide>
+                    <div className="w-full h-[500px] mb-4" key={image.id}>
+                      <img
+                        className="w-full h-full object-contain"
+                        src={image.url}
+                        alt=""
+                      />
+                    </div>
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            </div>
           </div>
         </div>
         <div className={classes.containerRight}>
