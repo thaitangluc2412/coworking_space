@@ -18,10 +18,9 @@ public class RoomListDto {
 	private String roomName;
 	private String address;
 	private String city;
-	private String size;
-	private String capacity;
 	private String description;
 	private List<ImageDto> images;
+	private List<UtilityDto> utilities;
 	private LocalDateTime timeCreate;
 	private LocalDateTime timeUpdate;
 }

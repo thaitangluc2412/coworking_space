@@ -25,7 +25,7 @@ public class PriceServiceImpl implements PriceService {
 	}
 
 	@Override
-	public Price findById(String id) throws NotFoundException {
-		return priceRepository.findById(id).orElseThrow(NotFoundException::new);
+	public Price findById(String id) {
+		return priceRepository.findById(id).orElseThrow(() -> new RuntimeException("Not found room by Id"));
 	}
 }

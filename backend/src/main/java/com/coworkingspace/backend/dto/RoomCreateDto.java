@@ -21,13 +21,18 @@ public class RoomCreateDto {
 	private String roomStatusId;
 	private String roomTypeId;
 	private String imageStorageId;
+	private String utilityStorageId;
 	private String roomName;
 	private String address;
-	private String city;
-	private String size;
-	private String capacity;
+	private Integer provinceId;
+	private String provinceName;
+	private Integer districtId;
+	private String districtName;
+	private Integer wardId;
+	private String wardName;
 	private String description;
 	private List<ImageDto> images;
+	private List<UtilityDto> utilities;
 	private LocalDateTime timeCreate;
 	private LocalDateTime timeUpdate;
 }

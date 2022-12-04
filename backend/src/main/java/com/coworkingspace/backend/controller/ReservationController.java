@@ -1,6 +1,7 @@
 package com.coworkingspace.backend.controller;
 
 import com.coworkingspace.backend.dto.ReservationDto;
+import com.coworkingspace.backend.dto.ReservationListDto;
 import com.coworkingspace.backend.dto.RoomCreateDto;
 import com.coworkingspace.backend.sdo.DateStatus;
 import com.coworkingspace.backend.service.ReservationService;
@@ -32,22 +33,40 @@ public class ReservationController {
 		return new ResponseEntity<>(reservationDto1, HttpStatus.OK);
 	}
 
-	@GetMapping(value = "/furthest_valid_date/{roomId}")
+	@GetMapping("/furthest_valid_date/{roomId}")
 	public ResponseEntity<String> getFurthestValidDate(@PathVariable String roomId, @RequestParam String from) throws NotFoundException {
 			System.out.println("# Date : " + from);
 			String furthestValidDate = reservationService.getFurthestValidDate(roomId, from);
 			return new ResponseEntity<>(furthestValidDate,HttpStatus.OK);
 	}
 
-	@GetMapping(value = "/date_status/{roomId}")
+	@GetMapping("/date_status/{roomId}")
 	public ResponseEntity<List<DateStatus>> getDateStatus(@PathVariable String roomId, @RequestParam int month, @RequestParam int year) throws NotFoundException {
 		List<DateStatus> dateStatus = reservationService.getDateStatus(roomId, month, year);
 		return new ResponseEntity<>(dateStatus, HttpStatus.OK);
 	}
 
-	@GetMapping(value = "/get_invalid_date/{roomId}")
+	@GetMapping("/get_invalid_date/{roomId}")
 	public ResponseEntity<?> getAllInvalidDates(@PathVariable String roomId) throws NotFoundException {
 		List<LocalDate> dates = new ArrayList<>(reservationService.getAllInvalidDate(roomId));
 		return new ResponseEntity<>(dates, HttpStatus.OK);
+	}
+
+	@GetMapping("/by-customer/{customerId}")
+	public ResponseEntity<List<ReservationListDto>> getByCustomerId(@PathVariable String customerId){
+		List<ReservationListDto> reservationListDtos = reservationService.getByCustomerId(customerId);
+		return new ResponseEntity<>(reservationListDtos, HttpStatus.OK);
+	}
+
+	@GetMapping("/{id}")
+	public ResponseEntity<ReservationListDto> getById(@PathVariable String id){
+		ReservationListDto reservationListDto = reservationService.getById(id);
+		return new ResponseEntity<>(reservationListDto, HttpStatus.OK);
+	}
+
+	@PutMapping("/{id}")
+	public ResponseEntity<ReservationListDto> updateReservation(@PathVariable String id, @RequestParam String reservationStatusName){
+		ReservationListDto reservationListDto = reservationService.updateReservation(id, reservationStatusName);
+		return new ResponseEntity<>(reservationListDto, HttpStatus.OK);
 	}
 }

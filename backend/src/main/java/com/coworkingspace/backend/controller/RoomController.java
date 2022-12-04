@@ -3,6 +3,7 @@ package com.coworkingspace.backend.controller;
 import com.coworkingspace.backend.dto.RoomCreateDto;
 import com.coworkingspace.backend.dto.RoomListDto;
 import com.coworkingspace.backend.service.RoomService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.HttpStatus;
@@ -21,9 +22,9 @@ public class RoomController {
 
 	@PostMapping
 	public ResponseEntity<RoomCreateDto> createRoom(@RequestPart RoomCreateDto roomCreateDto,
-	                                                  @RequestPart("files") MultipartFile[] files) {
+		@RequestPart(value = "files", required = false) MultipartFile[] files) {
 		roomService.createRoom(roomCreateDto, files);
-		return new ResponseEntity<>(roomCreateDto, HttpStatus.OK);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	@GetMapping
@@ -34,8 +35,8 @@ public class RoomController {
 
 	@PutMapping("/{id}")
 	public ResponseEntity<RoomCreateDto> updateRoom(@PathVariable String id,
-	                                                      @RequestPart RoomCreateDto roomCreateDto,
-	                                                      @RequestPart("files") MultipartFile[] files) throws NotFoundException {
+		@RequestPart RoomCreateDto roomCreateDto,
+		@RequestPart("files") MultipartFile[] files) throws NotFoundException {
 		RoomCreateDto roomCreateDto1 = roomService.updateRoom(id, roomCreateDto, files);
 		return ResponseEntity.status(HttpStatus.OK).body(roomCreateDto1);
 	}
@@ -46,9 +47,12 @@ public class RoomController {
 		return ResponseEntity.status(HttpStatus.OK).body(roomListDto);
 	}
 
-	@GetMapping("/roomType/{id}")
-	public ResponseEntity<List<RoomListDto>> getByRoomTypeId(@PathVariable String id) {
-		List<RoomListDto> rooms = roomService.getByRoomTypeId(id);
+	@GetMapping("/roomFilter")
+	public ResponseEntity<List<RoomListDto>> getWithFilter(@RequestParam(required = false) String typeRoomId,
+		@RequestParam(required = false) String provinceId, @RequestParam(required = false) String roomName,
+		@RequestParam(required = false) String cityName,
+		@RequestParam(required = false) String minPrice, @RequestParam(required = false) String maxPrice) {
+		List<RoomListDto> rooms = roomService.getWithFilter(typeRoomId, provinceId, roomName, cityName, minPrice, maxPrice);
 		return new ResponseEntity<>(rooms, HttpStatus.OK);
 	}
 

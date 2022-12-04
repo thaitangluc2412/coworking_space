@@ -4,7 +4,10 @@ import { NavLink, useParams, useNavigate } from "react-router-dom";
 import http from "../config/axiosConfig";
 import { GiFlowerStar } from "react-icons/gi";
 import Carousel from "react-elastic-carousel";
+import { useAuth } from "../context/auth-context";
+
 const SpaceDetail = () => {
+  const { user } = useAuth();
   const navigate = useNavigate();
   const { id } = useParams();
   const [data, setData] = useState([]);
@@ -16,7 +19,11 @@ const SpaceDetail = () => {
     });
   }, []);
   const handleRent = () => {
-    navigate(`/rent/${id}`);
+    if (user.id) {
+      navigate(`/rent/${id}`);
+    } else {
+      navigate("/login");
+    }
   };
   console.log(data);
   return (

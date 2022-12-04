@@ -37,6 +37,10 @@
   color: #1e8489;
 }
 
+.inline {
+  display: inline;
+}
+
 .close {
   position: absolute;
   right: -70px;
@@ -114,6 +118,7 @@
 .rentInfo p {
   color: #333;
   font-size: 17px;
+  padding-top: 10px;
 }
 
 .rentInfo p span {

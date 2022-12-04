@@ -14,7 +14,7 @@ public class ReservationStatusServiceImpl implements ReservationStatusService {
 	private ReservationStatusRepository reservationStatusRepository;
 
 	@Override
-	public ReservationStatus findByReservationStatusName(String name) throws NotFoundException {
-		return reservationStatusRepository.findByReservationStatusName(name).orElseThrow(NotFoundException::new);
+	public ReservationStatus findByReservationStatusName(String name) {
+		return reservationStatusRepository.findByReservationStatusName(name).orElseThrow(() -> new RuntimeException("Not found status name"));
 	}
 }

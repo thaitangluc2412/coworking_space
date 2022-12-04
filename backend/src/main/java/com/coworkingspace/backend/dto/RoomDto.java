@@ -22,14 +22,16 @@ public class RoomDto {
 	private String priceId;
 	private String roomStatusId;
 	private String imageStorageId;
+	private String utilityStorageId;
 	private String roomTypeId;
 	private String roomName;
 	private String address;
-	private String city;
-	private String size;
-	private String capacity;
+	private Integer provinceId;
+	private Integer districtId;
+	private Integer wardId;
 	private String description;
 	private List<ImageDto> images;
+	private List<UtilityDto> utilities;
 	private LocalDateTime timeCreate;
 	private LocalDateTime timeUpdate;
 }

@@ -7,6 +7,7 @@ import com.coworkingspace.backend.configuration.CloudinaryConfig;
 import com.coworkingspace.backend.dao.entity.Image;
 import com.coworkingspace.backend.dao.entity.ImageStorage;
 import com.coworkingspace.backend.dao.entity.Room;
+import com.coworkingspace.backend.dao.hibernate.RoomDao;
 import com.coworkingspace.backend.dao.repository.RoomRepository;
 import com.coworkingspace.backend.dto.ImageDto;
 import com.coworkingspace.backend.dto.RoomCreateDto;
@@ -20,6 +21,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+
+import java.io.File;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -32,6 +35,7 @@ public class RoomServiceImpl implements RoomService {
 	private RoomRepository roomRepository;
 	private RoomMapper roomMapper;
 	private ImageMapper imageMapper;
+	private RoomDao roomDao;
 
 	@Transactional
 	@Override
@@ -39,9 +43,17 @@ public class RoomServiceImpl implements RoomService {
 		try {
 			List<ImageDto> imageDtos = new ArrayList<>();
 			imageDtos.addAll(saveImage(files));
-			roomCreateDto.setImages(imageDtos);
-			Room room = roomMapper.roomCreateDtoToRoom(roomCreateDto);
-			roomRepository.save(room);
+			Thread thread = new Thread(() -> {
+				roomCreateDto.setImages(imageDtos);
+				Room room = null;
+				try {
+					room = roomMapper.roomCreateDtoToRoom(roomCreateDto);
+				} catch (NotFoundException e) {
+					throw new RuntimeException(e);
+				}
+				roomRepository.save(room);
+			});
+			thread.start();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -63,12 +75,12 @@ public class RoomServiceImpl implements RoomService {
 	}
 
 	@Override
-	public Room findById(String id) throws NotFoundException {
-		return roomRepository.findById(id).orElseThrow(NotFoundException::new);
+	public Room findById(String id){
+		return roomRepository.findById(id).orElseThrow(() -> new RuntimeException("Not found room"));
 	}
 
 	@Override
-	public RoomListDto findByRoomId(String id) throws NotFoundException {
+	public RoomListDto findByRoomId(String id) {
 		return roomMapper.roomToRoomListDto(findById(id));
 	}
 
@@ -78,7 +90,7 @@ public class RoomServiceImpl implements RoomService {
 	}
 
 	@Override
-	public void deleteRoom(String id) throws NotFoundException {
+	public void deleteRoom(String id){
 		Room room = findById(id);
 		room.setEnable(false);
 		roomRepository.save(room);
@@ -110,12 +122,8 @@ public class RoomServiceImpl implements RoomService {
 	}
 
 	@Override
-	public List<RoomListDto> getByRoomTypeId(String id) {
-		return roomRepository.getByRoomTypeId(id)
-				.stream()
-				.map(room ->
-						     roomMapper.roomToRoomListDto(room))
-				.collect(Collectors.toList());
+	public List<RoomListDto> getWithFilter(String typeRoomId, String provinceId, String roomName, String cityName, String minPrice, String maxPrice) {
+		return roomDao.getWithFilter(typeRoomId, provinceId, roomName, cityName, minPrice, maxPrice).stream().map(room -> roomMapper.roomToRoomListDto(room)).collect(Collectors.toList());
 	}
 
 	public void deleteFolderCloudinary(Room room) {
@@ -145,6 +153,7 @@ public class RoomServiceImpl implements RoomService {
 		int[] idx = new int[1];
 		idx[0] = 0;
 		List<ImageDto> imageDtos = new ArrayList<>();
+		if (files == null) { return Collections.emptyList(); }
 		Arrays.asList(files).stream().forEach(file -> {
 			String fileName = "image_" + idx[0];
 			try {
