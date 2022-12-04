@@ -130,6 +130,8 @@ const SpaceAdd = () => {
     const roomsAdd = {
       address: `${value.address}, ${wardsName}, ${districtName}`,
       provinceId: value.city,
+      districtId: value.district,
+      wardId: value.wards,
       roomName: value.roomName,
       dayPrice: value.dayPrice,
       monthPrice: value.monthPrice,
@@ -139,6 +141,7 @@ const SpaceAdd = () => {
       roomTypeId: value.roomTypeId,
       customerId: user.id,
     };
+    console.log(roomsAdd);
     const formData = new FormData();
 
     formData.append(

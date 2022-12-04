@@ -27,12 +27,12 @@ const Header = () => {
   };
   return (
     <div className="relative header w-[100%] minH-[70px] h-[80px] bg-white shadow-lg flex flex-row justify-between items-center pl-5">
-      <span
-        className="text-3xl font-bungee text-primary cursor-pointer"
+      <div
+        className="text-3xl font-bungee text-primary cursor-pointer h-[60px]"
         onClick={() => clickCoworkingSpace()}
       >
-        Coworking space
-      </span>
+        <img src="/logo.png" alt="" className="w-full h-full object-cover" />
+      </div>
       <div className="flex flex-row gap-4 justify-center items-center mr-10">
         <div className="text-base cursor-pointer hover:text-primary border-b-noColor border-b hover:border-primary">
           Request

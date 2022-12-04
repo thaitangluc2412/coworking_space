@@ -4,13 +4,11 @@
   "private": true,
   "dependencies": {
     "@hookform/resolvers": "^2.9.8",
-    "@react-google-maps/api": "^2.16.1",
     "@testing-library/jest-dom": "^5.16.3",
     "@testing-library/react": "^12.1.4",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^0.26.1",
     "dotenv": "^16.0.3",
-    "firebase": "^9.6.10",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
     "node-sass": "^7.0.1",
@@ -29,7 +27,6 @@
     "sass": "^1.49.11",
     "styled-components": "^5.3.6",
     "swiper": "^8.4.3",
-    "uuid": "^8.3.2",
     "web-vitals": "^2.1.4",
     "yup": "^0.32.11"
   },

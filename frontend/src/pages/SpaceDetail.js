@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import { NavLink, useParams, useNavigate } from "react-router-dom";
 import http from "../config/axiosConfig";
+import { GiFlowerStar } from "react-icons/gi";
 import Carousel from "react-elastic-carousel";
 const SpaceDetail = () => {
   const navigate = useNavigate();
@@ -17,6 +18,7 @@ const SpaceDetail = () => {
   const handleRent = () => {
     navigate(`/rent/${id}`);
   };
+  console.log(data);
   return (
     <div className="px-8 py-6 flex flex-row gap-6">
       <div className="w-[65%]">
@@ -47,36 +49,16 @@ const SpaceDetail = () => {
         <div className="px-5 py-8">
           <h2 className="font-bold text-2xl pb-4">Property features</h2>
           <div className="flex items-center px-2 text-lg gap-10 flex-wrap">
-            <div className="flex items-center gap-2 ">
-              <img src="/people.svg" alt="" className="w-7 h-7" />
-              <span>Maximum 4 people</span>
-            </div>
-            <div className="flex items-center gap-2 ">
-              <img src="/square.svg" alt="" className="w-7 h-7" />
-              <span>
-                45m<sup>2</sup>
-              </span>
-            </div>
-            <div className="flex items-center gap-2 ">
-              <img src="/bedroom.svg" alt="" className="w-7 h-7" />
-              <span>1 Bedrooms</span>
-            </div>
-            <div className="flex items-center gap-2 ">
-              <img src="/bathroom.svg" alt="" className="w-7 h-7" />
-              <span>1 Bathrooms</span>
-            </div>
-            <div className="flex items-center gap-2 ">
-              <img src="/kitchen.svg" alt="" className="w-7 h-7" />
-              <span>1 Kitchens</span>
-            </div>
-            <div className="flex items-center gap-2 ">
-              <img src="/kitchen.svg" alt="" className="w-7 h-7" />
-              <span>1 Kitchens</span>
-            </div>
-            <div className="flex items-center gap-2 ">
-              <img src="/kitchen.svg" alt="" className="w-7 h-7" />
-              <span>1 Kitchens</span>
-            </div>
+            {data?.utilities?.length > 0 &&
+              data?.utilities.map((item) => {
+                return (
+                  <div className="flex items-center gap-2 ">
+                    <GiFlowerStar className="w-7 h-7" />
+                    <span>{item.value}</span>
+                    <span>{item.name}</span>
+                  </div>
+                );
+              })}
           </div>
           <h3 className="font-bold text-2xl pb-4 mt-10">Description</h3>
           <div>{data.description}</div>

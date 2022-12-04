@@ -1,12 +1,12 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
-import { NavLink, useParams, useSearchParams } from "react-router-dom";
+import { NavLink, useSearchParams } from "react-router-dom";
 
 import SpaceItem from "../components/space-list/SpaceItem";
 import http from "../config/axiosConfig";
+import FilterSpace from "../module/filter/FilterSpace";
 
 const SpaceList = () => {
-  // const { id } = useParams();
   const [params] = useSearchParams();
   const cityName = params.get("cityName");
   const typeRoomId = params.get("typeRoomId");
@@ -36,6 +36,9 @@ const SpaceList = () => {
 
       .catch((e) => console.log(e));
   }, [cityName, typeRoomId]);
+  const handleFilter = (values) => {
+    console.log("values", values);
+  };
   return (
     <div className="flex flex-row w-full min-h-full h-full pl-8">
       <div className="w-[60%] pt-10 overflow-y-auto scrollbar">
@@ -70,7 +73,7 @@ const SpaceList = () => {
         </div>
       </div>
       <div className="w-[40%] right-0 h-full shadow-lg">
-        {/* <Map locations={locations} /> */}
+        <FilterSpace handleFilter={handleFilter} />
       </div>
     </div>
   );
