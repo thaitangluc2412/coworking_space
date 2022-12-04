@@ -6,5 +6,5 @@ import com.coworkingspace.backend.dao.entity.Room;
 import com.coworkingspace.backend.dto.RoomListDto;
 
 public interface RoomDao {
-	List<Room> getWithFilter(String typeRoomId, String provinceId, String roomName, String cityName);
+	List<Room> getWithFilter(String typeRoomId, String provinceId, String roomName, String cityName, String minPrice, String maxPrice);
 }

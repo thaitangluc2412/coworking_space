@@ -13,11 +13,14 @@ import SpaceManage from "./module/space/SpaceManage";
 import { useState, Fragment, useContext } from "react";
 import Backdrop from "./components/backdrop/Backdrop";
 import { useAuth } from "./context/auth-context";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useParams, useNavigate } from "react-router-dom";
+import MyReservation from "./components/modal/MyReservation";
+import ReservationDetail from "./components/request/ReservationDetail";
 
 function App() {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const id = user.id;
   const [isBackdrop, setBackdrop] = useState(false);
   const [isModalPayment, setModalPayment] = useState(false);
   const [reservation, setReservation] = useState({});
@@ -28,17 +31,14 @@ function App() {
   };
   const onActiveModalPayment = (input_reservation) => {
     setReservation(input_reservation);
-    if (user.id) {
+
+    setBackdrop(true);
+    if (user) {
       setModalPayment(true);
-      setBackdrop(true);
     } else {
-      navigate(`/login`);
+      navigate(`/rent/${id}`);
     }
   };
-
-  // const onActivePaymentFromLogin = () => {
-  //   setModalPayment(true);
-  // };
 
   const onExitModalPayment = () => {
     setModalPayment(false);
@@ -62,6 +62,8 @@ function App() {
             path="/rent/:id"
             element={<ModalRent onActiveModalPayment={onActiveModalPayment} />}
           />
+          <Route path="/myreservation" element={<MyReservation />} />
+          <Route path="/reservation/:id" element={<ReservationDetail />} />
         </Route>
         <Route path="/manage" element={<LayoutMange />}>
           <Route path="/manage/space" element={<SpaceManage />} />

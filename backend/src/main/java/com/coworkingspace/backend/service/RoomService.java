@@ -11,10 +11,10 @@ import java.util.List;
 public interface RoomService {
 	void createRoom(RoomCreateDto roomCreateDto,  MultipartFile[] files);
 	List<RoomCreateDto> getAll();
-	Room findById(String id) throws NotFoundException;
+	Room findById(String id);
 	RoomCreateDto updateRoom(String id, RoomCreateDto roomCreateDto, MultipartFile[] files) throws NotFoundException;
-	List<RoomListDto> getWithFilter(String typeRoomId, String provinceId, String roomName, String cityName);
-	RoomListDto findByRoomId(String id) throws NotFoundException;
+	List<RoomListDto> getWithFilter(String typeRoomId, String provinceId, String roomName, String cityName, String minPrice, String maxPrice);
+	RoomListDto findByRoomId(String id);
 	List<RoomListDto> findByCustomerId(String id);
-	void deleteRoom(String id) throws NotFoundException;
+	void deleteRoom(String id);
 }

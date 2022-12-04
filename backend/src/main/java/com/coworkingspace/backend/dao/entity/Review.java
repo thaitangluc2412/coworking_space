@@ -32,7 +32,7 @@ public class Review extends BaseEntity{
 	private Room room;
 
 	@Column(name = "rating")
-	private String rating;
+	private Integer rating;
 
 	@Lob
 	@Column(name = "content")

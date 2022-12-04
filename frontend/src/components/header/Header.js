@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/auth-context";
 import { FaRegUserCircle } from "react-icons/fa";
 
@@ -25,6 +25,20 @@ const Header = () => {
     });
     setShow(false);
   };
+  const items = [
+    {
+      url: "/manage",
+      name: "Management",
+    },
+    {
+      url: "/myreservation",
+      name: "My Reservation",
+    },
+    {
+      url: "/help",
+      name: "Help",
+    },
+  ];
   return (
     <div className="relative header w-[100%] minH-[70px] h-[80px] bg-white shadow-lg flex flex-row justify-between items-center pl-5">
       <span
@@ -34,18 +48,18 @@ const Header = () => {
         Coworking space
       </span>
       <div className="flex flex-row gap-4 justify-center items-center mr-10">
-        <div className="text-base cursor-pointer hover:text-primary border-b-noColor border-b hover:border-primary">
-          Request
-        </div>
-        <div className="text-base cursor-pointer hover:text-primary border-b-noColor border-b hover:border-primary">
-          Properties for rent
-        </div>
-        <div className="text-base cursor-pointer hover:text-primary border-b-noColor border-b hover:border-primary">
-          My reservation
-        </div>
-        <div className="text-base cursor-pointer hover:text-primary border-b-noColor border-b hover:border-primary">
-          Help
-        </div>
+        {items.map((item) => (
+          <NavLink
+            to={item.url}
+            className={({ isActive }) =>
+              `text-base cursor-pointer hover:text-primary border-b-noColor border-b hover:border-primary ${
+                isActive ? "text-primary" : ""
+              }`
+            }
+          >
+            {item.name}
+          </NavLink>
+        ))}
 
         <div className="flex flex-row gap-2 relative">
           <FaRegUserCircle

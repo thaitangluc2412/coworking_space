@@ -25,6 +25,11 @@ public class RoomCreateDto {
 	private String roomName;
 	private String address;
 	private Integer provinceId;
+	private String provinceName;
+	private Integer districtId;
+	private String districtName;
+	private Integer wardId;
+	private String wardName;
 	private String description;
 	private List<ImageDto> images;
 	private List<UtilityDto> utilities;

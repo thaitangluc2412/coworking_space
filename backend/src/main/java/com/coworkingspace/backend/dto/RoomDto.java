@@ -27,6 +27,8 @@ public class RoomDto {
 	private String roomName;
 	private String address;
 	private Integer provinceId;
+	private Integer districtId;
+	private Integer wardId;
 	private String description;
 	private List<ImageDto> images;
 	private List<UtilityDto> utilities;

@@ -54,6 +54,14 @@ public class Room extends BaseEntity{
 	@JoinColumn(name = "province_id", nullable = false)
 	private Province province;
 
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(name = "district_id", nullable = false)
+	private District district;
+
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(name = "ward_id", nullable = false)
+	private Ward ward;
+
 	@Lob
 	@Column(name = "description")
 	private String description;

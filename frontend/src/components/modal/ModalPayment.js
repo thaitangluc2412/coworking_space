@@ -1,6 +1,6 @@
 import ReactDOM from "react-dom";
 import classes from "./ModalPayment.module.css";
-
+import http from "../../config/axiosConfig";
 import { useState, useRef, useContext, useEffect } from "react";
 import {
   BsCheckCircle,
@@ -15,6 +15,13 @@ const ModalPayment = (props) => {
   const exitRegister = (event) => {
     event.preventDefault();
     props.onExitModalPayment();
+  };
+  const onSubmit = () => {
+    console.log("onSubmit: ", props.reservation);
+    http
+      .post("reservations", props.reservation)
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
   };
 
   return ReactDOM.createPortal(
@@ -84,7 +91,9 @@ const ModalPayment = (props) => {
             you don't send them wrong.
           </p>
           <div className={classes.btnContainer}>
-            <button className={classes.btnRent}>Request</button>
+            <button className={classes.btnRent} onClick={() => onSubmit()}>
+              Request
+            </button>
           </div>
         </div>
       </div>

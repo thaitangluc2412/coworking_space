@@ -5,16 +5,19 @@ import com.coworkingspace.backend.dao.entity.ReservationStatus;
 import com.coworkingspace.backend.dao.hibernate.ReservationDao;
 import com.coworkingspace.backend.dao.repository.ReservationRepository;
 import com.coworkingspace.backend.dto.ReservationDto;
+import com.coworkingspace.backend.dto.ReservationListDto;
 import com.coworkingspace.backend.mapper.ReservationMapper;
 import com.coworkingspace.backend.sdo.DateStatus;
 import com.coworkingspace.backend.service.ReservationService;
 import com.coworkingspace.backend.service.ReservationStatusService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ReservationServiceImpl implements ReservationService {
@@ -54,5 +57,23 @@ public class ReservationServiceImpl implements ReservationService {
 	@Override
 	public List<LocalDate> getAllInvalidDate(String roomId) throws NotFoundException {
 		return reservationDao.getAllInvalidDates(roomId);
+	}
+
+	@Override public List<ReservationListDto> getByCustomerId(String customerId) {
+		return reservationRepository.getByCustomerId(customerId).stream()
+			.map(reservation -> reservationMapper.reservationToReservationListDto(reservation)).collect(
+				Collectors.toList());
+	}
+
+	@Override public ReservationListDto getById(String id) {
+		return reservationMapper.reservationToReservationListDto(
+			reservationRepository.getById(id));
+	}
+
+	@Override public ReservationListDto updateReservation(String id, String reservationStatsName) {
+		Reservation reservation = reservationRepository.getById(id);
+		reservation.setReservationStatus(reservationStatusService.findByReservationStatusName(reservationStatsName));
+		reservationRepository.save(reservation);
+		return reservationMapper.reservationToReservationListDto(reservation);
 	}
 }

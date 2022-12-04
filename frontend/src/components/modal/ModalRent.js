@@ -9,14 +9,14 @@ import Carousel from "react-elastic-carousel";
 import { useContext } from "react";
 import http from "../../config/axiosConfig";
 import { useAuth } from "../../context/auth-context";
-
+import { format } from "date-fns";
 const convertDateToString = (date) => {
   const dateObj = new Date(date);
   const month = dateObj.getUTCMonth() + 1; //months from 1-12
-  const day = dateObj.getUTCDate();
+  const day = dateObj.getUTCDate() + 1;
   const year = dateObj.getUTCFullYear();
   const rs = year + "-" + month + "-" + day;
-  return rs;
+  return format(new Date(rs), "yyyy-MM-dd");
 };
 
 const ModalRent = (props) => {
@@ -98,6 +98,7 @@ const ModalRent = (props) => {
   };
 
   const chooseEndDate = (date) => {
+    console.log("end date: ", data);
     setEndDate(date);
     setQuantityDays((new Date(date) - new Date(startDate)) / 86400000 + 1);
   };

@@ -10,17 +10,31 @@ const SpaceList = () => {
   const [params] = useSearchParams();
   const cityName = params.get("cityName");
   const typeRoomId = params.get("typeRoomId");
+  const provinceId = params.get("provinceId");
+  const minPrice = params.get("minPrice");
+  const maxPrice = params.get("maxPrice");
 
   const [listSpace, setListSpace] = useState([]);
   const filter = (cityName, typeRoomId) => {
     let filterList = "rooms/roomFilter";
     const urlString = [];
     if (cityName) {
+      cityName = cityName.replaceAll(" ", "_");
       urlString.push(`cityName=${cityName}`);
     }
     if (typeRoomId) {
       urlString.push(`typeRoomId=${typeRoomId}`);
     }
+    if (provinceId) {
+      urlString.push(`provinceId=${provinceId}`);
+    }
+    if (minPrice) {
+      urlString.push(`minPrice=${minPrice}`);
+    }
+    if (maxPrice) {
+      urlString.push(`maxPrice=${maxPrice}`);
+    }
+
     if (urlString.length !== 0) {
       filterList = filterList.concat(`?${urlString.join("&")}`);
     }
