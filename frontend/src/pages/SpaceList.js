@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
-import { NavLink, useSearchParams } from "react-router-dom";
+import { NavLink, useNavigate, useSearchParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
 import SpaceItem from "../components/space-list/SpaceItem";
 import http from "../config/axiosConfig";
@@ -10,12 +11,16 @@ const SpaceList = () => {
   const [params] = useSearchParams();
   const cityName = params.get("cityName");
   const typeRoomId = params.get("typeRoomId");
-  const provinceId = params.get("provinceId");
-  const minPrice = params.get("minPrice");
-  const maxPrice = params.get("maxPrice");
-
+  const navigate = useNavigate();
   const [listSpace, setListSpace] = useState([]);
-  const filter = (cityName, typeRoomId) => {
+  const filter = ({
+    cityName = "",
+    typeRoomId = "",
+    provinceId = "",
+    minPrice = "",
+    maxPrice = "",
+    roomName = "",
+  }) => {
     let filterList = "rooms/roomFilter";
     const urlString = [];
     if (cityName) {
@@ -34,6 +39,9 @@ const SpaceList = () => {
     if (maxPrice) {
       urlString.push(`maxPrice=${maxPrice}`);
     }
+    if (roomName) {
+      urlString.push(`roomName=${roomName}`);
+    }
 
     if (urlString.length !== 0) {
       filterList = filterList.concat(`?${urlString.join("&")}`);
@@ -42,16 +50,37 @@ const SpaceList = () => {
   };
   useEffect(() => {
     http
-      .get(filter(cityName, typeRoomId))
+      .get(filter({ cityName: cityName, typeRoomId: typeRoomId }))
       .then((response) => {
-        console.log(response.data);
         setListSpace(response.data);
       })
 
       .catch((e) => console.log(e));
   }, [cityName, typeRoomId]);
   const handleFilter = (values) => {
-    console.log("values", values);
+    console.log("Values", values);
+    if (Number(values.minPrice) > Number(values.maxPrice)) {
+      toast.error("Min Price must be less than max Price");
+      return;
+    }
+
+    http
+      .get(
+        filter({
+          typeRoomId: values.typeRoomId,
+          provinceId: values.city,
+          minPrice: values.minPrice,
+          maxPrice: values.maxPrice,
+          roomName: values.roomName,
+        })
+      )
+      .then((response) => {
+        setListSpace(response.data);
+      })
+      .catch((err) => {
+        console.error(err);
+        toast.error(err);
+      });
   };
   return (
     <div className="flex flex-row w-full min-h-full h-full pl-8">
@@ -86,7 +115,8 @@ const SpaceList = () => {
             ))}
         </div>
       </div>
-      <div className="w-[40%] right-0 h-full shadow-lg">
+      <div className="w-[40%] right-0 h-full shadow-lg bg-[url('https://images.unsplash.com/photo-1601762429744-46fe92ccd903?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80')] relative">
+        <div className="inset-0 absolute bg-black bg-opacity-40"></div>
         <FilterSpace handleFilter={handleFilter} />
       </div>
     </div>

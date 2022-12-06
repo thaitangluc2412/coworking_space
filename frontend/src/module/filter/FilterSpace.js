@@ -12,14 +12,14 @@ import http from "../../config/axiosConfig";
 import Button from "../../components/button/Button";
 
 const FilterSpace = ({ handleFilter }) => {
-  const { handleSubmit, control, setValue } = useForm({
+  const { handleSubmit, control, setValue, reset } = useForm({
     mode: "onSubmit",
     defaultValues: {
       minPrice: "",
       maxPrice: "",
       city: "",
-      search: "",
-      roomTypeId: "",
+      roomName: "",
+      typeRoomId: "",
     },
   });
   const [cities, setCites] = useState([]);
@@ -32,7 +32,7 @@ const FilterSpace = ({ handleFilter }) => {
   };
   const handleClickRoomType = (room) => {
     setRoomTypesName(room.roomTypeName);
-    setValue("roomTypeId", room.id);
+    setValue("typeRoomId", room.id);
   };
   useEffect(() => {
     http
@@ -53,15 +53,26 @@ const FilterSpace = ({ handleFilter }) => {
         console.error("roomTypes err", err);
       });
   }, []);
+  const clearFilter = () => {
+    reset({
+      minPrice: "",
+      maxPrice: "",
+      city: "",
+      roomName: "",
+      typeRoomId: "",
+    });
+    setCityName("");
+    setRoomTypesName("");
+  };
   return (
-    <div className="w-full h-full pt-10 flex items-center justify-center">
+    <div className="w-full h-full pt-10 flex items-center justify-center z-30 relative">
       <form
         onSubmit={handleSubmit(handleFilter)}
-        className="w-full max-w-[350px] mx-auto grid grid-cols-1 gap-6 px-5 py-5 rounded-2xl border shadow-lg shadow-purple-300"
+        className="bg-white bg-opacity-80 w-full max-w-[350px] mx-auto grid grid-cols-1 gap-6 px-5 py-5 rounded-2xl border "
       >
         <Input
           type="text"
-          name="search"
+          name="roomName"
           placeholder="Search"
           control={control}
         ></Input>
@@ -107,7 +118,11 @@ const FilterSpace = ({ handleFilter }) => {
             ></Input>
           </div>
         </div>
-        <Button type="submit">Search</Button>
+        <div className="flex flex-row gap-2 items-center justify-center">
+          <Button type="submit">Search</Button>
+
+          <Button onClick={clearFilter}>Clear</Button>
+        </div>
       </form>
     </div>
   );
