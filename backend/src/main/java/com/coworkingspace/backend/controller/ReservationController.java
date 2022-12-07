@@ -71,8 +71,8 @@ public class ReservationController {
 	}
 
 	@GetMapping("/get-by-seller-id/{id}")
-	public ResponseEntity<List<ReservationDto>> getBySellerId(@PathVariable String id){
-		List<ReservationDto> reservationDtos = reservationService.getBySellerId(id);
+	public ResponseEntity<List<ReservationListDto>> getBySellerId(@PathVariable String id){
+		List<ReservationListDto> reservationDtos = reservationService.getBySellerId(id);
 		return new ResponseEntity<>(reservationDtos, HttpStatus.OK);
 	}
 }

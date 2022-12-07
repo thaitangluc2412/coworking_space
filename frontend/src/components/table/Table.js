@@ -34,10 +34,16 @@ const Table = ({ head, data, linkTo, handleDelete }) => {
                     .map((value, i) => {
                       return (
                         <td key={i}>
-                          {typeof value == "boolean" ? (
-                            <span>{value ? "Yes" : "No"}</span>
+                          {value === "CANCELLED" ? (
+                            <span style={{ color: "#d75a64" }}>{value}</span>
+                          ) : value === "APPROVED" ? (
+                            <span style={{ color: "#039487" }}>{value}</span>
+                          ) : value === "PENDING" ? (
+                            <span style={{ color: "#6a5af9" }}>{value}</span>
+                          ) : value === "PAYING" ? (
+                            <span style={{ color: "#fece04" }}>{value}</span>
                           ) : (
-                            <div className="text-td">{value}</div>
+                            <span>{value}</span>
                           )}
                         </td>
                       );

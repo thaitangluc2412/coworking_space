@@ -12,12 +12,11 @@ import { NavLink } from "react-router-dom";
 
 const ReservationCard = (props) => {
   const handleReview = () => {
-    // if (props.reservation.reservationStatusName !== 2) {
-    //   props.handleNotification();
-    // } else {
-    //   props.onActiveModalReview(room);
-    // }
-    console.log("review nek");
+    if (props.reservation.reservationStatusName !== "APPROVED") {
+      props.handleNotification();
+    } else {
+      props.onActiveModalReview(props.reservation);
+    }
   };
 
   return (

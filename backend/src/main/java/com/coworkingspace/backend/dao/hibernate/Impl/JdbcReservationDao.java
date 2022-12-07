@@ -1,7 +1,9 @@
 package com.coworkingspace.backend.dao.hibernate.Impl;
 
+import com.coworkingspace.backend.dao.entity.Reservation;
 import com.coworkingspace.backend.dao.hibernate.ReservationDao;
 import com.coworkingspace.backend.dto.ReservationDto;
+import com.coworkingspace.backend.dto.ReservationListDto;
 import com.coworkingspace.backend.mapper.DateMapper;
 import com.coworkingspace.backend.mapper.DateStatusMapper;
 import com.coworkingspace.backend.sdo.DateStatus;
@@ -36,8 +38,8 @@ public class JdbcReservationDao implements ReservationDao {
 	private ReservationStatusService reservationStatusService;
 
 	@Override
-	public String getFurthestValidDate(String roomId, String from) throws NotFoundException {
-		String reservationStatusId = reservationStatusService.findByReservationStatusName("PENDING").getId();
+	public String getFurthestValidDate(String roomId, String from) {
+		String reservationStatusId = reservationStatusService.findByReservationStatusName("APPROVED").getId();
 		final String GET_FURTHEST_VALID_DATE = "SELECT DATE(start_date) - INTERVAL 1 DAY AS furthest_date FROM reservation \n" +
 			"WHERE room_id = '" + roomId + "'\n" +
 			"AND DATE('" + from + "') < DATE(start_date)\n" +
@@ -54,7 +56,7 @@ public class JdbcReservationDao implements ReservationDao {
 	}
 
 	@Override
-	public List<DateStatus> getDateStatus(String roomId, int month, int year) throws NotFoundException {
+	public List<DateStatus> getDateStatus(String roomId, int month, int year) {
 		String reservationStatusId = reservationStatusService.findByReservationStatusName("APPROVED").getId();
 		List<DateStatus> ret = new ArrayList<>();
 		final String sql = "WITH RECURSIVE days AS\n" +
@@ -78,7 +80,7 @@ public class JdbcReservationDao implements ReservationDao {
 
 	@Override
 	public List<LocalDate> getAllInvalidDates(String roomId) throws NotFoundException {
-		String reservationStatusId = reservationStatusService.findByReservationStatusName("PENDING").getId();
+		String reservationStatusId = reservationStatusService.findByReservationStatusName("APPROVED").getId();
 		List<LocalDate> ret = new ArrayList<>();
 		final String sql = "SELECT DISTINCT gen_date AS date FROM \n" +
 			"(SELECT ADDDATE('1970-01-01',t4*10000 + t3*1000 + t2*100 + t1*10 + t0) gen_date FROM\n" +
@@ -101,14 +103,15 @@ public class JdbcReservationDao implements ReservationDao {
 		return ret;
 	}
 
-	@Override public List<ReservationDto> getBySellerId(String id) {
+	@Override public List<Reservation> getBySellerId(String id) {
 		final String GET_BY_SELLER_ID =
-			"SELECT reservation.id AS id, reservation.room_id AS roomId, reservation.customer_id AS customerId, reservation.start_date AS startDate, reservation.end_date AS endDate, reservation.reservation_status_id, reservation.total AS total, reservation.deposit AS deposit FROM reservation\n" +
+			"SELECT reservation.* FROM reservation\n" +
 				"JOIN room ON reservation.room_id = room.room_id\n" +
 				"JOIN customer ON room.customer_id = customer.customer_id\n" +
-				"WHERE customer.customer_id = \"CQgjk9SySBAaOl9\"";
+				"WHERE customer.customer_id = ?1\n" +
+			    "ORDER BY reservation.time_create DESC";
 		Session session = entityManager.unwrap((Session.class));
-		return session.createNativeQuery(GET_BY_SELLER_ID, ReservationDto.class).getResultList();
+		return session.createNativeQuery(GET_BY_SELLER_ID, Reservation.class).setParameter(1, id).getResultList();
 	}
 
 }

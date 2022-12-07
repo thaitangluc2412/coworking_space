@@ -23,7 +23,8 @@ public class RoomDaoImpl implements RoomDao {
 		"AND room.room_name LIKE ?3\n" +
 		"AND province.name LIKE ?4\n" +
 		"AND province.codename LIKE ?4\n" +
-		"AND price.day_price > ?5 AND price.day_price < ?6";
+		"AND price.day_price > ?5 AND price.day_price < ?6\n" +
+		"ORDER BY room.time_create DESC ";
 
 	private EntityManager entityManager;
 

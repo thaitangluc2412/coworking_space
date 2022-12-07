@@ -5,6 +5,7 @@ import http from "../config/axiosConfig";
 import { GiFlowerStar } from "react-icons/gi";
 import Carousel from "react-elastic-carousel";
 import { useAuth } from "../context/auth-context";
+import Rating from "@mui/material/Rating";
 
 const SpaceDetail = () => {
   const { user } = useAuth();
@@ -12,12 +13,17 @@ const SpaceDetail = () => {
   const { id } = useParams();
   const [data, setData] = useState([]);
   const [listImages, setListImages] = useState([]);
+  const [listComment, setListComment] = useState([]);
+
   useEffect(() => {
     http.get(`rooms/${id}`).then((res) => {
       setData(res.data);
       setListImages(res.data.images);
     });
+
+    http.get(`reviews/rooms/${id}`).then((res) => setListComment(res.data));
   }, []);
+
   const handleRent = () => {
     if (user.id) {
       navigate(`/rent/${id}`);
@@ -25,7 +31,6 @@ const SpaceDetail = () => {
       navigate("/login");
     }
   };
-  console.log(data);
   return (
     <div className="px-8 py-6 flex flex-row gap-6">
       <div className="w-[65%]">
@@ -57,9 +62,9 @@ const SpaceDetail = () => {
           <h2 className="font-bold text-2xl pb-4">Property features</h2>
           <div className="flex items-center px-2 text-lg gap-10 flex-wrap">
             {data?.utilities?.length > 0 &&
-              data?.utilities.map((item) => {
+              data?.utilities.map((item, index) => {
                 return (
-                  <div className="flex items-center gap-2 ">
+                  <div className="flex items-center gap-2 " key={index}>
                     <GiFlowerStar className="w-7 h-7" />
                     <span>{item.value}</span>
                     <span>{item.name}</span>
@@ -104,6 +109,28 @@ const SpaceDetail = () => {
               Request information
             </button>
           </div>
+        </div>
+        <div className="w-full max-h-[400px] overflow-scroll rounded-sm shadow-lg p-5 mt-10">
+          {listComment.map((comment, index) => (
+            <div
+              className="flex flex-col  bg-slate-100 p-3 my-5 rounded"
+              key={index}
+            >
+              <div className="flex items-center justify-between">
+                <div>Customer: {comment.customerId}</div>
+                <div>{comment.rating} stars</div>
+                <Rating
+                  // className={classes.stars}
+                  name="half-rating-read"
+                  defaultValue={comment.ratingg}
+                  precision={0.5}
+                  readOnly
+                />
+              </div>
+              <div className="text-sm">Room: {comment.roomId || "1"}</div>
+              <div className="mt-4">{comment.content}</div>
+            </div>
+          ))}
         </div>
       </div>
     </div>

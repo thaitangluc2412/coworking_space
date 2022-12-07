@@ -38,6 +38,6 @@ public class Review extends BaseEntity{
 	@Column(name = "content")
 	private String content;
 
-	@Column(name = "create_date", nullable = false)
-	private LocalDateTime createDate;
+	@Column(name = "enable")
+	private Boolean enable = true;
 }

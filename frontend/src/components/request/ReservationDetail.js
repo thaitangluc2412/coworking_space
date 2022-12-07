@@ -107,7 +107,7 @@ const ReservationDetail = () => {
                   <span>
                     <BsPaypal className={classes.inline} />
                   </span>{" "}
-                  Amount: <span>{reservation.total} VNĐ</span>
+                  Amount: <span>{reservation.total} $</span>
                 </p>
               </div>
               <div className={classes.rentInfo}>
@@ -253,8 +253,7 @@ const ReservationDetail = () => {
               <label>Method payment:</label>
               <PayPalScriptProvider
                 options={{
-                  "client-id":
-                    "AfXHQGIlOw0Bl--mNCVnaj1fNPWyrWoAmN8B9ZjfcZkkpfy-I_l8lo_JOelcFtNR8GnM5nj1UmDqAD7O",
+                  "client-id": "test",
                 }}
               >
                 <PayPalButtons
@@ -298,7 +297,10 @@ const ReservationDetail = () => {
               <button
                 className={classes.btnRent}
                 onClick={handleCancelRequest}
-                disabled={reservation.reservationStatusName === "APPROVED"}
+                disabled={
+                  reservation.reservationStatusName === "APPROVED" ||
+                  reservation.reservationStatusName === "CANCELLED"
+                }
                 style={{
                   backgroundColor: `${
                     reservation.reservationStatusName === "APPROVED" ||

@@ -20,6 +20,7 @@ public class ReservationListDto {
 	private String roomId;
 	private String roomName;
 	private Double total;
+	private Boolean reviewed;
 	private String startDate;
 	private String endDate;
 	private List<ImageDto> images;

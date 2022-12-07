@@ -118,6 +118,7 @@ CREATE TABLE `review`
     room_id     VARCHAR(15) NOT NULL,
     content     TEXT,
     rating      INT,
+    enable      BOOLEAN,
     time_create DATETIME DEFAULT CURRENT_TIMESTAMP,
     time_update DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     CONSTRAINT PRIMARY KEY (review_id),
@@ -144,6 +145,8 @@ CREATE TABLE `reservation`
     reservation_status_id VARCHAR(15) NOT NULL,
     total                 DOUBLE      NOT NULL,
     deposit               DOUBLE      NOT NULL,
+    reviewed              BOOLEAN,
+    enable                BOOLEAN,
     time_create           DATETIME DEFAULT CURRENT_TIMESTAMP,
     time_update           DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     CONSTRAINT PRIMARY KEY (reservation_id),
@@ -179,22 +182,6 @@ CREATE TABLE `message`
     time_update DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     CONSTRAINT PRIMARY KEY (message_id),
     CONSTRAINT `fk_message_inbox` FOREIGN KEY (inbox_id) REFERENCES inbox (inbox_id)
-);
-
-CREATE TABLE `room_virtual`
-(
-    room_id          VARCHAR(15),
-    price_id         VARCHAR(15)  NOT NULL,
-    room_name        VARCHAR(255) NOT NULL,
-    size             VARCHAR(255),
-    capacity         VARCHAR(255),
-    room_status_id   VARCHAR(15)  NOT NULL,
-    description      TEXT,
-    image_storage_id VARCHAR(15)  NOT NULL,
-    customer_id      VARCHAR(15)  NOT NULL,
-    time_create      DATETIME DEFAULT CURRENT_TIMESTAMP,
-    time_update      DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    CONSTRAINT PRIMARY KEY (room_id)
 );
 
 INSERT INTO `role`

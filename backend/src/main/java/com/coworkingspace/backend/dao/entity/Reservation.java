@@ -29,7 +29,7 @@ public class Reservation extends BaseEntity{
 	@JoinColumn(name = "room_id", nullable = false)
 	private Room room;
 
-	@OneToOne(optional = false)
+	@ManyToOne(fetch = FetchType.LAZY ,optional = false)
 	@JoinColumn(name = "customer_id", nullable = false)
 	private Customer customer;
 
@@ -50,4 +50,10 @@ public class Reservation extends BaseEntity{
 
 	@Column(name = "deposit", nullable = false)
 	private Double deposit;
+
+	@Column(name = "reviewed")
+	private Boolean reviewed = false;
+
+	@Column(name = "enable")
+	private Boolean enable = true;
 }

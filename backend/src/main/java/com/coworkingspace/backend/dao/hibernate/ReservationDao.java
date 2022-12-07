@@ -1,5 +1,6 @@
 package com.coworkingspace.backend.dao.hibernate;
 
+import com.coworkingspace.backend.dao.entity.Reservation;
 import com.coworkingspace.backend.dto.ReservationDto;
 import com.coworkingspace.backend.dto.ReservationListDto;
 import com.coworkingspace.backend.sdo.DateStatus;
@@ -14,5 +15,5 @@ public interface ReservationDao {
 	List<DateStatus> getDateStatus(String roomId, int month, int year) throws NotFoundException;
 	String getFurthestValidDate(String roomId, String from) throws NotFoundException;
 	List<LocalDate> getAllInvalidDates(String roomId) throws NotFoundException;
-	List<ReservationDto> getBySellerId(String id);
+	List<Reservation> getBySellerId(String id);
 }

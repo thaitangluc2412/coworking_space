@@ -1,5 +1,7 @@
 package com.coworkingspace.backend.mapper;
 
+import org.mapstruct.InheritConfiguration;
+import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -13,5 +15,6 @@ public interface ReviewMapper {
 	@Mapping(source = "roomId", target = "room.id")
 	Review reviewDtoToReview(ReviewDto reviewDto);
 
+	@InheritInverseConfiguration(name = "reviewDtoToReview")
 	ReviewDto reviewToReviewDto(Review review);
 }

@@ -1,15 +1,20 @@
 package com.coworkingspace.backend.service.impl;
 
+import com.coworkingspace.backend.dao.entity.Customer;
 import com.coworkingspace.backend.dao.entity.Reservation;
 import com.coworkingspace.backend.dao.entity.ReservationStatus;
+import com.coworkingspace.backend.dao.entity.Room;
 import com.coworkingspace.backend.dao.hibernate.ReservationDao;
+import com.coworkingspace.backend.dao.repository.CustomerRepository;
 import com.coworkingspace.backend.dao.repository.ReservationRepository;
 import com.coworkingspace.backend.dto.ReservationDto;
 import com.coworkingspace.backend.dto.ReservationListDto;
 import com.coworkingspace.backend.mapper.ReservationMapper;
 import com.coworkingspace.backend.sdo.DateStatus;
+import com.coworkingspace.backend.service.EmailService;
 import com.coworkingspace.backend.service.ReservationService;
 import com.coworkingspace.backend.service.ReservationStatusService;
+import com.coworkingspace.backend.service.RoomService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
@@ -19,6 +24,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.mail.MessagingException;
+
 @Service
 public class ReservationServiceImpl implements ReservationService {
 
@@ -27,20 +34,45 @@ public class ReservationServiceImpl implements ReservationService {
 
 	@Autowired
 	private ReservationMapper reservationMapper;
-
 	@Autowired
 	private ReservationDao reservationDao;
-
 	@Autowired
 	private ReservationStatusService reservationStatusService;
+	@Autowired
+	private RoomService roomService;
+	@Autowired
+	private CustomerRepository customerRepository;
+	@Autowired
+	private EmailService emailService;
 
 	@Override
-	public ReservationDto createReservation(ReservationDto reservationDto) throws NotFoundException {
+	public ReservationDto createReservation(ReservationDto reservationDto) {
 		Reservation reservation = reservationMapper.reservationDtoToReservation(reservationDto);
 		ReservationStatus reservationStatus = reservationStatusService.findByReservationStatusName("PENDING");
 		reservation.setReservationStatus(reservationStatus);
 		reservationDto.setReservationStatusId(reservation.getReservationStatus().getId());
-		reservationRepository.save(reservationMapper.reservationDtoToReservation(reservationDto));
+
+		Reservation reservation1 = reservationRepository.save(reservationMapper.reservationDtoToReservation(reservationDto));
+
+		Reservation reservation2 = reservationRepository.findById(reservation1.getId()).orElseThrow();
+
+		Room room = roomService.findById(reservation2.getRoom().getId());
+		Customer customer = customerRepository.findById(reservation2.getCustomer().getId()).orElseThrow();
+		reservation2.setRoom(room);
+		reservation2.setCustomer(customer);
+		reservation2.setReservationStatus(reservationStatus);
+		String emailSeller = room.getCustomer().getEmail();
+		ReservationListDto reservationListDto = reservationMapper.reservationToReservationListDto(reservation2);
+
+//		Thread thread = new Thread(() -> {
+			try {
+				emailService.sendCreateReservationMail(reservationListDto, emailSeller);
+			} catch (MessagingException | NotFoundException e) {
+				throw new RuntimeException(e);
+			}
+//		});
+//		thread.start();
+
 		return reservationMapper.reservationToReservationDto(reservation);
 	}
 
@@ -60,7 +92,7 @@ public class ReservationServiceImpl implements ReservationService {
 	}
 
 	@Override public List<ReservationListDto> getByCustomerId(String customerId) {
-		return reservationRepository.getByCustomerId(customerId).stream()
+		return reservationRepository.getByCustomerIdOrderByTimeCreateDesc(customerId).stream()
 			.map(reservation -> reservationMapper.reservationToReservationListDto(reservation)).collect(
 				Collectors.toList());
 	}
@@ -77,7 +109,8 @@ public class ReservationServiceImpl implements ReservationService {
 		return reservationMapper.reservationToReservationListDto(reservation);
 	}
 
-	@Override public List<ReservationDto> getBySellerId(String sellerId) {
-		return reservationDao.getBySellerId(sellerId);
+	@Override public List<ReservationListDto> getBySellerId(String sellerId) {
+		return reservationDao.getBySellerId(sellerId).stream().map(reservation -> reservationMapper.reservationToReservationListDto(reservation)).collect(
+			Collectors.toList());
 	}
 }

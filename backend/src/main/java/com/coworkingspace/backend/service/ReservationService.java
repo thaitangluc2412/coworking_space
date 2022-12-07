@@ -16,5 +16,5 @@ public interface ReservationService {
 	List<ReservationListDto> getByCustomerId(String customerId);
 	ReservationListDto getById(String id);
 	ReservationListDto updateReservation(String id, String reservationStatsName);
-	List<ReservationDto> getBySellerId(String sellerId);
+	List<ReservationListDto> getBySellerId(String sellerId);
 }

@@ -96,7 +96,6 @@ const ModalRent = (props) => {
   };
 
   const chooseEndDate = (date) => {
-    console.log("end date: ", data);
     setEndDate(date);
     setQuantityDays((new Date(date) - new Date(startDate)) / 86400000 + 1);
   };

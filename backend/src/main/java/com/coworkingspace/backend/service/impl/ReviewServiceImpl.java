@@ -26,6 +26,6 @@ public class ReviewServiceImpl implements ReviewService {
 	}
 
 	@Override public List<ReviewDto> findByRoomId(String roomId) {
-		return reviewRepository.findByRoomId(roomId).stream().map(review -> reviewMapper.reviewToReviewDto(review)).collect(Collectors.toList());
+		return reviewRepository.findByRoomIdOrderByTimeCreate(roomId).stream().map(review -> reviewMapper.reviewToReviewDto(review)).collect(Collectors.toList());
 	}
 }

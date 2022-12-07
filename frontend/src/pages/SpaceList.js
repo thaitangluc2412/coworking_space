@@ -2,12 +2,15 @@ import React, { useEffect } from "react";
 import { useState } from "react";
 import { NavLink, useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import Scroll from "react-scroll";
 
 import SpaceItem from "../components/space-list/SpaceItem";
 import http from "../config/axiosConfig";
 import FilterSpace from "../module/filter/FilterSpace";
 
 const SpaceList = () => {
+  Scroll.animateScroll.scrollToTop();
+
   const [params] = useSearchParams();
   const cityName = params.get("cityName");
   const typeRoomId = params.get("typeRoomId");

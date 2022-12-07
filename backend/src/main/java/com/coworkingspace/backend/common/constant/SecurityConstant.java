@@ -15,6 +15,6 @@ public class SecurityConstant {
 	public static final String ROOM_STATUS = "/api/v1/roomStatuses";
 	public static final String ROOM_LIST = "/api/v1/rooms/roomType";
 	public static final String VERIFICATION_EMAIL = "/api/v1/users/verify";
-	public static final String ROOM_TYPE = "/api/v1/roomTypes";
+	public static final String ROOM_TYPE = "*/api/v1/roomTypes";
 	public static final String[] PUBLIC_MATCHERS = {LOGIN_PATH, RESOURCE_PATH, VERIFICATION_EMAIL, REGISTER_PATH, ROOM_STATUS, ROOM_LIST, ROOM_TYPE};
 }

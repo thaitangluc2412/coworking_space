@@ -50,7 +50,7 @@ const Header = () => {
       <div className="flex flex-row gap-4 justify-center items-center mr-10">
         {items.map((item) => (
           <NavLink
-            to={item.url}
+            to={user.id ? item.url : "/login"}
             key={item.name}
             className={({ isActive }) =>
               `text-base cursor-pointer hover:text-primary border-b-noColor border-b hover:border-primary ${

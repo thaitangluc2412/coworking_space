@@ -1,5 +1,6 @@
 package com.coworkingspace.backend.controller;
 
+import com.coworkingspace.backend.dto.ImageDto;
 import com.coworkingspace.backend.dto.RoomCreateDto;
 import com.coworkingspace.backend.dto.RoomListDto;
 import com.coworkingspace.backend.service.RoomService;
@@ -36,7 +37,7 @@ public class RoomController {
 	@PutMapping("/{id}")
 	public ResponseEntity<RoomCreateDto> updateRoom(@PathVariable String id,
 		@RequestPart RoomCreateDto roomCreateDto,
-		@RequestPart("files") MultipartFile[] files) throws NotFoundException {
+		@RequestPart("files") MultipartFile[] files, @RequestPart List<ImageDto> imageDtos) throws NotFoundException {
 		RoomCreateDto roomCreateDto1 = roomService.updateRoom(id, roomCreateDto, files);
 		return ResponseEntity.status(HttpStatus.OK).body(roomCreateDto1);
 	}

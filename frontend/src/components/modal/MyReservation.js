@@ -5,12 +5,12 @@ import http from "../../config/axiosConfig";
 import classes from "./MyReservation.module.css";
 import { useAuth } from "../../context/auth-context";
 import ReservationCard from "../request/ReservationCard";
+import { toast } from "react-toastify";
 
-const MyReservation = () => {
+const MyReservation = (props) => {
   const { user } = useAuth();
   const userId = user.id;
   const [data, setData] = useState([]);
-  console.log("user Id: " + userId);
 
   document.title = "My reservation | Coworking-space";
 
@@ -20,9 +20,9 @@ const MyReservation = () => {
     });
   }, [userId]);
 
-  //   const handleNotification = () => {
-  //     NotificationManager.info("Your reservation must be completed to review");
-  //   };
+  const handleNotification = () => {
+    toast.error("Your reservation must be completed to review");
+  };
 
   return (
     <div class={classes.container}>
@@ -47,8 +47,8 @@ const MyReservation = () => {
           data?.map((reservation) => (
             <ReservationCard
               reservation={reservation}
-              // onActiveModalReview={props.onActiveModalReview}
-              // handleNotification={handleNotification}
+              onActiveModalReview={props.onActiveModalReview}
+              handleNotification={handleNotification}
             />
           ))}
       </ul>
