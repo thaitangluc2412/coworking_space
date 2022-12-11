@@ -16,14 +16,14 @@ const root = createRoot(container);
 
 axios.defaults.baseURL = "http://localhost:8080/api/v1/";
 root.render(
-  <React.StrictMode>
-    <BrowserRouter>
-      <AuthProvider>
-        <App />
-        <ToastContainer></ToastContainer>
-      </AuthProvider>
-    </BrowserRouter>
-  </React.StrictMode>
+  // <React.StrictMode>
+  <BrowserRouter>
+    <AuthProvider>
+      <App />
+      <ToastContainer></ToastContainer>
+    </AuthProvider>
+  </BrowserRouter>
+  // </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.mail.MessagingException;
+
 @RestController
 @RequestMapping("/api/v1/reservations")
 @AllArgsConstructor
@@ -65,8 +67,9 @@ public class ReservationController {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<ReservationListDto> updateReservation(@PathVariable String id, @RequestParam String reservationStatusName){
-		ReservationListDto reservationListDto = reservationService.updateReservation(id, reservationStatusName);
+	public ResponseEntity<ReservationListDto> updateReservation(@PathVariable String id, @RequestParam String reservationStatusName, @RequestParam String email)
+		throws MessagingException {
+		ReservationListDto reservationListDto = reservationService.updateReservation(id, reservationStatusName, email);
 		return new ResponseEntity<>(reservationListDto, HttpStatus.OK);
 	}
 

@@ -1,6 +1,15 @@
 import React from "react";
 import { useNavigate } from "react-router";
-const SpaceItem = ({ url, roomTypeName, address, roomName, dayPrice, id }) => {
+import Rating from "@mui/material/Rating";
+const SpaceItem = ({
+  url,
+  roomTypeName,
+  address,
+  roomName,
+  dayPrice,
+  id,
+  averageRating,
+}) => {
   const navigate = useNavigate();
   const handleClick = () => {
     navigate(`/space/${id}`);
@@ -10,7 +19,12 @@ const SpaceItem = ({ url, roomTypeName, address, roomName, dayPrice, id }) => {
       <div className="w-full h-[200px] relative">
         <img src={url} alt="" className="w-full h-full object-cover" />
         <div className="inline-block text-xs px-1 py-1 rounded-full text-grayText bg-white absolute top-1 right-1">
-          Available from <span className="font-semibold"> 22 Jan 2023 </span>
+          <Rating
+            name="half-rating-read"
+            defaultValue={averageRating}
+            precision={0.5}
+            readOnly
+          />
         </div>
       </div>
       <div className="flex w-full h-[150px] flex-col px-1 py-1">

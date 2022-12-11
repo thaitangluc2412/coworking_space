@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.coworkingspace.backend.dto.ReviewDto;
+import com.coworkingspace.backend.dto.ReviewListDto;
 import com.coworkingspace.backend.service.ReviewService;
 
 @RestController
@@ -28,8 +29,8 @@ public class ReviewController {
 	}
 
 	@GetMapping("/rooms/{id}")
-	public ResponseEntity<List<ReviewDto>> getByRoomId(@PathVariable String id){
-		List<ReviewDto> reviewDtos = reviewService.findByRoomId(id);
+	public ResponseEntity<List<ReviewListDto>> getByRoomId(@PathVariable String id){
+		List<ReviewListDto> reviewDtos = reviewService.findByRoomId(id);
 		return new ResponseEntity<>(reviewDtos, HttpStatus.OK);
 	}
 }

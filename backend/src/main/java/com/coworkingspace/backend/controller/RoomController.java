@@ -42,9 +42,9 @@ public class RoomController {
 		return ResponseEntity.status(HttpStatus.OK).body(roomCreateDto1);
 	}
 
-	@GetMapping("/{id}")
-	public ResponseEntity<RoomCreateDto> updateRoom(@PathVariable String id) throws NotFoundException {
-		RoomCreateDto roomListDto = roomService.findByRoomId(id);
+	@GetMapping("/{roomId}")
+	public ResponseEntity<RoomCreateDto> getDetail(@PathVariable String roomId, @RequestParam(required = false) String customerId) throws NotFoundException {
+		RoomCreateDto roomListDto = roomService.findByRoomId(roomId, customerId);
 		return ResponseEntity.status(HttpStatus.OK).body(roomListDto);
 	}
 
@@ -67,5 +67,10 @@ public class RoomController {
 	public ResponseEntity<Void> deleteRoom(@PathVariable String id) throws NotFoundException {
 		roomService.deleteRoom(id);
 		return new ResponseEntity<>(HttpStatus.OK);
+	}
+
+	@GetMapping("/favorite/${id}")
+	public ResponseEntity favorite(@PathVariable String id){
+		return roomService.favoriteRoom(id);
 	}
 }

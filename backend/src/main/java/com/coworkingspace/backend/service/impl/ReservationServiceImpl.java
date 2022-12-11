@@ -64,14 +64,14 @@ public class ReservationServiceImpl implements ReservationService {
 		String emailSeller = room.getCustomer().getEmail();
 		ReservationListDto reservationListDto = reservationMapper.reservationToReservationListDto(reservation2);
 
-//		Thread thread = new Thread(() -> {
+		Thread thread = new Thread(() -> {
 			try {
 				emailService.sendCreateReservationMail(reservationListDto, emailSeller);
 			} catch (MessagingException | NotFoundException e) {
 				throw new RuntimeException(e);
 			}
-//		});
-//		thread.start();
+		});
+		thread.start();
 
 		return reservationMapper.reservationToReservationDto(reservation);
 	}
@@ -98,14 +98,20 @@ public class ReservationServiceImpl implements ReservationService {
 	}
 
 	@Override public ReservationListDto getById(String id) {
-		return reservationMapper.reservationToReservationListDto(
+		ReservationListDto reservationListDto = reservationMapper.reservationToReservationListDto(
 			reservationRepository.getById(id));
+		String emailOwner = reservationRepository.getById(id).getRoom().getCustomer().getEmail();
+		reservationListDto.setEmailOwner(emailOwner);
+		return reservationListDto;
 	}
 
-	@Override public ReservationListDto updateReservation(String id, String reservationStatsName) {
+	@Override public ReservationListDto updateReservation(String id, String reservationStatsName, String email) throws MessagingException {
 		Reservation reservation = reservationRepository.getById(id);
+		ReservationListDto oldReservationListDto = reservationMapper.reservationToReservationListDto(reservation);
 		reservation.setReservationStatus(reservationStatusService.findByReservationStatusName(reservationStatsName));
 		reservationRepository.save(reservation);
+
+		emailService.sendUpdateReservationMail(oldReservationListDto, reservationStatsName, email);
 		return reservationMapper.reservationToReservationListDto(reservation);
 	}
 

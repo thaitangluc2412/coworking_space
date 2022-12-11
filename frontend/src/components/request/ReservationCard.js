@@ -35,7 +35,10 @@ const ReservationCard = (props) => {
         )}
       </div>
       <div class={classes.col2} data-label="Customer Name">
-        <div className={classes.infoCus}>
+        <div
+          className={classes.infoCus}
+          style={{ width: "240px", text: "center" }}
+        >
           <p>{props.reservation.roomName}</p>
         </div>
       </div>
@@ -169,8 +172,14 @@ const ReservationCard = (props) => {
       </div>
       <div class={classes.col6}>
         <div className={classes.btn}>
-          <button onClick={handleReview}>
-            <IoChatbubbleOutline />
+          <button onClick={handleReview} disabled={!props.reservation.reviewed}>
+            <IoChatbubbleOutline
+              style={{
+                color: `${
+                  props.reservation.reviewed ? "rgb(175,176,176)" : "#1D8489"
+                }`,
+              }}
+            />
           </button>
         </div>
       </div>

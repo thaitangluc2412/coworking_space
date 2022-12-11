@@ -14,5 +14,5 @@ public interface EmailService {
 
 	void sendCreateReservationMail(ReservationListDto reservationListDto, String emailSeller) throws MessagingException, ChangeSetPersister.NotFoundException;
 
-	void sendUpdateReservationMail(ReservationListDto oldReservationDto, ReservationListDto newReservationDto) throws MessagingException;
+	void sendUpdateReservationMail(ReservationListDto oldReservationDto, String reservationStatusNameNew, String email) throws MessagingException;
 }

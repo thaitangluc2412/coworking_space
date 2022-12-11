@@ -23,13 +23,13 @@ public class Price extends BaseEntity{
 	private String id;
 
 	@Column(name = "day_price")
-	private Double dayPrice;
+	private Double dayPrice = 0.0;
 
 	@Column(name = "month_price")
-	private Double monthPrice;
+	private Double monthPrice = 0.0;
 
 	@Column(name = "year_price")
-	private Double yearPrice;
+	private Double yearPrice = 0.0;
 
 	public Price(Double dayPrice, Double monthPrice, Double yearPrice) {
 		this.dayPrice = dayPrice;

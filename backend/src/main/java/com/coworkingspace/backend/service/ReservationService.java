@@ -8,6 +8,8 @@ import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import java.time.LocalDate;
 import java.util.List;
 
+import javax.mail.MessagingException;
+
 public interface ReservationService {
 	ReservationDto createReservation(ReservationDto reservationDto) throws NotFoundException;
 	String getFurthestValidDate(String roomId, String from) throws NotFoundException;
@@ -15,6 +17,6 @@ public interface ReservationService {
 	List<LocalDate> getAllInvalidDate(String roomId) throws NotFoundException;
 	List<ReservationListDto> getByCustomerId(String customerId);
 	ReservationListDto getById(String id);
-	ReservationListDto updateReservation(String id, String reservationStatsName);
+	ReservationListDto updateReservation(String id, String reservationStatsName, String email) throws MessagingException;
 	List<ReservationListDto> getBySellerId(String sellerId);
 }

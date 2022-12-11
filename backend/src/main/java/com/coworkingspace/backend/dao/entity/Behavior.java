@@ -1,28 +1,39 @@
 package com.coworkingspace.backend.dao.entity;
 
+import java.util.Objects;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.GenericGenerator;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.GenericGenerator;
-
-import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.util.Objects;
 
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity
+@Table(name = "behavior")
 @Getter
 @Setter
-@Entity
-@Table(name = "review")
-public class Review extends BaseEntity{
+public class Behavior extends BaseEntity{
+
 	@Id
 	@GenericGenerator(name = "id_gen", strategy = "com.coworkingspace.backend.common.utils.GenerateUUID")
 	@GeneratedValue(generator = "id_gen")
-	@Column(name = "review_id", nullable = false)
+	@Column(name = "behavior_id")
 	private String id;
+
+	@Column(name = "time")
+	private Integer time;
 
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "customer_id", nullable = false)
@@ -32,30 +43,20 @@ public class Review extends BaseEntity{
 	@JoinColumn(name = "room_id", nullable = false)
 	private Room room;
 
-	@Column(name = "rating")
-	private Double rating;
-
-	@Lob
-	@Column(name = "content")
-	private String content;
-
-	@Column(name = "enable")
-	private Boolean enable = true;
-
 	@Override
 	public boolean equals(Object o){
 		if (this == o) {
 			return true;
 		}
-		if (!(o instanceof Review)){
+		if (!(o instanceof Behavior)){
 			return false;
 		}
-		Review review = (Review) o;
-		return Objects.equals(id, review.id) && Objects.equals(rating, review.rating);
+		Behavior behavior = (Behavior) o;
+		return Objects.equals(id, behavior.id) && Objects.equals(time, behavior.time);
 	}
 
 	@Override
 	public int hashCode(){
-		return Objects.hash(id, rating);
+		return Objects.hash(id, time);
 	}
 }

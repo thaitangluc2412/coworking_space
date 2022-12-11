@@ -16,6 +16,7 @@ public class RoomListDto {
 	private String roomTypeId;
 	private String roomTypeName;
 	private String roomName;
+	private Double averageRating;
 	private String address;
 	private String city;
 	private String description;

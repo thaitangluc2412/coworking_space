@@ -20,6 +20,7 @@ import MyReservation from "./components/modal/MyReservation";
 import ReservationDetail from "./components/request/ReservationDetail";
 import SpaceUpdate from "./module/space/SpaceUpdate";
 import ReservationRequest from "./components/request/ReservationRequest";
+import HelpPage from "./pages/HelpPage";
 
 function App() {
   const navigate = useNavigate();
@@ -60,6 +61,7 @@ function App() {
     setBackdrop(false);
     setModalReview(false);
   };
+
   return (
     <>
       {isBackdrop && <Backdrop onBackdrop={onBackdropHandler} />}
@@ -90,6 +92,7 @@ function App() {
               <MyReservation onActiveModalReview={onActiveModalReview} />
             }
           />
+          <Route path="/help" element={<HelpPage />} />
           <Route path="/reservation/:id" element={<ReservationDetail />} />
         </Route>
         <Route path="/manage" element={<LayoutMange />}>

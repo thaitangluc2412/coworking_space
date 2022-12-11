@@ -46,7 +46,9 @@ const ReservationRequest = () => {
 
   const handleCancelRequest = () => {
     http
-      .put(`reservations/${id}?reservationStatusName=CANCELLED`)
+      .put(
+        `reservations/${id}?reservationStatusName=CANCELLED&email=${reservation.email}`
+      )
       .then((res) => {
         console.log("new reservation: ", res.data);
         setReservation(res.data);
@@ -55,10 +57,14 @@ const ReservationRequest = () => {
   };
 
   const handleApproveRequest = () => {
-    http.put(`reservations/${id}?reservationStatusName=PAYING`).then((res) => {
-      setReservation(res.data);
-      toast.success("You approve the request");
-    });
+    http
+      .put(
+        `reservations/${id}?reservationStatusName=PAYING&email=${reservation.email}`
+      )
+      .then((res) => {
+        setReservation(res.data);
+        toast.success("You approve the request");
+      });
   };
   const onNavigate = () => {
     navigate(-1);

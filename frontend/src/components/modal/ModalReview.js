@@ -1,61 +1,39 @@
 import { useState, useEffect, useRef } from "react";
 import classes from "./ModalReview.module.css";
-import { Carousel } from "react-bootstrap";
 import ReactDOM from "react-dom";
-import ReactStars from "react-rating-stars-component";
+import Rating from "@mui/material/Rating";
+import { useAuth } from "../../context/auth-context";
+import http from "../../config/axiosConfig";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const ModalReview = (props) => {
   const [rating, setRating] = useState(0);
   const content = useRef();
-  // useEffect(() => {
-  //   let headers = new Headers();
-
-  //   headers.append("Content-Type", "application/json");
-  //   headers.append("Accept", "application/json");
-
-  //   headers.append("Access-Control-Allow-Origin", "http://localhost:3000");
-  //   headers.append("Access-Control-Allow-Credentials", "true");
-  //   fetch("http://localhost:8080/api/price/" + props.room.priceId, {
-  //     method: "GET",
-  //     headers: headers,
-  //   })
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       setPrice(data.data.dayPrice);
-  //     })
-  //     .catch((err) => console.log(err));
-  // }, []);
-
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const handleExitModal = (event) => {
     event.preventDefault();
     props.onExitModalReview();
   };
 
-  const ratingChanged = (newRating) => {
-    setRating(newRating);
-  };
+  const handleReview = () => {
+    const review = {
+      customerId: user.id,
+      roomId: props.reservation.roomId,
+      content: content.current.value,
+      rating: rating,
+    };
 
-  const hanldeReview = (event) => {
-    event.preventDefault();
-    fetch("http://localhost:8080/api/reviews", {
-      method: "POST",
-      body: JSON.stringify({
-        // customerId: authCtx.id,
-        propertyId: props.room.propertyId,
-        rating: rating,
-        // content: content.current.value,
-        createDate: new Date(),
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
+    http
+      .post("reviews", review)
       .then((res) => {
-        return res.json();
-      })
-      .then((data) => {
+        console.log(res);
+        navigate(`myreservation`);
         props.onExitModalReview();
-      });
+        toast.success("Review success");
+      })
+      .catch((err) => console.log(err));
   };
 
   return ReactDOM.createPortal(
@@ -65,47 +43,31 @@ const ModalReview = (props) => {
         <h2>Review room</h2>
       </div>
       <div className={classes.content}>
-        <div className={classes.images}>
-          <Carousel className={classes.carousel} slide={false} controls={true}>
-            {props.reservation.images?.map((image) => (
-              <Carousel.Item>
-                <img
-                  className={classes.imageRoom}
-                  src={`${image.url}`}
-                  alt="First slide"
-                />
-              </Carousel.Item>
-            ))}
-          </Carousel>
-        </div>
         <div className={classes.rating}>
-          <h3>{props.reservation.roomName}</h3>
-
-          <p>
-            <span>Price: </span>
-            price VNĐ/Day
-          </p>
-          <p>
+          <div style={{ paddingBottom: "20px" }}>
             <span>Room name: </span>
             {props.reservation.roomName}
-          </p>
-          <form onSubmit={hanldeReview}>
-            <div className={classes.containerRating}>
+          </div>
+          <div>
+            <div
+              className={classes.containerRating}
+              style={{ paddingBottom: "20px" }}
+            >
               <label>Rating: </label>
-              <ReactStars
-                // classNames={classes.ratingStar}
-                count={5}
-                onChange={ratingChanged}
-                size={24}
-                activeColor="#ffd700"
+              <Rating
+                name="simple-controlled"
+                value={rating}
+                onChange={(event, newValue) => {
+                  setRating(newValue);
+                }}
               />
             </div>
-            <span>Write your review:</span>
+            <div style={{ paddingBottom: "10px" }}>Write your review:</div>
             <textarea className={classes.textReview} ref={content}></textarea>
             <div className={classes.btn}>
-              <button>Review</button>
+              <button onClick={() => handleReview()}>Review</button>
             </div>
-          </form>
+          </div>
         </div>
       </div>
     </div>,

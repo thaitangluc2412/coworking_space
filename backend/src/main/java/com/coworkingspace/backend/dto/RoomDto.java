@@ -24,6 +24,7 @@ public class RoomDto {
 	private String imageStorageId;
 	private String utilityStorageId;
 	private String roomTypeId;
+	private Double averageRating;
 	private String roomName;
 	private String address;
 	private Integer provinceId;

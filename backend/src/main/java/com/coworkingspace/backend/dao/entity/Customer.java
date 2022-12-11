@@ -1,5 +1,9 @@
 package com.coworkingspace.backend.dao.entity;
 
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -37,6 +41,31 @@ public class Customer extends BaseEntity{
 	@JoinColumn(name = "role_id")
 	private Role role;
 
+	@OneToMany(fetch = FetchType.LAZY)
+	@JoinColumn(name = "behavior_id", nullable = false, insertable=false, updatable=false)
+	private Set<Behavior> behaviors = new HashSet<>();
+
+	@OneToMany(fetch = FetchType.LAZY)
+	@JoinColumn(name = "review_id", nullable = false, insertable=false, updatable=false)
+	private Set<Review> reviews = new HashSet<>();
+
 	@Column(name = "enable")
 	private Boolean enable = false;
+
+	@Override
+	public boolean equals(Object o){
+		if (this == o) {
+			return true;
+		}
+		if (!(o instanceof Customer)){
+			return false;
+		}
+		Customer customer = (Customer) o;
+		return Objects.equals(id, customer.id) && Objects.equals(email, customer.email);
+	}
+
+	@Override
+	public int hashCode(){
+		return Objects.hash(id, email);
+	}
 }

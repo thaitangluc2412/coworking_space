@@ -9,6 +9,7 @@ import Rating from "@mui/material/Rating";
 
 const SpaceDetail = () => {
   const { user } = useAuth();
+  const userId = user.id;
   const navigate = useNavigate();
   const { id } = useParams();
   const [data, setData] = useState([]);
@@ -16,7 +17,7 @@ const SpaceDetail = () => {
   const [listComment, setListComment] = useState([]);
 
   useEffect(() => {
-    http.get(`rooms/${id}`).then((res) => {
+    http.get(`rooms/${id}?customerId=${userId}`).then((res) => {
       setData(res.data);
       setListImages(res.data.images);
     });
@@ -54,7 +55,9 @@ const SpaceDetail = () => {
             />
           </NavLink>
           <span className="text-2xl"> {">"} </span>
-          <NavLink to={`/space-list/${data.roomTypeId}`}>Listings</NavLink>
+          <NavLink to={`/space-list?typeRoomId=${data.roomTypeId}`}>
+            Listings
+          </NavLink>
           <span className="text-2xl"> {">"} </span>
           <span to={"/space-list"}>{data.roomName}</span>
         </div>
@@ -90,7 +93,12 @@ const SpaceDetail = () => {
             {data.roomTypeName}
           </h3>
           <div className="text-grayText font-medium mb-1">
-            Available from <span className="font-semibold"> 22 Jan 2023 </span>
+            <Rating
+              name="half-rating-read"
+              defaultValue={data.rating}
+              precision={0.5}
+              readOnly
+            />
           </div>
           <div className="flex flex-col text-primary pt-5 pb-7">
             <span className="text-5xl">
@@ -117,17 +125,38 @@ const SpaceDetail = () => {
               key={index}
             >
               <div className="flex items-center justify-between">
-                <div>Customer: {comment.customerId}</div>
-                <div>{comment.rating} stars</div>
+                <div className="flex items-center">
+                  <div className="w-11 h-11">
+                    <img
+                      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdqXZFnoB9eMvcBSXMRQrtLBL_JhTfjZFbtcu9DiBoJfu4qqFZleZRD_6WTtfoMXkNZB0&usqp=CAU"
+                      alt=""
+                      className="w-full h-full object-cover rounded-full"
+                    />
+                  </div>
+                  <span
+                    style={{
+                      marginLeft: "10px",
+                    }}
+                  >
+                    {comment.customerName}
+                  </span>
+                </div>
+                <div
+                  style={{
+                    fontWeight: "200",
+                    fontSize: "12px",
+                    marginLeft: "5px",
+                  }}
+                >
+                  {comment.timeCreate}{" "}
+                </div>
                 <Rating
-                  // className={classes.stars}
                   name="half-rating-read"
-                  defaultValue={comment.ratingg}
-                  precision={0.5}
+                  defaultValue={comment.rating}
+                  precision={1}
                   readOnly
                 />
               </div>
-              <div className="text-sm">Room: {comment.roomId || "1"}</div>
               <div className="mt-4">{comment.content}</div>
             </div>
           ))}

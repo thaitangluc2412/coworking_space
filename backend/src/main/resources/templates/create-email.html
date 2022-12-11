@@ -26,7 +26,7 @@
         .link {
             display: flex;
             align-items: center;
-            margin-bottom: 4px;
+            margin-left: 23px;
         }
 
         .link-issue {
@@ -53,7 +53,7 @@
 
         .change-name {
             margin-left: 30px;
-            margin-top: 50px;
+            margin-top: 20px;
             font-size: 14px;
         }
 
@@ -67,7 +67,7 @@
         }
 
         .name-properties {
-            width: 80px;
+            width: 150px;
             max-width: 200px;
             color: #5e6c84;
             vertical-align: text-top;
@@ -76,72 +76,62 @@
         .details-properties {
             vertical-align: text-top;
         }
+
+        .logo-bot{
+            margin-left: 25px;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body style="margin-top: -100px">
     <div>
         <div class="notification">
-            <div> This issue has been <b class="created-label">CREATED</b></div>
-            <div> This issue is now <b> assigned to you</b></div>
+            <div> Have a reservation of room <b class="created-label" th:text="${roomName}"></b></div>
         </div>
         <div class="form-email">
             <div class="link">
-<!--                <img src="cid:logo" th:width="29">-->
-                <a th:href="${homeUrl}" class="link-issue">Easy Reporting /</a>
-                <a th:href="${issueUrl}" class="link-issue">Issue Detail</a>
+                <img src="cid:logo" th:width="29">
+                <a th:href="${homeUrl}" class="link-issue">Coworking-space /</a>
+                <a th:href="${issueUrl}" class="link-issue">Reservation Detail</a>
             </div>
             <p class="issue-name" th:text="${issueName}"></p>
-            <a th:href="${issueUrl}" class="view-issue">View issue</a>
             <p class="change-name">
-<!--                <b> [[${creatorName}]] </b> created this issue on <b-->
-<!--                    th:text="${#temporals.format(timeCreate, 'yyyy-MM-dd HH:mm:ss')}"></b>-->
+                <b> Reservation is </b> created on <b
+                    th:text="${#temporals.format(timeCreate, 'yyyy-MM-dd HH:mm')}"></b>
             </p>
 
             <table class="properties">
                 <tr>
-                    <td class="name-properties">Issue Name:</td>
-                    <td class="details-properties" th:text="${issueName}"></td>
+                    <td class="name-properties">Customer name :</td>
+                    <td class="details-properties" th:text="${customerName}"></td>
                 </tr>
                 <tr>
-                    <td class="name-properties">Category:</td>
-                    <td class="details-properties" th:text="${category}"></td>
+                    <td class="name-properties">Email :</td>
+                    <td class="details-properties" th:text="${email}"></td>
                 </tr>
                 <tr>
-                    <td class="name-properties">Location:</td>
-                    <td class="details-properties" th:text="${location}"></td>
+                    <td class="name-properties">Phone number :</td>
+                    <td class="details-properties" th:text="${phone}"></td>
                 </tr>
                 <tr>
-                    <td class="name-properties">Priority:</td>
-                    <td class="details-properties" th:text="${priority}"></td>
+                    <td class="name-properties">Start date :</td>
+                    <td class="details-properties" th:text="${startDate}"></td>
                 </tr>
                 <tr>
-                    <td class="name-properties">Assignee:</td>
-                    <td class="details-properties" th:text="${assigneeName}"></td>
+                    <td class="name-properties">End date :</td>
+                    <td class="details-properties" th:text="${endDate}"></td>
                 </tr>
                 <tr>
-                    <td class="name-properties">Status:</td>
-                    <td class="details-properties" th:text="${status}"></td>
+                    <td class="name-properties">Status :</td>
+                    <td class="details-properties" th:text="${reservationStatusName}"></td>
                 </tr>
                 <tr>
-                    <td class="name-properties">Reported by:</td>
-                    <td class="details-properties" th:text="${creatorName}"></td>
+                    <td class="name-properties">Total :</td>
+                    <td class="details-properties" th:text="${total}"></td>
                 </tr>
-<!--                <tr>-->
-<!--                    <td class="name-properties">Report day: </td>-->
-<!--                    <td class="details-properties" th:text="${#temporals.format(timeCreate, 'yyyy-MM-dd HH:mm:ss')}"></td>-->
-<!--                </tr>-->
-                <tr th:if="${fileNames}">
-                    <td class="name-properties">Images:</td>
-                    <td>
-                        <div th:each="fileName: ${fileNames}" th:text="${fileName}"></div>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="name-properties">Description:</td>
-                    <td class="details-properties" th:text="${description}"></td>
-                </tr>
+
             </table>
-<!--            <img src="cid:logo" th:width="100">-->
+            <img src="cid:coworking" th:width="200" class="logo-bot">
         </div>
     </div>
 </body>

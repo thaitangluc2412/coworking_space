@@ -19,8 +19,10 @@ import classes from "./ReservationDetail.module.css";
 import { toast } from "react-toastify";
 import http from "../../config/axiosConfig";
 import RoomCard from "./RoomCard";
+import { useAuth } from "../../context/auth-context";
 
 const ReservationDetail = () => {
+  const { user } = useAuth();
   const [reservation, setReservation] = useState({});
   const [listImages, setListImages] = useState([]);
   const { id } = useParams();
@@ -37,7 +39,9 @@ const ReservationDetail = () => {
 
   const handleCancelRequest = () => {
     http
-      .put(`reservations/${id}?reservationStatusName=CANCELLED`)
+      .put(
+        `reservations/${id}?reservationStatusName=CANCELLED&email=${reservation.emailOwner}`
+      )
       .then((res) => {
         console.log("new reservation: ", res.data);
         setReservation(res.data);
@@ -47,11 +51,13 @@ const ReservationDetail = () => {
 
   const handleCompleteRequest = () => {
     http
-      .put(`reservations/${id}?reservationStatusName=APPROVED`)
+      .put(
+        `reservations/${id}?reservationStatusName=APPROVED&email=${reservation.emailOwner}`
+      )
       .then((res) => {
         console.log("new reservation: ", res.data);
         setReservation(res.data);
-        toast.success("You cancelled the request");
+        toast.errors("You cancelled the request");
       });
   };
   const onNavigate = () => {

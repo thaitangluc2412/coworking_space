@@ -14,6 +14,7 @@ const SpaceList = () => {
   const [params] = useSearchParams();
   const cityName = params.get("cityName");
   const typeRoomId = params.get("typeRoomId");
+  const provinceId = params.get("provinceId");
   const navigate = useNavigate();
   const [listSpace, setListSpace] = useState([]);
   const filter = ({
@@ -53,7 +54,13 @@ const SpaceList = () => {
   };
   useEffect(() => {
     http
-      .get(filter({ cityName: cityName, typeRoomId: typeRoomId }))
+      .get(
+        filter({
+          cityName: cityName,
+          typeRoomId: typeRoomId,
+          provinceId: provinceId,
+        })
+      )
       .then((response) => {
         setListSpace(response.data);
       })
@@ -114,6 +121,7 @@ const SpaceList = () => {
                 dayPrice={space.dayPrice}
                 id={space.id}
                 typeRoomId={space.typeRoomId}
+                averageRating={space.averageRating}
               />
             ))}
         </div>

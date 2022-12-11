@@ -7,6 +7,7 @@ import org.mapstruct.Mapping;
 
 import com.coworkingspace.backend.dao.entity.Review;
 import com.coworkingspace.backend.dto.ReviewDto;
+import com.coworkingspace.backend.dto.ReviewListDto;
 
 @Mapper
 public interface ReviewMapper {
@@ -17,4 +18,14 @@ public interface ReviewMapper {
 
 	@InheritInverseConfiguration(name = "reviewDtoToReview")
 	ReviewDto reviewToReviewDto(Review review);
+
+
+
+	@InheritInverseConfiguration(name = "reviewToReviewListDto")
+	Review reviewListDtoToReview(ReviewListDto reviewListDto);
+
+	@Mapping(source = "customer.customerName", target = "customerName")
+	@Mapping(source = "room.roomName", target = "roomName")
+	@Mapping(source = "timeCreate", target = "timeCreate", dateFormat = "yyyy-MM-dd HH:mm")
+	ReviewListDto reviewToReviewListDto(Review review);
 }

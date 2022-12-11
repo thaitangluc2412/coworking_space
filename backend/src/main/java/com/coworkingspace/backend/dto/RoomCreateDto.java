@@ -23,6 +23,7 @@ public class RoomCreateDto {
 	private String roomTypeName;
 	private String imageStorageId;
 	private String utilityStorageId;
+	private Double averageRating;
 	private String roomName;
 	private String address;
 	private Integer provinceId;

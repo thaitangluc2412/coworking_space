@@ -1,8 +1,13 @@
 package com.coworkingspace.backend.dao.entity;
 
 
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
+import lombok.Cleanup;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -47,6 +52,9 @@ public class Room extends BaseEntity{
 	@Column(name = "room_name", nullable = false)
 	private String roomName;
 
+	@Column(name = "average_rating")
+	private Double averageRating = 0.0;
+
 	@Column(name = "address", nullable = false)
 	private String address;
 
@@ -62,10 +70,31 @@ public class Room extends BaseEntity{
 	@JoinColumn(name = "ward_id", nullable = false)
 	private Ward ward;
 
+	@OneToMany(fetch = FetchType.LAZY)
+	@JoinColumn(name = "behavior_id", nullable = false, insertable=false, updatable=false)
+	private Set<Behavior> behaviorItems = new HashSet<>();
+
 	@Lob
 	@Column(name = "description")
 	private String description;
 
 	@Column(name = "enable")
 	private Boolean enable = true;
+
+	@Override
+	public boolean equals(Object o){
+		if (this == o) {
+			return true;
+		}
+		if (!(o instanceof Room)){
+			return false;
+		}
+		Room room = (Room) o;
+		return Objects.equals(id, room.id) && Objects.equals(roomName, room.roomName);
+	}
+
+	@Override
+	public int hashCode(){
+		return Objects.hash(id, roomName);
+	}
 }
