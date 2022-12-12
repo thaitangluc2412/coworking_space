@@ -1,9 +1,4 @@
-.container {
-  /* width: 100%; */
-  padding: 0 60px;
-  /* display: flex; */
-  /* border:1px solid black; */
-}
+
 
 .header {
   display: flex;
@@ -85,8 +80,12 @@
 }
 
 .btnContainer {
-  width: 500px;
+  width: 100%;
+  max-width: 500px;
   position: relative;
+  display: flex;
+  gap: 20px;
+
 }
 
 .btnContainer button {
@@ -105,19 +104,18 @@
 }
 
 .roomAndMap {
-  width: calc(100% - 650px);
+  width: calc(100% - 600px);
   /* padding: 0px 10px; */
   /* border:1px solid black; */
 }
 
 .room {
-  /* width: 100%; */
-  height: fit-content;
+  width: 100%;
   box-shadow: 0 2px 8px rgba(116, 113, 113, 0.2);
   border-radius: 10px;
   background-color: white;
   padding: 20px 10px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .room .header {
@@ -162,7 +160,7 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
   display: flex;
   margin-top: 15px;
-  margin-bot: 15px;
+
   /* border: 1px solid #1e8489; */
 }
 

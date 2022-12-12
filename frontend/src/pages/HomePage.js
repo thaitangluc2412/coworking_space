@@ -4,6 +4,7 @@ import City from "../components/city/City";
 import SearchBox from "../components/searchBox/SearchBox";
 
 import CardList from "../components/swiper/CardList";
+import FavoriteSpaces from "../components/swiper/FavoriteSpaces";
 import TypeRoom from "../components/typeRoom/TypeRoom";
 
 const HomePage = () => {
@@ -40,7 +41,7 @@ const HomePage = () => {
           We have a solution for every needs
         </h2>
         <div className="ml-5">
-          <CardList></CardList>
+          <FavoriteSpaces></FavoriteSpaces>
         </div>
       </section>
       <City />

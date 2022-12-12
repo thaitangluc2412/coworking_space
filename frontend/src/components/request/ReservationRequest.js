@@ -7,7 +7,7 @@ import {
   IoMdPhonePortrait,
 } from "react-icons/io";
 import { HiOutlineMail } from "react-icons/hi";
-import { Carousel } from "react-bootstrap";
+import Carousel from "react-elastic-carousel";
 import {
   IoAlarmSharp,
   IoWalletSharp,
@@ -288,7 +288,7 @@ const ReservationRequest = () => {
 
           <div className={classes.btnContainer}>
             <button
-              className={classes.approvedBtn}
+              className={"flex flex-col items-center w-full"}
               disabled={reservation.reservationStatusName !== "PENDING"}
               onClick={handleApproveRequest}
               style={{
@@ -305,7 +305,7 @@ const ReservationRequest = () => {
               Approve
             </button>
             <button
-              className={classes.cancelBtn}
+              className={"flex flex-col items-center w-full"}
               disabled={
                 reservation.reservationStatusName === "CANCELLED" ||
                 reservation.reservationStatusName === "APPROVED"
@@ -329,7 +329,11 @@ const ReservationRequest = () => {
         </div>
         <div className={classes.roomAndMap}>
           <div className={classes.room}>
-            <label className={classes.name}>{reservation.roomName}</label>
+            <div
+              className={"text-2xl font-semibold text-primary mb-5 text-center"}
+            >
+              {reservation.roomName}
+            </div>
             <Carousel showArrows={true}>
               {listImages.map((image) => (
                 <div className="w-full h-[500px] mb-4" key={image.id}>

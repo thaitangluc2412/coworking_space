@@ -21,6 +21,7 @@ import ReservationDetail from "./components/request/ReservationDetail";
 import SpaceUpdate from "./module/space/SpaceUpdate";
 import ReservationRequest from "./components/request/ReservationRequest";
 import HelpPage from "./pages/HelpPage";
+import UserPage from "./pages/UserPage";
 
 function App() {
   const navigate = useNavigate();
@@ -97,7 +98,7 @@ function App() {
         </Route>
         <Route path="/manage" element={<LayoutMange />}>
           <Route path="/manage/space" element={<SpaceManage />} />
-          <Route path="/manage/users" element={<div>user</div>} />
+          <Route path="/manage/users" element={<UserPage />} />
           <Route path="/manage/add-space" element={<SpaceAdd />} />
           <Route path="/manage/update-space/:id" element={<SpaceUpdate />} />
           <Route path="/manage/business" element={<SpaceBusiness />} />

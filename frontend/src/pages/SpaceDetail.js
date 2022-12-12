@@ -118,49 +118,51 @@ const SpaceDetail = () => {
             </button>
           </div>
         </div>
-        <div className="w-full max-h-[400px] overflow-scroll rounded-sm shadow-lg p-5 mt-10">
-          {listComment.map((comment, index) => (
-            <div
-              className="flex flex-col  bg-slate-100 p-3 my-5 rounded"
-              key={index}
-            >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center">
-                  <div className="w-11 h-11">
-                    <img
-                      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdqXZFnoB9eMvcBSXMRQrtLBL_JhTfjZFbtcu9DiBoJfu4qqFZleZRD_6WTtfoMXkNZB0&usqp=CAU"
-                      alt=""
-                      className="w-full h-full object-cover rounded-full"
-                    />
+        {listComment.length > 0 && (
+          <div className="w-full max-h-[400px] overflow-scroll rounded-sm shadow-lg p-5 mt-10">
+            {listComment.map((comment, index) => (
+              <div
+                className="flex flex-col  bg-slate-100 p-3 my-5 rounded"
+                key={index}
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center">
+                    <div className="w-11 h-11">
+                      <img
+                        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdqXZFnoB9eMvcBSXMRQrtLBL_JhTfjZFbtcu9DiBoJfu4qqFZleZRD_6WTtfoMXkNZB0&usqp=CAU"
+                        alt=""
+                        className="w-full h-full object-cover rounded-full"
+                      />
+                    </div>
+                    <span
+                      style={{
+                        marginLeft: "10px",
+                      }}
+                    >
+                      {comment.customerName}
+                    </span>
                   </div>
-                  <span
+                  <div
                     style={{
-                      marginLeft: "10px",
+                      fontWeight: "200",
+                      fontSize: "12px",
+                      marginLeft: "5px",
                     }}
                   >
-                    {comment.customerName}
-                  </span>
+                    {comment.timeCreate}{" "}
+                  </div>
+                  <Rating
+                    name="half-rating-read"
+                    defaultValue={comment.rating}
+                    precision={1}
+                    readOnly
+                  />
                 </div>
-                <div
-                  style={{
-                    fontWeight: "200",
-                    fontSize: "12px",
-                    marginLeft: "5px",
-                  }}
-                >
-                  {comment.timeCreate}{" "}
-                </div>
-                <Rating
-                  name="half-rating-read"
-                  defaultValue={comment.rating}
-                  precision={1}
-                  readOnly
-                />
+                <div className="mt-4">{comment.content}</div>
               </div>
-              <div className="mt-4">{comment.content}</div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

@@ -111,9 +111,10 @@ const SpaceUpdate = () => {
         roomDetail.images.map((image) =>
           listImageUpdate.push({
             file: {
-              name: "",
+              name: image.id,
             },
             url: image.url,
+            update: true,
           })
         );
         setImageFiles(listImageUpdate);
@@ -160,7 +161,7 @@ const SpaceUpdate = () => {
   };
 
   const onSubmit = (value) => {
-    console.log("values ", value);
+    setIsLoading(true)
     let checkError = false;
 
     for (let i = 0; i < utilities.length; i++) {
@@ -182,7 +183,14 @@ const SpaceUpdate = () => {
         value: getValues(`${item.price}`),
       });
     });
-
+    const imgUrl = [];
+    imageFiles.forEach((item) => {
+      if (item.update)
+        imgUrl.push({
+          id: item.file.name,
+          url: item.url,
+        });
+    });
     const roomsAdd = {
       address: `${value.address}, ${wardsName}, ${districtName}`,
       provinceId: value.city,
@@ -196,6 +204,7 @@ const SpaceUpdate = () => {
       utilities: utilitiesAdd,
       roomTypeId: value.roomTypeId,
       customerId: user.id,
+      images: imgUrl,
     };
     const formData = new FormData();
 
@@ -205,7 +214,9 @@ const SpaceUpdate = () => {
         type: "application/json",
       })
     );
-    imageFiles.forEach((item) => formData.append("files", item.file));
+    imageFiles.forEach((item) => {
+      if (!item.update) formData.append("files", item.file);
+    });
     setIsLoading(true);
     http
       .put(`rooms/${id}`, formData)
@@ -219,6 +230,7 @@ const SpaceUpdate = () => {
         setIsLoading(false);
         console.error("err", err);
       });
+      setIsLoading(false)
   };
   return (
     <div>

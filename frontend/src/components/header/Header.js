@@ -12,18 +12,23 @@ const Header = () => {
     navigate("/");
   };
   const handleSignInOut = () => {
-    if (!user.id) navigate("/login");
-    localStorage.removeItem("token");
-    setUser({
-      id: "",
-      customerName: "",
-      email: "",
-      phoneNumber: "",
-      roleName: "",
-      timeCreate: "",
-      timeUpdate: "",
-    });
-    setShow(false);
+    if (!user.id) {
+      navigate("/login");
+    }
+    if (user.id) {
+      localStorage.removeItem("token");
+      setUser({
+        id: "",
+        customerName: "",
+        email: "",
+        phoneNumber: "",
+        roleName: "",
+        timeCreate: "",
+        timeUpdate: "",
+      });
+      setShow(false);
+      navigate("/");
+    }
   };
   const items = [
     {
