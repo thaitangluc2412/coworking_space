@@ -26,14 +26,11 @@ import lombok.AllArgsConstructor;
 
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.thymeleaf.expression.Lists;
 
 import javax.transaction.Transactional;
 
-import java.io.File;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -136,6 +133,9 @@ public class RoomServiceImpl implements RoomService {
 			deleteFolderCloudinary(room);
 			List<ImageDto> imageDtos = new ArrayList<>();
 			imageDtos.addAll(saveImage(files));
+			if (roomCreateDto.getImages() != null ) {
+				imageDtos.addAll(roomCreateDto.getImages());
+			}
 			roomCreateDto.setImages(imageDtos);
 		} else {
 			roomCreateDto.setImages(room.getImageStorage()
@@ -208,7 +208,7 @@ public class RoomServiceImpl implements RoomService {
 		return imageDtos;
 	}
 
-	@Override public ResponseEntity favoriteRoom(String id) {
+	@Override public List<RoomListDto> favoriteRoom(String id) {
 		List<Room> roomIterable = roomRepository.findAll();
 		List<Customer> customers = customerRepository.findAllByBehavior();
 
@@ -220,7 +220,7 @@ public class RoomServiceImpl implements RoomService {
 
 		if (customerOptional.isEmpty()){
 
-			return ResponseEntity.ok(roomRepository.findTop10ByOrderByAverageRatingDesc());
+			return roomRepository.findTop10ByOrderByAverageRatingDesc().stream().map(room -> roomMapper.roomToRoomListDto(room)).collect(Collectors.toList());
 		}
 
 		var customer = customerOptional.get();
@@ -255,7 +255,10 @@ public class RoomServiceImpl implements RoomService {
 
 		var prediction = predictionRating(aRU, userSimilarities, listItems, matrix);
 		var result = prediction.stream().sorted(Comparator.comparing(Pair::getValue)).map(pair -> rooms.get(pair.getIndex())).collect(Collectors.toList());
-		return ResponseEntity.ok(result);
+		if (result.isEmpty()) {
+			return roomRepository.findTop10ByOrderByAverageRatingDesc().stream().map(room -> roomMapper.roomToRoomListDto(room)).collect(Collectors.toList());
+		}
+		return result.stream().map(room -> roomMapper.roomToRoomListDto(room)).collect(Collectors.toList());
 	}
 
 	private double[][] generateRatingMatrix(List<Room> rooms, List<Customer> customers) {
@@ -283,6 +286,7 @@ public class RoomServiceImpl implements RoomService {
 
 	private double getAverageRating(int indexOfUser, double[][] matrix) {
 		double sum = 0d;
+		if (matrix.length == 0) return 0;
 		for (int i = 0; i < matrix[0].length; i++) {
 			sum += matrix[indexOfUser][i];
 		}

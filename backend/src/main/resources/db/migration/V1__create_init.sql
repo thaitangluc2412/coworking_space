@@ -48,7 +48,6 @@ CREATE TABLE `image`
     image_id         VARCHAR(15),
     image_storage_id VARCHAR(15) NOT NULL,
     url              TEXT        NOT NULL,
-    thumbnail        VARCHAR(255),
     time_create      DATETIME DEFAULT CURRENT_TIMESTAMP,
     time_update      DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     CONSTRAINT PRIMARY KEY (image_id),
@@ -109,7 +108,8 @@ CREATE TABLE `room`
     CONSTRAINT `fk_room_room_type` FOREIGN KEY (room_type_id) REFERENCES room_type (room_type_id),
     CONSTRAINT `fk_room_price` FOREIGN KEY (price_id) REFERENCES price (price_id),
     CONSTRAINT `fk_room_image_storage` FOREIGN KEY (image_storage_id) REFERENCES image_storage (image_storage_id),
-    CONSTRAINT `fk_room_customer` FOREIGN KEY (customer_id) REFERENCES customer (customer_id)
+    CONSTRAINT `fk_room_customer` FOREIGN KEY (customer_id) REFERENCES customer (customer_id),
+    CONSTRAINT `fk_room_utility_storage` FOREIGN KEY (utility_storage_id) REFERENCES utility_storage (utility_storage_id)
 );
 
 CREATE TABLE `review`
@@ -154,35 +154,6 @@ CREATE TABLE `reservation`
     CONSTRAINT `fk_reservation_room` FOREIGN KEY (room_id) REFERENCES room (room_id),
     CONSTRAINT `fk_reservation_customer` FOREIGN KEY (customer_id) REFERENCES customer (customer_id),
     CONSTRAINT `fk_reservation_reservation_status` FOREIGN KEY (reservation_status_id) REFERENCES reservation_status (reservation_status_id)
-);
-
-CREATE TABLE `inbox`
-(
-    inbox_id             VARCHAR(15),
-    seller_id            VARCHAR(15),
-    customer_id          VARCHAR(15),
-    message              VARCHAR(255),
-    seller_has_message   BOOLEAN,
-    customer_has_message BOOLEAN,
-    time_create          DATETIME DEFAULT CURRENT_TIMESTAMP,
-    time_update          DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    CONSTRAINT PRIMARY KEY (inbox_id),
-    CONSTRAINT `fk_inbox_seller` FOREIGN KEY (seller_id) REFERENCES customer (customer_id),
-    CONSTRAINT `fk_inbox_customer` FOREIGN KEY (customer_id) REFERENCES customer (customer_id)
-
-);
-
-CREATE TABLE `message`
-(
-    message_id  VARCHAR(15),
-    inbox_id    VARCHAR(15),
-    message     VARCHAR(255),
-    sender_id   VARCHAR(15),
-    receiver_id VARCHAR(15),
-    time_create DATETIME DEFAULT CURRENT_TIMESTAMP,
-    time_update DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    CONSTRAINT PRIMARY KEY (message_id),
-    CONSTRAINT `fk_message_inbox` FOREIGN KEY (inbox_id) REFERENCES inbox (inbox_id)
 );
 
 CREATE TABLE `behavior`

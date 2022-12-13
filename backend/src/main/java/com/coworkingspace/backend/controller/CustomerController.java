@@ -6,8 +6,6 @@ import com.coworkingspace.backend.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,7 +20,6 @@ public class CustomerController {
 
 	@PostMapping
 	public ResponseEntity<Void> createCustomer(@RequestBody CustomerDto customerDto) {
-		System.out.println("customerDto: " + customerDto.getCustomerName());
 		customerService.createCustomer(customerDto);
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
@@ -37,5 +34,18 @@ public class CustomerController {
 	public ResponseEntity<CustomerResponseDto> getCurrentUser(HttpServletRequest request) {
 		CustomerResponseDto customerResponseDto = customerService.getCurrentUser(request);
 		return ResponseEntity.status(HttpStatus.OK).body(customerResponseDto);
+	}
+
+	@PutMapping("/{id}")
+	public ResponseEntity<Void> updateCustomer(@RequestBody CustomerDto customerDto){
+		customerService.updateCustomer(customerDto);
+		return ResponseEntity.status(HttpStatus.OK).build();
+	}
+
+	// Get total customer for admin page
+	@GetMapping("/total")
+	public ResponseEntity<?> getTotalCustomer() {
+		int total = customerService.getTotalCustomer();
+		return ResponseEntity.ok(total);
 	}
 }

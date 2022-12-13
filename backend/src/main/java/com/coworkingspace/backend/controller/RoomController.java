@@ -1,8 +1,9 @@
 package com.coworkingspace.backend.controller;
 
-import com.coworkingspace.backend.dto.ImageDto;
+import com.coworkingspace.backend.dao.repository.RoomRepository;
 import com.coworkingspace.backend.dto.RoomCreateDto;
 import com.coworkingspace.backend.dto.RoomListDto;
+import com.coworkingspace.backend.mapper.RoomMapper;
 import com.coworkingspace.backend.service.RoomService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/rooms")
@@ -21,11 +23,17 @@ public class RoomController {
 	@Autowired
 	private RoomService roomService;
 
+	@Autowired
+	private RoomRepository roomRepository;
+
+	@Autowired
+	private RoomMapper roomMapper;
+
 	@PostMapping
 	public ResponseEntity<RoomCreateDto> createRoom(@RequestPart RoomCreateDto roomCreateDto,
 		@RequestPart(value = "files", required = false) MultipartFile[] files) {
 		roomService.createRoom(roomCreateDto, files);
-		return new ResponseEntity<>(HttpStatus.OK);
+		return new ResponseEntity<>(roomCreateDto, HttpStatus.OK);
 	}
 
 	@GetMapping
@@ -37,7 +45,7 @@ public class RoomController {
 	@PutMapping("/{id}")
 	public ResponseEntity<RoomCreateDto> updateRoom(@PathVariable String id,
 		@RequestPart RoomCreateDto roomCreateDto,
-		@RequestPart("files") MultipartFile[] files, @RequestPart List<ImageDto> imageDtos) throws NotFoundException {
+		@RequestPart( required = false) MultipartFile[] files) throws NotFoundException {
 		RoomCreateDto roomCreateDto1 = roomService.updateRoom(id, roomCreateDto, files);
 		return ResponseEntity.status(HttpStatus.OK).body(roomCreateDto1);
 	}
@@ -69,8 +77,22 @@ public class RoomController {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
-	@GetMapping("/favorite/${id}")
-	public ResponseEntity favorite(@PathVariable String id){
-		return roomService.favoriteRoom(id);
+	@GetMapping("/favorite/customer/{id}")
+	public ResponseEntity<List<RoomListDto>> favorite(@PathVariable(required = false) String id){
+		return new ResponseEntity<>(roomService.favoriteRoom(id), HttpStatus.OK);
+	}
+
+	@GetMapping("/favorite/customer/getAll/{id}")
+	public ResponseEntity<List<RoomListDto>> getAllTest(@PathVariable String id){
+		System.out.println("id: " + id);
+		List<RoomListDto> roomListDtos = roomRepository.findTop10ByOrderByAverageRatingDesc().stream().map(room -> roomMapper.roomToRoomListDto(room)).collect(Collectors.toList());
+		return new ResponseEntity<>(roomListDtos, HttpStatus.OK);
+	}
+
+	// get total room for admin page
+	@GetMapping("/total")
+	public ResponseEntity<?> getTotalRoom() {
+		int total = (int) roomRepository.count();
+		return ResponseEntity.ok(total);
 	}
 }

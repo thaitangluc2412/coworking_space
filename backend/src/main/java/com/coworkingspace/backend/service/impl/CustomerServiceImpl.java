@@ -2,6 +2,7 @@ package com.coworkingspace.backend.service.impl;
 
 import com.coworkingspace.backend.common.utils.JwtUtil;
 import com.coworkingspace.backend.dao.entity.Customer;
+import com.coworkingspace.backend.dao.entity.Role;
 import com.coworkingspace.backend.dao.repository.CustomerRepository;
 import com.coworkingspace.backend.dto.CustomerDto;
 import com.coworkingspace.backend.dto.CustomerResponseDto;
@@ -55,5 +56,24 @@ public class CustomerServiceImpl implements CustomerService {
 		Customer customer = customerRepository.findByEmail(email)
 				.orElseThrow(() -> new UsernameNotFoundException("Not found email"));
 		return customerMapper.customerToCustomerResponseDto(customer);
+	}
+
+	@Override public void updateCustomer(CustomerDto customerDto) {
+		Customer customer = customerMapper.customerDtoToCustomer(customerDto);
+		if (customerDto.getPassword() == null){
+			String password = customerRepository.findByEmail(customerDto.getEmail()).get().getPassword();
+			customer.setPassword(password);
+		} else {
+			String password = passwordEncoder.encode(customerDto.getPassword());
+			customer.setPassword(password);
+		}
+		Role role =  customerRepository.findByEmail(customerDto.getEmail()).get().getRole();
+		customer.setRole(role);
+		customerRepository.save(customer);
+	}
+
+	@Override
+	public int getTotalCustomer() {
+		return customerRepository.getTotalCustomer();
 	}
 }

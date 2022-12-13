@@ -23,11 +23,8 @@ public class Image extends BaseEntity{
 	private String id;
 
 	@Lob
-	@Column(name = "url", nullable = false)
+	@Column(name = "url")
 	private String url;
-
-	@Column(name = "thumbnail", nullable = false)
-	private String thumbnail;
 
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "image_storage_id", nullable = false)

@@ -1,13 +1,10 @@
 package com.coworkingspace.backend.dao.hibernate.Impl;
 
-import com.coworkingspace.backend.dao.entity.Reservation;
-import com.coworkingspace.backend.dao.hibernate.ReservationDao;
-import com.coworkingspace.backend.dto.ReservationDto;
-import com.coworkingspace.backend.dto.ReservationListDto;
-import com.coworkingspace.backend.mapper.DateMapper;
-import com.coworkingspace.backend.mapper.DateStatusMapper;
-import com.coworkingspace.backend.sdo.DateStatus;
-import com.coworkingspace.backend.service.ReservationStatusService;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.EntityManager;
 
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +12,12 @@ import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManager;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import com.coworkingspace.backend.dao.entity.Reservation;
+import com.coworkingspace.backend.dao.hibernate.ReservationDao;
+import com.coworkingspace.backend.mapper.DateMapper;
+import com.coworkingspace.backend.mapper.DateStatusMapper;
+import com.coworkingspace.backend.sdo.DateStatus;
+import com.coworkingspace.backend.service.ReservationStatusService;
 
 @Repository
 public class JdbcReservationDao implements ReservationDao {
@@ -109,9 +106,42 @@ public class JdbcReservationDao implements ReservationDao {
 				"JOIN room ON reservation.room_id = room.room_id\n" +
 				"JOIN customer ON room.customer_id = customer.customer_id\n" +
 				"WHERE customer.customer_id = ?1\n" +
-			    "ORDER BY reservation.time_create DESC";
+				"ORDER BY reservation.time_create DESC";
 		Session session = entityManager.unwrap((Session.class));
 		return session.createNativeQuery(GET_BY_SELLER_ID, Reservation.class).setParameter(1, id).getResultList();
 	}
 
+	// TODO: đổi reservation_status_id lại cho đúng
+	@Override
+	public com.cnpm.workingspace.sdo.Budget getBudget() {
+		com.cnpm.workingspace.sdo.Budget ret = new com.cnpm.workingspace.sdo.Budget();
+		int month = LocalDate.now().getMonthValue();
+		int year = LocalDate.now().getYear();
+		int preMonth = month - 1;
+		int preYear = year;
+		if (month == 1) {
+			preMonth = 12;
+			preYear = year - 1;
+		}
+		final String sql = "WITH oldMonth as (\n" +
+			"select IFNULL(sum(total), 1) as oldTotal\n" +
+			"from reservation \n" +
+			"where reservation_status_id = 2 and (MONTH(create_date) = " + preMonth + ") and (YEAR(create_date) = " + preYear + ") \n" +
+			") \n" +
+			"select ROUND(IFNULL(sum(reservation.total), 1) / oldMonth.oldTotal * 100 - 100, 2) as percent, sum(reservation.total) as budget\n" +
+			"from reservation, oldMonth\n" +
+			"where reservation_status_id = 2 and (MONTH(create_date) = " + month + ") and (YEAR(create_date) = " + year + ") ;";
+		try {
+			ret = jdbcTemplateObject.queryForObject(sql, (rs, rowNum) -> {
+				return new com.cnpm.workingspace.sdo.Budget(
+					rs.getDouble("percent"),
+					rs.getDouble("budget")
+				);
+			});
+			System.out.println("added");
+		} catch (Exception e) {
+			System.out.println("error : " + e.getMessage());
+		}
+		return ret;
+	}
 }

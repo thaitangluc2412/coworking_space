@@ -16,4 +16,5 @@ public interface ReservationDao {
 	String getFurthestValidDate(String roomId, String from) throws NotFoundException;
 	List<LocalDate> getAllInvalidDates(String roomId) throws NotFoundException;
 	List<Reservation> getBySellerId(String id);
+	com.cnpm.workingspace.sdo.Budget getBudget();
 }

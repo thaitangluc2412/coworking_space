@@ -19,4 +19,7 @@ public interface ReservationService {
 	ReservationListDto getById(String id);
 	ReservationListDto updateReservation(String id, String reservationStatsName, String email) throws MessagingException;
 	List<ReservationListDto> getBySellerId(String sellerId);
+	com.cnpm.workingspace.sdo.Budget getBudget();
+	double getProfit();
+	List<ReservationListDto> getLatestReservations();
 }

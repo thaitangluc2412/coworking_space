@@ -10,4 +10,6 @@ public interface CustomerService {
 	void createCustomer(CustomerDto customerDto);
 	List<CustomerResponseDto> getAllCustomers();
 	CustomerResponseDto getCurrentUser(HttpServletRequest request);
+	void updateCustomer(CustomerDto customerDto);
+	int getTotalCustomer();
 }

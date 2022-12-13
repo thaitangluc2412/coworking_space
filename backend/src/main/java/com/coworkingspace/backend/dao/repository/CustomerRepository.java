@@ -12,4 +12,8 @@ public interface CustomerRepository extends JpaRepository<Customer, String> {
 
 	@Query("select customer from Customer customer join customer.behaviors bi where bi.time > 0")
 	List<Customer> findAllByBehavior();
+
+	// TODO: Thêm khoảng thời gian nếu muốn thống kê theo tháng
+	@Query(value = "SELECT count(customer_id) as total FROM customer", nativeQuery = true)
+	int getTotalCustomer();
 }

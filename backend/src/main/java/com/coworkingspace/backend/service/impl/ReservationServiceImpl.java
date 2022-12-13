@@ -1,5 +1,17 @@
 package com.coworkingspace.backend.service.impl;
 
+import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.mail.MessagingException;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
+import org.springframework.data.domain.Sort;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Service;
+
 import com.coworkingspace.backend.dao.entity.Customer;
 import com.coworkingspace.backend.dao.entity.Reservation;
 import com.coworkingspace.backend.dao.entity.ReservationStatus;
@@ -16,22 +28,11 @@ import com.coworkingspace.backend.service.ReservationService;
 import com.coworkingspace.backend.service.ReservationStatusService;
 import com.coworkingspace.backend.service.RoomService;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
-import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.mail.MessagingException;
-
 @Service
 public class ReservationServiceImpl implements ReservationService {
 
 	@Autowired
 	private ReservationRepository reservationRepository;
-
 	@Autowired
 	private ReservationMapper reservationMapper;
 	@Autowired
@@ -44,6 +45,8 @@ public class ReservationServiceImpl implements ReservationService {
 	private CustomerRepository customerRepository;
 	@Autowired
 	private EmailService emailService;
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
 
 	@Override
 	public ReservationDto createReservation(ReservationDto reservationDto) {
@@ -117,6 +120,23 @@ public class ReservationServiceImpl implements ReservationService {
 
 	@Override public List<ReservationListDto> getBySellerId(String sellerId) {
 		return reservationDao.getBySellerId(sellerId).stream().map(reservation -> reservationMapper.reservationToReservationListDto(reservation)).collect(
+			Collectors.toList());
+	}
+
+	@Override
+	public com.cnpm.workingspace.sdo.Budget getBudget() {
+		return reservationDao.getBudget();
+	}
+
+	@Override
+	public double getProfit() {
+		return reservationRepository.getProfit();
+	}
+
+	//TODO: đổi param của Sort.by cho đúng (nếu t viết k đúng)
+	@Override
+	public List<ReservationListDto> getLatestReservations() {
+		return reservationRepository.findAll(Sort.by("time_created").descending()).stream().map(reservation -> reservationMapper.reservationToReservationListDto(reservation)).collect(
 			Collectors.toList());
 	}
 }

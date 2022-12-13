@@ -11,4 +11,10 @@ import org.springframework.stereotype.Repository;
 public interface ReservationRepository extends JpaRepository<Reservation, String> {
 	List<Reservation> getByCustomerIdOrderByTimeCreateDesc(String id);
 	Reservation getById(String id);
+
+	// TODO: change reservation_status_id
+	@Query(value = "select IFNULL(sum(total), 0) as total\n" +
+		"from reservation \n" +
+		"where reservation_status_id = 2;", nativeQuery = true)
+	double getProfit();
 }
