@@ -4,8 +4,8 @@ import { toast } from "react-toastify";
 class Http {
   constructor() {
     this.instance = axios.create({
-      baseURL: "http://192.168.10.45:8080/api/v1/",
-      timeout: 30000,
+      baseURL: "http://localhost:8080/api/v1/",
+      timeout: 60000,
       headers: {
         "Content-Type": "application/json",
       },

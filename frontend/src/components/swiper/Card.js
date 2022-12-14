@@ -8,7 +8,7 @@ const Card = ({ roomTypeName, description, url, id }) => {
   };
   return (
     <div
-      className="w-[320px] h-[500px]  flex flex-col shadow-lg rounded-lg overflow-hidden cursor-pointer"
+      className="w-[320px] h-[500px] bg-white flex flex-col shadow-lg rounded-lg overflow-hidden cursor-pointer"
       onClick={handleClick}
     >
       <div className="w-full h-[300px] mb-4">

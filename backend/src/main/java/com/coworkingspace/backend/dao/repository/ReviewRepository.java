@@ -11,4 +11,5 @@ import com.coworkingspace.backend.dao.entity.Review;
 public interface ReviewRepository extends JpaRepository<Review, String> {
 	List<Review> findByRoomIdOrderByTimeCreate(String roomId);
 	List<Review> findByCustomerId(String id);
+	List<Review> findReviewByCustomerIdAndRoomId(String customerId, String roomId);
 }

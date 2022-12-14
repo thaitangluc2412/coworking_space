@@ -161,7 +161,7 @@ const SpaceUpdate = () => {
   };
 
   const onSubmit = (value) => {
-    setIsLoading(true)
+    setIsLoading(true);
     let checkError = false;
 
     for (let i = 0; i < utilities.length; i++) {
@@ -198,8 +198,8 @@ const SpaceUpdate = () => {
       dayPrice: value.dayPrice,
       districtId: value.district,
       wardId: value.wards,
-      monthPrice: value.monthPrice,
-      yearPrice: value.yearPrice,
+      monthPrice: 0,
+      yearPrice: 0,
       description: value.desc,
       utilities: utilitiesAdd,
       roomTypeId: value.roomTypeId,
@@ -230,7 +230,7 @@ const SpaceUpdate = () => {
         setIsLoading(false);
         console.error("err", err);
       });
-      setIsLoading(false)
+    setIsLoading(false);
   };
   return (
     <div>
@@ -297,15 +297,7 @@ const SpaceUpdate = () => {
 
           <div className="grid grid-cols-3 gap-3">
             <Field>
-              <Label>Year Price</Label>
-              <Input type="text" name="yearPrice" control={control}></Input>
-            </Field>
-            <Field>
-              <Label>Month Price</Label>
-              <Input type="text" name="monthPrice" control={control}></Input>
-            </Field>
-            <Field>
-              <Label>Day Price</Label>
+              <Label>Day Price ($)</Label>
               <Input type="text" name="dayPrice" control={control}></Input>
             </Field>
           </div>

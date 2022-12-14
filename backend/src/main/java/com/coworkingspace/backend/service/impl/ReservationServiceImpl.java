@@ -8,6 +8,9 @@ import javax.mail.MessagingException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -114,7 +117,14 @@ public class ReservationServiceImpl implements ReservationService {
 		reservation.setReservationStatus(reservationStatusService.findByReservationStatusName(reservationStatsName));
 		reservationRepository.save(reservation);
 
-		emailService.sendUpdateReservationMail(oldReservationListDto, reservationStatsName, email);
+		Thread thread = new Thread(() -> {
+			try {
+				emailService.sendUpdateReservationMail(oldReservationListDto, reservationStatsName, email);
+			} catch (MessagingException e) {
+				throw new RuntimeException(e);
+			}
+		});
+		thread.start();
 		return reservationMapper.reservationToReservationListDto(reservation);
 	}
 
@@ -136,7 +146,19 @@ public class ReservationServiceImpl implements ReservationService {
 	//TODO: đổi param của Sort.by cho đúng (nếu t viết k đúng)
 	@Override
 	public List<ReservationListDto> getLatestReservations() {
-		return reservationRepository.findAll(Sort.by("time_created").descending()).stream().map(reservation -> reservationMapper.reservationToReservationListDto(reservation)).collect(
-			Collectors.toList());
+		return reservationRepository.findAll(Sort.by("timeCreate").descending()).stream()
+			.map(reservation -> reservationMapper.reservationToReservationListDto(reservation)).collect(
+				Collectors.toList());
+	}
+
+	@Override public Page<ReservationListDto> findReservationPage(int page, int size) {
+		Pageable pageable = PageRequest.of(page, size);
+		Page<Reservation> reservationsPage = reservationRepository.findAll(pageable);
+		return reservationsPage.map(reservation -> reservationMapper.reservationToReservationListDto(reservation));
+	}
+
+	@Override public Page<ReservationListDto> findByRoomNameOrStatusName(String roomName, int page, int size) {
+		return reservationRepository.findReservationByReservationStatusReservationStatusNameContaining(roomName,
+			PageRequest.of(page, size)).map(reservation -> reservationMapper.reservationToReservationListDto(reservation));
 	}
 }

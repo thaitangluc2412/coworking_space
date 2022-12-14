@@ -11,7 +11,7 @@ const FavoriteSpaces = () => {
   const { user } = useAuth();
 
   useEffect(() => {
-    http.get(`rooms/getByCustomerId/${user.id}`).then((res) => {
+    http.get(`rooms/favorite/customer/${user.id}`).then((res) => {
       setData(res.data);
     });
   }, [user]);

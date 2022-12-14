@@ -27,7 +27,7 @@ const Sidebar = () => {
   const { user } = useAuth();
 
   return (
-    <div className="w-[300px] h-full shadow-lg flex flex-col pt-5  items-center  text-slate-500 ">
+    <div className="w-[300px] h-full shadow-lg flex flex-col pt-5  items-center  text-slate-500 bg-white">
       {/* <div
         className="font-bungee text-xl text-primary "
         onClick={() => navigate("/")}

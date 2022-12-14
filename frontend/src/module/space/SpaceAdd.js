@@ -21,6 +21,7 @@ const schema = yup
   .object({
     roomName: yup.string().required("Please enter your name location"),
     address: yup.string().required("Please enter your address of location"),
+    dayPrice: yup.string().required("Please enter day price of location"),
   })
   .required();
 const SpaceAdd = () => {
@@ -262,7 +263,7 @@ const SpaceAdd = () => {
               <Input type="text" name="monthPrice" control={control}></Input>
             </Field> */}
             <Field>
-              <Label>Day Price</Label>
+              <Label>Day Price ($)</Label>
               <Input type="text" name="dayPrice" control={control}></Input>
             </Field>
           </div>
@@ -325,7 +326,7 @@ const SpaceAdd = () => {
                       </Field>
                       <Field>
                         <Label name={`priceUtility${utility.index}`}>
-                          Price
+                          Value
                         </Label>
                         <Input
                           type="text"

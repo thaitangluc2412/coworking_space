@@ -15,7 +15,7 @@ const SpaceDetail = () => {
   const [data, setData] = useState([]);
   const [listImages, setListImages] = useState([]);
   const [listComment, setListComment] = useState([]);
-
+  let averageRating = data.averageRating !== undefined ? data.averageRating : 0;
   useEffect(() => {
     http.get(`rooms/${id}?customerId=${userId}`).then((res) => {
       setData(res.data);
@@ -94,8 +94,9 @@ const SpaceDetail = () => {
           </h3>
           <div className="text-grayText font-medium mb-1">
             <Rating
-              name="half-rating-read"
-              defaultValue={data.rating}
+              name="simple-controlled"
+              defaultValue={averageRating}
+              value={averageRating}
               precision={0.5}
               readOnly
             />
@@ -119,7 +120,7 @@ const SpaceDetail = () => {
           </div>
         </div>
         {listComment.length > 0 && (
-          <div className="w-full max-h-[400px] overflow-scroll rounded-sm shadow-lg p-5 mt-10">
+          <div className="w-full max-h-[400px] overflow-scroll rounded-sm shadow-lg p-5 mt-10 bg-white">
             {listComment.map((comment, index) => (
               <div
                 className="flex flex-col  bg-slate-100 p-3 my-5 rounded"

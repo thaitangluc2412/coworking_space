@@ -35,7 +35,7 @@ const HomePage = () => {
       <TypeRoom></TypeRoom>
       <section className="mb-10 pl-[70px]">
         <h1 className="mb-2 text-3xl font-semibold">
-          Find the space that fits your bussiness
+          Spaces that might be right for you
         </h1>
         <h2 className="mb-[80px] text-lg font-light text-grayCustom">
           We have a solution for every needs

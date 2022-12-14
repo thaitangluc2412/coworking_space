@@ -1,19 +1,26 @@
 package com.coworkingspace.backend.controller;
 
+import com.coworkingspace.backend.dao.hibernate.RoomDao;
 import com.coworkingspace.backend.dao.repository.RoomRepository;
 import com.coworkingspace.backend.dto.RoomCreateDto;
 import com.coworkingspace.backend.dto.RoomListDto;
 import com.coworkingspace.backend.mapper.RoomMapper;
+import com.coworkingspace.backend.sdo.CountRoomType;
+import com.coworkingspace.backend.sdo.ObjectSdo;
 import com.coworkingspace.backend.service.RoomService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @RestController
@@ -28,6 +35,9 @@ public class RoomController {
 
 	@Autowired
 	private RoomMapper roomMapper;
+
+	@Autowired
+	private RoomDao roomDao;
 
 	@PostMapping
 	public ResponseEntity<RoomCreateDto> createRoom(@RequestPart RoomCreateDto roomCreateDto,
@@ -85,7 +95,7 @@ public class RoomController {
 	@GetMapping("/favorite/customer/getAll/{id}")
 	public ResponseEntity<List<RoomListDto>> getAllTest(@PathVariable String id){
 		System.out.println("id: " + id);
-		List<RoomListDto> roomListDtos = roomRepository.findTop10ByOrderByAverageRatingDesc().stream().map(room -> roomMapper.roomToRoomListDto(room)).collect(Collectors.toList());
+		List<RoomListDto> roomListDtos = roomRepository.findTop6ByOrderByAverageRatingDesc().stream().map(room -> roomMapper.roomToRoomListDto(room)).collect(Collectors.toList());
 		return new ResponseEntity<>(roomListDtos, HttpStatus.OK);
 	}
 
@@ -94,5 +104,36 @@ public class RoomController {
 	public ResponseEntity<?> getTotalRoom() {
 		int total = (int) roomRepository.count();
 		return ResponseEntity.ok(total);
+	}
+
+	@GetMapping("/countRoomType")
+	public ResponseEntity<?> countRoomType() {
+		List<CountRoomType> countRoomTypes = roomDao.getCountRoomType();
+		return ResponseEntity.ok(countRoomTypes);
+	}
+
+	@GetMapping("/page/list")
+	@ResponseBody
+	public ResponseEntity<?> findByRoomName(
+		@RequestParam(value = "value", required = false) String value,
+		@RequestParam(name = "page", required = false, defaultValue = "0") int page,
+		@RequestParam(name = "size", required = false, defaultValue = "7") int size
+	) {
+
+		if (Objects.equals(value, "")) {
+			Page<RoomListDto> rooms = roomService.findRoomPage(page, size);
+			List<RoomListDto> roomList = rooms.toList();
+			List<Object> cusObjectList = Arrays.asList(roomList.toArray());
+
+			List<RoomCreateDto> allRooms = roomService.getAll();
+			int count = allRooms.size();
+
+			ObjectSdo objectSdo = new ObjectSdo(count, cusObjectList);
+			return new ResponseEntity<>(objectSdo, HttpStatus.OK);
+		}
+		Page<RoomListDto> roomPage = roomService.findRoomByRoomName(value, page, size);
+		List<RoomListDto> rooms = roomPage.toList();
+		int cnt = rooms.size();
+		return new ResponseEntity<>(new ObjectSdo(cnt, new ArrayList(rooms)), HttpStatus.OK);
 	}
 }

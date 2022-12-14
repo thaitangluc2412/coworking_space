@@ -1,6 +1,9 @@
 package com.coworkingspace.backend.dao.repository;
 
 import com.coworkingspace.backend.dao.entity.Customer;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -16,4 +19,5 @@ public interface CustomerRepository extends JpaRepository<Customer, String> {
 	// TODO: Thêm khoảng thời gian nếu muốn thống kê theo tháng
 	@Query(value = "SELECT count(customer_id) as total FROM customer", nativeQuery = true)
 	int getTotalCustomer();
+	Page<Customer> findCustomerByCustomerNameContainingOrEmailContainingOrPhoneNumberContaining(String customerName, String email, String phone, Pageable pageable);
 }

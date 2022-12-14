@@ -27,7 +27,7 @@ const Statics = () => {
               className="w-full h-full text-purple-400"
             />
           </div>
-          <p className="font-semibold text-xl mb-4 text-primary">Users</p>
+          <p className="font-semibold text-xl mb-4 text-primary">Request</p>
         </div>
         <div className="w-10 h-10 bg-slate-200 rounded-full flex items-center justify-center font-semibold text-primary">
           6

@@ -172,7 +172,7 @@ const ReservationCard = (props) => {
       </div>
       <div class={classes.col6}>
         <div className={classes.btn}>
-          <button onClick={handleReview} disabled={!props.reservation.reviewed}>
+          <button onClick={handleReview} disabled={props.reservation.reviewed}>
             <IoChatbubbleOutline
               style={{
                 color: `${

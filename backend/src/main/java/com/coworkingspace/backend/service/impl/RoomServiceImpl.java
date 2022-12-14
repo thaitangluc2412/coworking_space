@@ -25,7 +25,9 @@ import com.coworkingspace.backend.service.RoomService;
 import lombok.AllArgsConstructor;
 
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -123,6 +125,17 @@ public class RoomServiceImpl implements RoomService {
 	}
 
 	@Override
+	public Page<RoomListDto> findRoomPage(int page, int size) {
+		Pageable pageable = PageRequest.of(page, size);
+		Page<Room> roomsPage = roomRepository.findAll(pageable);
+		return roomsPage.map(room -> roomMapper.roomToRoomListDto(room));
+	}
+
+	@Override public Page<RoomListDto> findRoomByRoomName(String roomName, int page, int size) {
+		return roomRepository.findRoomByRoomNameContaining(roomName, PageRequest.of(page, size)).map(room -> roomMapper.roomToRoomListDto(room));
+	}
+
+	@Override
 	public RoomCreateDto updateRoom(String id,
 		RoomCreateDto roomCreateDto,
 		MultipartFile[] files) throws NotFoundException {
@@ -210,8 +223,8 @@ public class RoomServiceImpl implements RoomService {
 
 	@Override public List<RoomListDto> favoriteRoom(String id) {
 		List<Room> roomIterable = roomRepository.findAll();
-		List<Customer> customers = customerRepository.findAllByBehavior();
-
+		List<Customer> customers = roomDao.findAllByBehavior();
+//		List<Customer> customers = customerRepository.findAll();
 		var rooms = new ArrayList<>(roomIterable);
 
 		var matrix = generateRatingMatrix(rooms, customers);
@@ -220,11 +233,12 @@ public class RoomServiceImpl implements RoomService {
 
 		if (customerOptional.isEmpty()){
 
-			return roomRepository.findTop10ByOrderByAverageRatingDesc().stream().map(room -> roomMapper.roomToRoomListDto(room)).collect(Collectors.toList());
+			return roomRepository.findTop6ByOrderByAverageRatingDesc().stream().map(room -> roomMapper.roomToRoomListDto(room)).collect(Collectors.toList());
 		}
 
 		var customer = customerOptional.get();
-		int u = customers.indexOf(customer);
+//		int u = customers.indexOf(customer);
+		int u = Customer.indexOf(customers, customer);
 		double aRU = getAverageRating(u, matrix);
 
 		List<Pair> userSimilarities = new ArrayList<>();
@@ -256,7 +270,7 @@ public class RoomServiceImpl implements RoomService {
 		var prediction = predictionRating(aRU, userSimilarities, listItems, matrix);
 		var result = prediction.stream().sorted(Comparator.comparing(Pair::getValue)).map(pair -> rooms.get(pair.getIndex())).collect(Collectors.toList());
 		if (result.isEmpty()) {
-			return roomRepository.findTop10ByOrderByAverageRatingDesc().stream().map(room -> roomMapper.roomToRoomListDto(room)).collect(Collectors.toList());
+			return roomRepository.findTop6ByOrderByAverageRatingDesc().stream().map(room -> roomMapper.roomToRoomListDto(room)).collect(Collectors.toList());
 		}
 		return result.stream().map(room -> roomMapper.roomToRoomListDto(room)).collect(Collectors.toList());
 	}
@@ -270,8 +284,8 @@ public class RoomServiceImpl implements RoomService {
 		for (int i = 0; i < m; i++) {
 			for (int j = 0; j < n; j++) {
 				var customer = customers.get(i);
-				var room = rooms.get(i);
-				List<Review> reviewList = customer.getReviews().stream().filter(review -> room.equals(review.getRoom())).collect(Collectors.toList());
+				var room = rooms.get(j);
+				List<Review> reviewList = reviewRepository.findReviewByCustomerIdAndRoomId(customer.getId(), room.getId());
 				if (reviewList.size() > 0) {
 					Double sum = reviewList.stream().map(Review::getRating).reduce(0d, Double::sum);
 					double avg = sum / reviewList.size();

@@ -2,8 +2,10 @@ package com.coworkingspace.backend.service;
 
 import com.coworkingspace.backend.dto.ReservationDto;
 import com.coworkingspace.backend.dto.ReservationListDto;
+import com.coworkingspace.backend.dto.RoomListDto;
 import com.coworkingspace.backend.sdo.DateStatus;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
+import org.springframework.data.domain.Page;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -22,4 +24,6 @@ public interface ReservationService {
 	com.cnpm.workingspace.sdo.Budget getBudget();
 	double getProfit();
 	List<ReservationListDto> getLatestReservations();
+	Page<ReservationListDto> findReservationPage(int page, int size);
+	Page<ReservationListDto> findByRoomNameOrStatusName(String roomName, int page, int size);
 }

@@ -3,6 +3,7 @@ package com.coworkingspace.backend.dao.hibernate;
 import com.coworkingspace.backend.dao.entity.Reservation;
 import com.coworkingspace.backend.dto.ReservationDto;
 import com.coworkingspace.backend.dto.ReservationListDto;
+import com.coworkingspace.backend.sdo.CountRoomType;
 import com.coworkingspace.backend.sdo.DateStatus;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 
@@ -17,4 +18,5 @@ public interface ReservationDao {
 	List<LocalDate> getAllInvalidDates(String roomId) throws NotFoundException;
 	List<Reservation> getBySellerId(String id);
 	com.cnpm.workingspace.sdo.Budget getBudget();
+	List<CountRoomType> getToTalPerMonth();
 }

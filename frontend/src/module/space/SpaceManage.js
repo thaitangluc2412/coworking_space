@@ -24,7 +24,7 @@ const SpaceManage = () => {
             roomName: item.roomName,
             roomType: item.roomTypeName,
             address: `${item.address} ${item.city}`,
-            description: item.description,
+            dayPrice: `${item.dayPrice}$`,
           };
         });
 
@@ -51,7 +51,7 @@ const SpaceManage = () => {
         console.log("err: ", err);
       });
   };
-  const head = ["Name", "Room Type", "Adress", "Description"];
+  const head = ["Name", "Room Type", "Adress", "Price"];
   return (
     <div>
       <div className="w-full flex flex-row justify-between">

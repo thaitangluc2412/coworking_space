@@ -1,6 +1,7 @@
 package com.coworkingspace.backend.dao.entity;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -67,5 +68,18 @@ public class Customer extends BaseEntity{
 	@Override
 	public int hashCode(){
 		return Objects.hash(id, email);
+	}
+
+	public static int indexOf(List<Customer> objectList, Customer o) {
+		if (o == null) {
+			for (int i = 0; i < objectList.size(); i++)
+				if (objectList.get(i) == null)
+					return i;
+		} else {
+			for (int i = 0; i < objectList.size(); i++)
+				if (Objects.equals(o, objectList.get(i)))
+					return i;
+		}
+		return -1;
 	}
 }

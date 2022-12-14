@@ -16,6 +16,7 @@ import com.coworkingspace.backend.dao.entity.Reservation;
 import com.coworkingspace.backend.dao.hibernate.ReservationDao;
 import com.coworkingspace.backend.mapper.DateMapper;
 import com.coworkingspace.backend.mapper.DateStatusMapper;
+import com.coworkingspace.backend.sdo.CountRoomType;
 import com.coworkingspace.backend.sdo.DateStatus;
 import com.coworkingspace.backend.service.ReservationStatusService;
 
@@ -123,14 +124,8 @@ public class JdbcReservationDao implements ReservationDao {
 			preMonth = 12;
 			preYear = year - 1;
 		}
-		final String sql = "WITH oldMonth as (\n" +
-			"select IFNULL(sum(total), 1) as oldTotal\n" +
-			"from reservation \n" +
-			"where reservation_status_id = 2 and (MONTH(create_date) = " + preMonth + ") and (YEAR(create_date) = " + preYear + ") \n" +
-			") \n" +
-			"select ROUND(IFNULL(sum(reservation.total), 1) / oldMonth.oldTotal * 100 - 100, 2) as percent, sum(reservation.total) as budget\n" +
-			"from reservation, oldMonth\n" +
-			"where reservation_status_id = 2 and (MONTH(create_date) = " + month + ") and (YEAR(create_date) = " + year + ") ;";
+		final String sql = "Select sum(reservation.deposit) as budget, sum(reservation.deposit) as percent from reservation \n" +
+			"where reservation_status_id = 'tngpi7zVKfwAY0N';";
 		try {
 			ret = jdbcTemplateObject.queryForObject(sql, (rs, rowNum) -> {
 				return new com.cnpm.workingspace.sdo.Budget(
@@ -141,6 +136,25 @@ public class JdbcReservationDao implements ReservationDao {
 			System.out.println("added");
 		} catch (Exception e) {
 			System.out.println("error : " + e.getMessage());
+		}
+		return ret;
+	}
+
+	@Override public List<CountRoomType> getToTalPerMonth() {
+		String GET_TOTAL_PER_MONTH = "SELECT sum(total) as total, month(time_create) AS month FROM reservation\n" +
+			"WHERE YEAR(time_create) = YEAR(NOW())\n" +
+			"AND reservation_status_id = \"tngpi7zVKfwAY0N\"\n" +
+			"AND time_create <= NOW()\n" +
+			"GROUP BY MONTH(time_create)\n" +
+			"ORDER BY MONTH(time_create)";
+		List<CountRoomType> ret = new ArrayList<>();
+		try {
+			ret.addAll(jdbcTemplateObject.query(GET_TOTAL_PER_MONTH, (rs, rowNum) -> {
+				return new CountRoomType(rs.getString("month"),
+					rs.getInt("total"));
+			}));
+		} catch (Exception e) {
+			System.out.println("dont have room type name");
 		}
 		return ret;
 	}

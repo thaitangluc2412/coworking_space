@@ -2,11 +2,14 @@ package com.coworkingspace.backend.controller;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import javax.mail.MessagingException;
 
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,11 +19,19 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.coworkingspace.backend.dao.entity.Reservation;
+import com.coworkingspace.backend.dao.hibernate.ReservationDao;
+import com.coworkingspace.backend.dao.repository.ReservationRepository;
 import com.coworkingspace.backend.dto.ReservationDto;
 import com.coworkingspace.backend.dto.ReservationListDto;
+import com.coworkingspace.backend.dto.RoomCreateDto;
+import com.coworkingspace.backend.dto.RoomListDto;
+import com.coworkingspace.backend.sdo.CountRoomType;
 import com.coworkingspace.backend.sdo.DateStatus;
+import com.coworkingspace.backend.sdo.ObjectSdo;
 import com.coworkingspace.backend.service.ReservationService;
 
 import lombok.AllArgsConstructor;
@@ -31,6 +42,10 @@ import lombok.AllArgsConstructor;
 public class ReservationController {
 
 	private ReservationService reservationService;
+
+	private ReservationRepository reservationRepository;
+
+	private ReservationDao reservationDao;
 
 	@PostMapping
 	public ResponseEntity<ReservationDto> createReservations(@RequestBody ReservationDto reservationDto) throws NotFoundException {
@@ -98,9 +113,46 @@ public class ReservationController {
 	}
 
 	// Get lastest reservation for admin page
-	@GetMapping()
+	@GetMapping("/get-lastest")
 	public ResponseEntity<?> getLastestReservation() {
 		List<ReservationListDto> reservationListDtos = reservationService.getLatestReservations();
 		return ResponseEntity.ok(reservationListDtos);
+	}
+
+	@GetMapping("/get-total-perMonth/get")
+	public ResponseEntity<?> getToTalPerMonth() {
+		List< CountRoomType> countRoomTypes =reservationDao.getToTalPerMonth();
+		return ResponseEntity.ok(countRoomTypes);
+	}
+
+	@GetMapping("/total")
+	public ResponseEntity<?> getTotal() {
+		Integer total = reservationRepository.findAll().size();
+		return ResponseEntity.ok(total);
+	}
+
+	@GetMapping("/page/list")
+	@ResponseBody
+	public ResponseEntity<?> findByRoomNameOrStatus(
+		@RequestParam(value = "value", required = false) String value,
+		@RequestParam(name = "page", required = false, defaultValue = "0") int page,
+		@RequestParam(name = "size", required = false, defaultValue = "6") int size
+	) {
+
+		if (Objects.equals(value, "")) {
+			Page<ReservationListDto> reservations = reservationService.findReservationPage(page, size);
+			List<ReservationListDto> reservationList = reservations.toList();
+			List<Object> cusObjectList = Arrays.asList(reservationList.toArray());
+
+			List<Reservation> allReservations = reservationRepository.findAll();
+			int count = allReservations.size();
+
+			ObjectSdo objectSdo = new ObjectSdo(count, cusObjectList);
+			return new ResponseEntity<>(objectSdo, HttpStatus.OK);
+		}
+		Page<ReservationListDto> reservationPage = reservationService.findByRoomNameOrStatusName(value, page, size);
+		List<ReservationListDto> reservations = reservationPage.toList();
+		int cnt = reservations.size();
+		return new ResponseEntity<>(new ObjectSdo(cnt, new ArrayList(reservations)), HttpStatus.OK);
 	}
 }

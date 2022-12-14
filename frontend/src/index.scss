@@ -10,7 +10,7 @@
   }
   body {
     font-family: "Poppins", sans-serif;
-   
+    background-color: #f0f2f5;
   }
   td {
     vertical-align: middle;
@@ -18,13 +18,18 @@
     max-width: 400px;
     overflow: hidden;
   }
-  tr:nth-child(even){
+  tr:nth-child(even) {
     background-color: #eff6ff;
+  }
+  tr:nth-child(odd) {
+    background-color: white;
   }
   th {
     text-align: left;
     padding: 20px 30px;
     max-width: 600px;
+    background-color: #695af9;
+    opacity: 0.8;
   }
 }
 .text-td {
@@ -39,28 +44,26 @@
   .movie-list .swiper-slide {
     width: 300px;
     height: auto;
-    
   }
   .movie-list .swiper-initialized {
     height: 600px;
   }
   .banner .swiper {
     height: 100%;
-}
+  }
 }
 @layer utilities {
-    .scrollbar::-webkit-scrollbar {
-      width: 8px;
-    }
-    .scrollbar::-webkit-scrollbar-thumb:hover{
-      background: #6a5af9; 
-      border-radius: 10px;
-    }
-    .scrollbar::-webkit-scrollbar-thumb {
-      background: #E7ECF3; 
-      border-radius: 10px;
-    }
-  
+  .scrollbar::-webkit-scrollbar {
+    width: 8px;
+  }
+  .scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #6a5af9;
+    border-radius: 10px;
+  }
+  .scrollbar::-webkit-scrollbar-thumb {
+    background: #e7ecf3;
+    border-radius: 10px;
+  }
 }
 @layer components {
   .button-animation {
@@ -80,7 +83,6 @@
       box-shadow: 0 0 0 5px rgb(106, 90, 249, 80%);
     }
   }
-
 }
 .hidden-input {
   border: 0;

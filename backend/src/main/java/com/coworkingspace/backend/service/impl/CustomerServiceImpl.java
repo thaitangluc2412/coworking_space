@@ -8,12 +8,17 @@ import com.coworkingspace.backend.dto.CustomerDto;
 import com.coworkingspace.backend.dto.CustomerResponseDto;
 import com.coworkingspace.backend.mapper.CustomerMapper;
 import com.coworkingspace.backend.service.CustomerService;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,7 +50,7 @@ public class CustomerServiceImpl implements CustomerService {
 	@Override
 	public List<CustomerResponseDto> getAllCustomers() {
 		return customerRepository.findAll().stream().map(customer -> customerMapper.customerToCustomerResponseDto(customer)).collect(
-				Collectors.toList());
+			Collectors.toList());
 	}
 
 	@Override
@@ -54,20 +59,20 @@ public class CustomerServiceImpl implements CustomerService {
 		String token = authorizationHeader.substring(TOKEN_PREFIX.length());
 		String email = jwtUtil.getUsernameFromToken(token);
 		Customer customer = customerRepository.findByEmail(email)
-				.orElseThrow(() -> new UsernameNotFoundException("Not found email"));
+			.orElseThrow(() -> new UsernameNotFoundException("Not found email"));
 		return customerMapper.customerToCustomerResponseDto(customer);
 	}
 
 	@Override public void updateCustomer(CustomerDto customerDto) {
 		Customer customer = customerMapper.customerDtoToCustomer(customerDto);
-		if (customerDto.getPassword() == null){
+		if (customerDto.getPassword() == null) {
 			String password = customerRepository.findByEmail(customerDto.getEmail()).get().getPassword();
 			customer.setPassword(password);
 		} else {
 			String password = passwordEncoder.encode(customerDto.getPassword());
 			customer.setPassword(password);
 		}
-		Role role =  customerRepository.findByEmail(customerDto.getEmail()).get().getRole();
+		Role role = customerRepository.findByEmail(customerDto.getEmail()).get().getRole();
 		customer.setRole(role);
 		customerRepository.save(customer);
 	}
@@ -75,5 +80,18 @@ public class CustomerServiceImpl implements CustomerService {
 	@Override
 	public int getTotalCustomer() {
 		return customerRepository.getTotalCustomer();
+	}
+
+	@Override public Page<CustomerResponseDto> findCustomerPage(int page, int size) {
+		Pageable pageable = PageRequest.of(page, size);
+		Page<Customer> customersPage = customerRepository.findAll(pageable);
+		return customersPage.map(customer -> customerMapper.customerToCustomerResponseDto(customer));
+	}
+
+	@Override
+	public Page<CustomerResponseDto> findCustomerByCustomerNameContainingOrEmailContaining(String customerName, String email, String phone, int page,
+		int size) {
+		return customerRepository.findCustomerByCustomerNameContainingOrEmailContainingOrPhoneNumberContaining(customerName, email, phone,
+			PageRequest.of(page, size)).map(customer -> customerMapper.customerToCustomerResponseDto(customer));
 	}
 }
