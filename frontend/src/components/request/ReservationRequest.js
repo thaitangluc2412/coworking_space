@@ -64,7 +64,8 @@ const ReservationRequest = () => {
       .then((res) => {
         setReservation(res.data);
         toast.success("You approve the request");
-      });
+      })
+      .catch((err) => toast.error(err.data));
   };
   const onNavigate = () => {
     navigate(-1);
