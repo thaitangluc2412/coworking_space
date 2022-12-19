@@ -8,6 +8,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { NavLink, useNavigate } from "react-router-dom";
 import http from "../config/axiosConfig";
+import { toast } from "react-toastify";
 
 const RegisterPage = () => {
   const navigate = useNavigate();
@@ -53,9 +54,14 @@ const RegisterPage = () => {
     };
     http
       .post("customers", customer)
-      .then((res) => console.log(res))
-      .catch((err) => console.log(err));
-    navigate("/");
+      .then((res) => {
+        console.log(res);
+        navigate("/");
+      })
+      .catch((err) => {
+        console.log(err);
+        toast.error(err.data);
+      });
   };
   return (
     <div className="minH-[100vh] h-[100vh] w-[100%]  pt-10">

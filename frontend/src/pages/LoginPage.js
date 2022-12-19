@@ -10,6 +10,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import axios from "axios";
 import http from "../config/axiosConfig";
 import { useAuth } from "../context/auth-context";
+import { toast } from "react-toastify";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -54,6 +55,7 @@ const LoginPage = () => {
       })
       .catch((err) => {
         console.log("error: ", err);
+        toast.error("Email or password incorrect");
       });
   }
 

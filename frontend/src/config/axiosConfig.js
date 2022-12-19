@@ -16,7 +16,7 @@ class Http {
         return result;
       },
       ({ response }) => {
-        if (response.status === 401) {
+        if (response.status === 404) {
           toast.error(response.data.message, {
             position: "top-right",
             autoClose: 3000,
