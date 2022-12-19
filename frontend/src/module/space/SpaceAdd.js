@@ -254,14 +254,14 @@ const SpaceAdd = () => {
           <h2 className="font-semibold text-xl text-primary mb-5">Price</h2>
 
           <div className="grid grid-cols-3 gap-3">
-            {/* <Field>
-              <Label>Year Price</Label>
+            <Field>
+              <Label>Year Price ($)</Label>
               <Input type="text" name="yearPrice" control={control}></Input>
             </Field>
             <Field>
-              <Label>Month Price</Label>
+              <Label>Month Price ($)</Label>
               <Input type="text" name="monthPrice" control={control}></Input>
-            </Field> */}
+            </Field>
             <Field>
               <Label>Day Price ($)</Label>
               <Input type="text" name="dayPrice" control={control}></Input>

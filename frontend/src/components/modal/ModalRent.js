@@ -12,6 +12,7 @@ import "swiper/css/navigation";
 import http from "../../config/axiosConfig";
 import { useAuth } from "../../context/auth-context";
 import { format } from "date-fns";
+import { FormControlLabel, Radio, RadioGroup } from "@mui/material";
 const convertDateToString = (date) => {
   const dateObj = new Date(date);
   const month = dateObj.getUTCMonth() + 1; //months from 1-12
@@ -99,6 +100,7 @@ const ModalRent = (props) => {
     setEndDate(date);
     setQuantityDays((new Date(date) - new Date(startDate)) / 86400000 + 1);
   };
+  const handleChangePrice = (e) => {};
 
   return (
     <div className={classes.modal_rent}>
@@ -150,6 +152,34 @@ const ModalRent = (props) => {
               </div>
             </div>
             <div className={classes.underInfo}>
+              <div className="">
+                <p>Choose your price type:</p>
+                <div>
+                  <RadioGroup
+                    aria-labelledby="demo-radio-buttons-group-label"
+                    defaultValue="dayPrice"
+                    name="radio-buttons-group"
+                    row={true}
+                    onChange={handleChangePrice}
+                  >
+                    <FormControlLabel
+                      value="dayPrice"
+                      control={<Radio color={"success"} />}
+                      label="Day Price"
+                    />
+                    <FormControlLabel
+                      value="monthPrice"
+                      control={<Radio color={"success"} />}
+                      label="Month Price"
+                    />
+                    <FormControlLabel
+                      value="yearPrice"
+                      control={<Radio color={"success"} />}
+                      label="Year Price"
+                    />
+                  </RadioGroup>
+                </div>
+              </div>
               <p>
                 Enter your <b>actual check-out date.</b>
               </p>
@@ -203,6 +233,20 @@ const ModalRent = (props) => {
               </p>
               <p>
                 Days rent: <span>X {quantityDays}</span>
+              </p>
+              <div className="w-full bg-slate-200 h-[1px] mb-1"></div>
+              <p>
+                Price/Month: <span>{data.monthPrice} $</span>
+              </p>
+              <p>
+                Months rent: <span>X {quantityDays}</span>
+              </p>
+              <div className="w-full bg-slate-200 h-[1px] mb-1"></div>
+              <p>
+                Price/Year: <span>{data.yearPrice} $</span>
+              </p>
+              <p>
+                Years rent: <span>X {quantityDays}</span>
               </p>
             </div>
             <hr />
