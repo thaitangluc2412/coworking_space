@@ -96,7 +96,7 @@ public class RoomServiceImpl implements RoomService {
 	public RoomCreateDto findByRoomId(String roomId, String customerId) throws NotFoundException {
 		Room room = findById(roomId);
 		if (customerId != null) {
-			Optional<Behavior> behaviorOptional = behaviorRepository.findByCustomerId(customerId);
+			Optional<Behavior> behaviorOptional = behaviorRepository.findByCustomerIdAndRoomId(customerId, roomId);
 			if (behaviorOptional.isPresent()) {
 				Behavior behavior = behaviorOptional.get();
 				behavior.setTime(behavior.getTime() + 1);
@@ -146,18 +146,19 @@ public class RoomServiceImpl implements RoomService {
 			deleteFolderCloudinary(room);
 			List<ImageDto> imageDtos = new ArrayList<>();
 			imageDtos.addAll(saveImage(files));
-			if (roomCreateDto.getImages() != null ) {
+			if (roomCreateDto.getImages() != null) {
 				imageDtos.addAll(roomCreateDto.getImages());
 			}
 			roomCreateDto.setImages(imageDtos);
-		} else {
-			roomCreateDto.setImages(room.getImageStorage()
-				.getImages()
-				.parallelStream()
-				.map(en -> imageMapper.imageToImageDto(en))
-				.collect(
-					Collectors.toList()));
 		}
+//		} else {
+//			roomCreateDto.setImages(room.getImageStorage()
+//				.getImages()
+//				.parallelStream()
+//				.map(en -> imageMapper.imageToImageDto(en))
+//				.collect(
+//					Collectors.toList()));
+//		}
 		roomCreateDto.setImageStorageId(room.getImageStorage().getId());
 		roomRepository.save(roomMapper.roomCreateDtoToRoom(roomCreateDto));
 		return roomCreateDto;

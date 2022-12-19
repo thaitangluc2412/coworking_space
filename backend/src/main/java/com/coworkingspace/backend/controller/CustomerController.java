@@ -1,6 +1,7 @@
 package com.coworkingspace.backend.controller;
 
 import com.coworkingspace.backend.dao.entity.Customer;
+import com.coworkingspace.backend.dao.repository.CustomerRepository;
 import com.coworkingspace.backend.dto.CustomerDto;
 import com.coworkingspace.backend.dto.CustomerResponseDto;
 import com.coworkingspace.backend.sdo.ObjectSdo;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/customers")
@@ -26,8 +28,15 @@ public class CustomerController {
 	@Autowired
 	private CustomerService customerService;
 
+	@Autowired
+	private CustomerRepository customerRepository;
+
 	@PostMapping
-	public ResponseEntity<Void> createCustomer(@RequestBody CustomerDto customerDto) {
+	public ResponseEntity<String> createCustomer(@RequestBody CustomerDto customerDto) {
+		Optional<Customer> customerOptional = customerRepository.findByEmail(customerDto.getEmail());
+		if (!customerOptional.isEmpty()) {
+			return new ResponseEntity<>("Email already exists", HttpStatus.NOT_FOUND);
+		}
 		customerService.createCustomer(customerDto);
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}

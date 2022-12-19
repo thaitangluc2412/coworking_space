@@ -9,5 +9,5 @@ import com.coworkingspace.backend.dao.entity.Behavior;
 
 @Repository
 public interface BehaviorRepository extends JpaRepository<Behavior, String> {
-	Optional<Behavior> findByCustomerId(String id);
+	Optional<Behavior> findByCustomerIdAndRoomId(String customerId, String roomId);
 }

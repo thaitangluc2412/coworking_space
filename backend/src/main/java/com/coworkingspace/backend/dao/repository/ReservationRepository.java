@@ -21,4 +21,5 @@ public interface ReservationRepository extends JpaRepository<Reservation, String
 		"where reservation_status_id = 'tngpi7zVKfwAY0N';", nativeQuery = true)
 	double getProfit();
 	Page<Reservation> findReservationByReservationStatusReservationStatusNameContaining(String reservationStatusName, Pageable pageable);
+	List<Reservation> findByRoomIdAndReservationStatusReservationStatusName(String roomId, String reservationStatusName);
 }

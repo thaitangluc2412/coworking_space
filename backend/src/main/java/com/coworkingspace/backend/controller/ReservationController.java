@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import javax.mail.MessagingException;
 
@@ -27,12 +28,11 @@ import com.coworkingspace.backend.dao.hibernate.ReservationDao;
 import com.coworkingspace.backend.dao.repository.ReservationRepository;
 import com.coworkingspace.backend.dto.ReservationDto;
 import com.coworkingspace.backend.dto.ReservationListDto;
-import com.coworkingspace.backend.dto.RoomCreateDto;
-import com.coworkingspace.backend.dto.RoomListDto;
 import com.coworkingspace.backend.sdo.CountRoomType;
 import com.coworkingspace.backend.sdo.DateStatus;
 import com.coworkingspace.backend.sdo.ObjectSdo;
 import com.coworkingspace.backend.service.ReservationService;
+import com.coworkingspace.backend.service.RoomService;
 
 import lombok.AllArgsConstructor;
 
@@ -46,6 +46,8 @@ public class ReservationController {
 	private ReservationRepository reservationRepository;
 
 	private ReservationDao reservationDao;
+
+	private RoomService roomService;
 
 	@PostMapping
 	public ResponseEntity<ReservationDto> createReservations(@RequestBody ReservationDto reservationDto) throws NotFoundException {
@@ -86,8 +88,43 @@ public class ReservationController {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<ReservationListDto> updateReservation(@PathVariable String id, @RequestParam String reservationStatusName, @RequestParam String email)
+	public ResponseEntity<?> updateReservation(@PathVariable String id, @RequestParam String reservationStatusName, @RequestParam String email)
 		throws MessagingException {
+		Optional<Reservation> reservationOptional = reservationRepository.findById(id);
+		if (reservationOptional.isPresent() && reservationStatusName.equals("PAYING")) {
+			Reservation reservationNew = reservationOptional.get();
+			boolean check = false;
+			List<Reservation> reservationList = reservationRepository.findByRoomIdAndReservationStatusReservationStatusName(reservationNew.getRoom().getId(), "APPROVED");
+			reservationList.addAll(reservationRepository.findByRoomIdAndReservationStatusReservationStatusName(reservationNew.getRoom().getId(), "PAYING"));
+
+			for (int i = 0; i < reservationList.size(); i++) {
+				Reservation reservationOld = reservationList.get(i);
+				LocalDate dateStartOld = reservationOld.getStartDate();
+				LocalDate dateEndOld = reservationOld.getEndDate();
+				LocalDate dateStartNew = reservationNew.getStartDate();
+				LocalDate dateEndNew = reservationNew.getEndDate();
+				if (dateStartNew.isAfter(dateEndOld)){
+					continue;
+				}
+				if (dateStartNew.isEqual(dateStartOld) || dateStartNew.isEqual(dateEndOld) || dateEndNew.isEqual(dateStartOld) || dateEndNew.isEqual(
+					dateEndOld)) {
+					check = true;
+					break;
+				}
+				if (dateStartNew.isBefore(dateStartOld)) {
+					if (dateEndNew.isAfter(dateEndOld) || dateEndNew.isAfter(dateStartOld)) {
+						check = true;
+						break;
+					}
+				}
+				check = true;
+				break;
+			}
+			if (check) {
+				return new ResponseEntity<>("The booking date has been duplicated, please check again", HttpStatus.NOT_FOUND);
+			}
+		}
+
 		ReservationListDto reservationListDto = reservationService.updateReservation(id, reservationStatusName, email);
 		return new ResponseEntity<>(reservationListDto, HttpStatus.OK);
 	}
@@ -121,7 +158,7 @@ public class ReservationController {
 
 	@GetMapping("/get-total-perMonth/get")
 	public ResponseEntity<?> getToTalPerMonth() {
-		List< CountRoomType> countRoomTypes =reservationDao.getToTalPerMonth();
+		List<CountRoomType> countRoomTypes = reservationDao.getToTalPerMonth();
 		return ResponseEntity.ok(countRoomTypes);
 	}
 
