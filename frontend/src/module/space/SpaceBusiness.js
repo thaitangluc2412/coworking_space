@@ -1,17 +1,19 @@
 import axios from "axios";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useMemo } from "react";
 import { toast } from "react-toastify";
 import Table from "../../components/table/Table";
 import http from "../../config/axiosConfig";
 import { useAuth } from "../../context/auth-context";
 import { Pagination } from "@mui/material";
 import usePagination from "../../hooks/usePagination";
+import { BsSearch } from "react-icons/bs";
 
 const SpaceManage = () => {
   const { user } = useAuth();
   const userId = user.id;
   const [reservations, setReservations] = useState([]);
   const getListReservation = useRef({});
+  const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
 
   getListReservation.current = () => {
@@ -41,10 +43,25 @@ const SpaceManage = () => {
     getListReservation.current();
   }, [userId]);
 
+  const searchData = useMemo(() => {
+    const searchHandle = search.trim().toLowerCase();
+    if (searchHandle === "") {
+      return reservations;
+    } else {
+      if (reservations) {
+        const reservationsSearch = reservations.filter((item) => {
+          return item.roomName?.toLowerCase().includes(searchHandle);
+        });
+        return reservationsSearch;
+      } else {
+        return [];
+      }
+    }
+  }, [search, reservations]);
   const PER_PAGE = 6;
 
-  const count = Math.ceil(reservations.length / PER_PAGE);
-  const { currentData, jump } = usePagination(reservations, PER_PAGE);
+  const count = Math.ceil(searchData.length / PER_PAGE);
+  const { currentData, jump } = usePagination(searchData, PER_PAGE);
 
   const handlePagination = (e, page) => {
     setPage(page);
@@ -64,6 +81,10 @@ const SpaceManage = () => {
         console.log("err: ", err);
       });
   };
+  const handleSearch = (e) => {
+    setSearch(e.target.value);
+    jump(1);
+  };
   const head = [
     "Room Name",
     "Status",
@@ -78,6 +99,17 @@ const SpaceManage = () => {
         Manage Your Business
       </h1>
       <div className="w-full h-full max-w-[1400px]">
+        <div className="relative max-w-[300px] w-full ">
+          <input
+            className="outline-none pl-5 py-2 pr-8 w-full mb-4 rounded-full border focus:border-primary focus:rounded-xl transition-all"
+            placeholder=""
+            value={search}
+            onChange={handleSearch}
+          />
+          <div className="absolute right-3 top-3">
+            <BsSearch />
+          </div>
+        </div>
         <Table
           head={head}
           data={currentData()}

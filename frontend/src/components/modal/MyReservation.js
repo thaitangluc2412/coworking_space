@@ -51,17 +51,6 @@ const MyReservation = (props) => {
             MY RESERVATIONS
           </h2>
         </div>
-        <div className="relative max-w-[300px] w-full ml-auto">
-          <input
-            className="outline-none pl-5 py-2 pr-8 w-full mb-4 rounded-full border focus:border-primary focus:rounded-xl transition-all"
-            placeholder=""
-            value={search}
-            onChange={handleSearch}
-          />
-          <div className="absolute right-3 top-3">
-            <BsSearch />
-          </div>
-        </div>
       </div>
       <ul className={classes.responsiveTable}>
         <li className={classes.tableHeader}>
