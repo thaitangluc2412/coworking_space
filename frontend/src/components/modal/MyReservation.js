@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 
-import { BsFillArchiveFill } from "react-icons/bs";
+import { BsFillArchiveFill, BsSearch } from "react-icons/bs";
 import http from "../../config/axiosConfig";
 import classes from "./MyReservation.module.css";
 import { useAuth } from "../../context/auth-context";
@@ -12,6 +12,7 @@ import { Pagination } from "@mui/material";
 const MyReservation = (props) => {
   const { user } = useAuth();
   const userId = user.id;
+  const [search, setSearch] = useState("");
   const [data, setData] = useState([]);
   const [page, setPage] = useState(1);
 
@@ -26,6 +27,7 @@ const MyReservation = (props) => {
   const handleNotification = () => {
     toast.error("Your reservation must be completed to review");
   };
+  const handleSearch = (e) => {};
 
   const handlePagination = (e, page) => {
     setPage(page);
@@ -40,12 +42,27 @@ const MyReservation = (props) => {
   const dataAfterPagination = currentData();
   return (
     <div class={classes.container}>
-      <h2 className={classes.headerr}>
-        <span>
-          <BsFillArchiveFill className={classes.inline} />
-        </span>
-        MY RESERVATIONS
-      </h2>
+      <div className="w-full">
+        <div className="mx-auto">
+          <h2 className={classes.headerr}>
+            <span>
+              <BsFillArchiveFill className={classes.inline} />
+            </span>
+            MY RESERVATIONS
+          </h2>
+        </div>
+        <div className="relative max-w-[300px] w-full ml-auto">
+          <input
+            className="outline-none pl-5 py-2 pr-8 w-full mb-4 rounded-full border focus:border-primary focus:rounded-xl transition-all"
+            placeholder=""
+            value={search}
+            onChange={handleSearch}
+          />
+          <div className="absolute right-3 top-3">
+            <BsSearch />
+          </div>
+        </div>
+      </div>
       <ul className={classes.responsiveTable}>
         <li className={classes.tableHeader}>
           <div className={classes.col1}>Room</div>
