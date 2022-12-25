@@ -4,12 +4,15 @@ import { toast } from "react-toastify";
 import Table from "../../components/table/Table";
 import http from "../../config/axiosConfig";
 import { useAuth } from "../../context/auth-context";
+import { Pagination } from "@mui/material";
+import usePagination from "../../hooks/usePagination";
 
 const SpaceManage = () => {
   const { user } = useAuth();
   const userId = user.id;
   const [reservations, setReservations] = useState([]);
   const getListReservation = useRef({});
+  const [page, setPage] = useState(1);
 
   getListReservation.current = () => {
     http
@@ -38,6 +41,16 @@ const SpaceManage = () => {
     getListReservation.current();
   }, [userId]);
 
+  const PER_PAGE = 6;
+
+  const count = Math.ceil(reservations.length / PER_PAGE);
+  const { currentData, jump } = usePagination(reservations, PER_PAGE);
+
+  const handlePagination = (e, page) => {
+    setPage(page);
+    jump(page);
+  };
+
   const handleDelete = (roomId) => {
     console.log("delete", roomId);
     http
@@ -57,7 +70,7 @@ const SpaceManage = () => {
     "EMail",
     "Start Date",
     "End Date",
-    "Total",
+    "Deposit",
   ];
   return (
     <div>
@@ -67,10 +80,19 @@ const SpaceManage = () => {
       <div className="w-full h-full max-w-[1400px]">
         <Table
           head={head}
-          data={reservations}
+          data={currentData()}
           handleDelete={handleDelete}
           linkTo={"/manage/businessDetail/"}
         ></Table>
+      </div>
+      <div className="flex justify-end mt-5">
+        <Pagination
+          count={count}
+          variant="outlined"
+          color="primary"
+          page={page}
+          onChange={handlePagination}
+        />
       </div>
     </div>
   );

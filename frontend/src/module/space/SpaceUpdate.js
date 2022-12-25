@@ -297,6 +297,14 @@ const SpaceUpdate = () => {
 
           <div className="grid grid-cols-3 gap-3">
             <Field>
+              <Label>Year Price ($)</Label>
+              <Input type="text" name="yearPrice" control={control}></Input>
+            </Field>
+            <Field>
+              <Label>Month Price ($)</Label>
+              <Input type="text" name="monthPrice" control={control}></Input>
+            </Field>
+            <Field>
               <Label>Day Price ($)</Label>
               <Input type="text" name="dayPrice" control={control}></Input>
             </Field>

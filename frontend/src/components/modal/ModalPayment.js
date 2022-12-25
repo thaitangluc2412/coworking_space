@@ -70,7 +70,7 @@ const ModalPayment = (props) => {
               <span>
                 <BsPaypal className={classes.inline} />
               </span>{" "}
-              Amount: <span>{props.reservation.total}$</span>
+              Deposit: <span>{props.reservation.total}$</span>
             </p>
           </div>
           <div className={classes.rentInfo}>

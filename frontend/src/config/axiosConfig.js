@@ -4,7 +4,11 @@ import { toast } from "react-toastify";
 class Http {
   constructor() {
     this.instance = axios.create({
+<<<<<<< HEAD
       baseURL: "https://social-islands-refuse-116-98-59-163.loca.lt/api/v1/",
+=======
+      baseURL: "http://localhost:8080/api/v1/",
+>>>>>>> e1a6fc5 (add something)
       timeout: 60000,
       headers: {
         "Content-Type": "application/json",

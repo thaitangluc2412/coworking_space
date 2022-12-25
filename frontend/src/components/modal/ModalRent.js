@@ -30,11 +30,13 @@ const ModalRent = (props) => {
   const [endDate, setEndDate] = useState(null);
   const [limitDate, setLimitDate] = useState(new Date());
   const [quantityDays, setQuantityDays] = useState(0);
+  const [quantityMonths, setQuantityMonths] = useState(0);
+  const [quantityYears, setQuantityYears] = useState(0);
   const [validDates, setValidDates] = useState([]);
   const { id } = useParams();
   const [data, setData] = useState([]);
   const [listImages, setListImages] = useState([]);
-
+  const [typePrice, setTypePrice] = useState("dayPrice");
   useEffect(() => {
     http.get(`rooms/${id}`).then((res) => {
       setData(res.data);
@@ -80,8 +82,16 @@ const ModalRent = (props) => {
       startDate: convertDateToString(startDate),
       endDate: convertDateToString(endDate),
       quantity: quantityDays,
-      total: data.dayPrice * quantityDays,
-      deposit: 0.05 * data.dayPrice * quantityDays,
+      total:
+        (data.dayPrice * quantityDays +
+          data.monthPrice * quantityMonths +
+          data.yearPrice * quantityYears) *
+        0.2,
+      deposit:
+        0.1 *
+        (data.dayPrice * quantityDays +
+          data.monthPrice * quantityMonths +
+          data.yearPrice * quantityYears),
     };
     props.onActiveModalPayment(reservation);
   };
@@ -98,9 +108,45 @@ const ModalRent = (props) => {
 
   const chooseEndDate = (date) => {
     setEndDate(date);
-    setQuantityDays((new Date(date) - new Date(startDate)) / 86400000 + 1);
+    if (typePrice === "dayPrice") {
+      setQuantityDays((new Date(date) - new Date(startDate)) / 86400000 + 1);
+      setQuantityYears(0);
+      setQuantityMonths(0);
+    }
+    if (typePrice === "monthPrice") {
+      const price = monthDiff(new Date(endDate), new Date(startDate));
+      setQuantityYears(0);
+      setQuantityMonths(price[0]);
+      setQuantityDays(price[1]);
+    }
+    if (typePrice === "yearPrice") {
+      const price = dateDiff(new Date(endDate), new Date(startDate));
+      setQuantityYears(price[0]);
+      setQuantityMonths(price[1]);
+      setQuantityDays(price[2]);
+    }
   };
-  const handleChangePrice = (e) => {};
+
+  const handleChangePrice = (e) => {
+    setTypePrice(e.target.value);
+    if (e.target.value === "dayPrice") {
+      setQuantityDays((new Date(endDate) - new Date(startDate)) / 86400000 + 1);
+      setQuantityYears(0);
+      setQuantityMonths(0);
+    }
+    if (e.target.value === "monthPrice") {
+      const price = monthDiff(new Date(endDate), new Date(startDate));
+      setQuantityYears(0);
+      setQuantityMonths(price[0]);
+      setQuantityDays(price[1]);
+    }
+    if (e.target.value === "yearPrice") {
+      const price = dateDiff(new Date(endDate), new Date(startDate));
+      setQuantityYears(price[0]);
+      setQuantityMonths(price[1]);
+      setQuantityDays(price[2]);
+    }
+  };
 
   return (
     <div className={classes.modal_rent}>
@@ -239,20 +285,26 @@ const ModalRent = (props) => {
                 Price/Month: <span>{data.monthPrice} $</span>
               </p>
               <p>
-                Months rent: <span>X {quantityDays}</span>
+                Months rent: <span>X {quantityMonths}</span>
               </p>
               <div className="w-full bg-slate-200 h-[1px] mb-1"></div>
               <p>
                 Price/Year: <span>{data.yearPrice} $</span>
               </p>
               <p>
-                Years rent: <span>X {quantityDays}</span>
+                Years rent: <span>X {quantityYears}</span>
               </p>
             </div>
             <hr />
             <div className={classes.pricePerMonth}>
               <p>
-                Total to confirm: <span>{data.dayPrice * quantityDays} $</span>
+                Total to confirm:{" "}
+                <span>
+                  {data.dayPrice * quantityDays +
+                    data.monthPrice * quantityMonths +
+                    data.yearPrice * quantityYears}{" "}
+                  $
+                </span>
               </p>
             </div>
           </div>
@@ -266,5 +318,27 @@ const ModalRent = (props) => {
     </div>
   );
 };
+
+function dateDiff(date1, date2) {
+  var daysDiff = Math.ceil(Math.abs(date1 - date2) / (1000 * 60 * 60 * 24));
+
+  var years = Math.floor(daysDiff / 365.25);
+  var remainingDays = Math.floor(daysDiff - years * 365.25);
+  var months = Math.floor((remainingDays / 365.25) * 12);
+  var days = Math.ceil(daysDiff - (years * 365.25 + (months / 12) * 365.25));
+
+  return [years, months, days];
+}
+
+function monthDiff(date1, date2) {
+  var daysDiff = Math.ceil(Math.abs(date1 - date2) / (1000 * 60 * 60 * 24));
+
+  var years = Math.floor(daysDiff / 365.25);
+  var remainingDays = Math.floor(daysDiff - years * 365.25);
+  var months = Math.floor((remainingDays / 365.25) * 12);
+  var days = Math.ceil(daysDiff - (years * 365.25 + (months / 12) * 365.25));
+  months = months + years * 12;
+  return [months, days];
+}
 
 export default ModalRent;

@@ -106,7 +106,7 @@ public class JdbcReservationDao implements ReservationDao {
 			"SELECT reservation.* FROM reservation\n" +
 				"JOIN room ON reservation.room_id = room.room_id\n" +
 				"JOIN customer ON room.customer_id = customer.customer_id\n" +
-				"WHERE customer.customer_id = ?1\n" +
+				"WHERE customer.customer_id = ?1 AND reservation.enable = 1\n" +
 				"ORDER BY reservation.time_create DESC";
 		Session session = entityManager.unwrap((Session.class));
 		return session.createNativeQuery(GET_BY_SELLER_ID, Reservation.class).setParameter(1, id).getResultList();

@@ -116,7 +116,7 @@ const ReservationRequest = () => {
                 <span>
                   <BsPaypal className={classes.inline} />
                 </span>{" "}
-                Amount: <span>{reservation.total} $</span>
+                Deposit: <span>{reservation.total} $</span>
               </p>
             </div>
             <div className={classes.rentInfo}>

@@ -1,5 +1,6 @@
 package com.coworkingspace.backend.dao.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,4 +11,6 @@ import com.coworkingspace.backend.dao.entity.Behavior;
 @Repository
 public interface BehaviorRepository extends JpaRepository<Behavior, String> {
 	Optional<Behavior> findByCustomerIdAndRoomId(String customerId, String roomId);
+	List<Behavior> findByCustomerId(String customerId);
+	List<Behavior> findByRoomId(String roomId);
 }

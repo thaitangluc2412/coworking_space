@@ -21,6 +21,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import static com.coworkingspace.backend.common.constant.SecurityConstant.HEADER_NAME;
+
 @RestController
 @RequestMapping("/api/v1/customers")
 public class CustomerController {
@@ -49,7 +51,10 @@ public class CustomerController {
 	}
 
 	@GetMapping("/me")
-	public ResponseEntity<CustomerResponseDto> getCurrentUser(HttpServletRequest request) {
+	public ResponseEntity<?> getCurrentUser(HttpServletRequest request) {
+		if (request.getHeader(HEADER_NAME) == null){
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+		}
 		CustomerResponseDto customerResponseDto = customerService.getCurrentUser(request);
 		return ResponseEntity.status(HttpStatus.OK).body(customerResponseDto);
 	}

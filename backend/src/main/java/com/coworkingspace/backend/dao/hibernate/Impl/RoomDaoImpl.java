@@ -29,6 +29,7 @@ public class RoomDaoImpl implements RoomDao {
 		"AND province.code IN (SELECT province.code FROM province WHERE province.code = COALESCE(?2, province.code))\n" +
 		"AND room.room_name LIKE ?3\n" +
 		"AND province.name LIKE ?4\n" +
+		"AND room.enable = 1\n" +
 		"AND province.codename LIKE ?4\n" +
 		"AND price.day_price > ?5 AND price.day_price < ?6\n" +
 		"ORDER BY room.time_create DESC ";
@@ -85,7 +86,7 @@ public class RoomDaoImpl implements RoomDao {
 
 	@Override public List<Customer> findAllByBehavior() {
 		String GET_CUSTOMER_BY_BEHAVIOR =
-			"select customer.* from Customer join behavior on customer.customer_id = behavior.customer_id where behavior.`time` > 0";
+			"select distinct customer.* from Customer join behavior on customer.customer_id = behavior.customer_id where behavior.`time` > 0";
 		Session session = entityManager.unwrap((Session.class));
 		return session.createNativeQuery(GET_CUSTOMER_BY_BEHAVIOR, Customer.class).getResultList();
 	}

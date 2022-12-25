@@ -9,9 +9,13 @@ import FavoriteItem from "./FavoriteItem";
 const FavoriteSpaces = () => {
   const [data, setData] = useState([]);
   const { user } = useAuth();
+  let idCustomer = "none";
+  if (user.id) {
+    const idCustomer = user.id;
+  }
 
   useEffect(() => {
-    http.get(`rooms/favorite/customer/${user.id}`).then((res) => {
+    http.get(`rooms/favorite/customer/${idCustomer}`).then((res) => {
       setData(res.data);
     });
   }, [user]);

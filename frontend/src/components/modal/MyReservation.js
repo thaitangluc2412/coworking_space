@@ -6,11 +6,14 @@ import classes from "./MyReservation.module.css";
 import { useAuth } from "../../context/auth-context";
 import ReservationCard from "../request/ReservationCard";
 import { toast } from "react-toastify";
+import usePagination from "../../hooks/usePagination";
+import { Pagination } from "@mui/material";
 
 const MyReservation = (props) => {
   const { user } = useAuth();
   const userId = user.id;
   const [data, setData] = useState([]);
+  const [page, setPage] = useState(1);
 
   document.title = "My reservation | Coworking-space";
 
@@ -24,6 +27,17 @@ const MyReservation = (props) => {
     toast.error("Your reservation must be completed to review");
   };
 
+  const handlePagination = (e, page) => {
+    setPage(page);
+    console.log("page", page);
+    jump(page);
+  };
+
+  const PER_PAGE = 4;
+
+  const count = Math.ceil(data.length / PER_PAGE);
+  const { currentData, jump } = usePagination(data, PER_PAGE);
+  const dataAfterPagination = currentData();
   return (
     <div class={classes.container}>
       <h2 className={classes.headerr}>
@@ -44,7 +58,7 @@ const MyReservation = (props) => {
         </li>
 
         {userId != null &&
-          data?.map((reservation) => (
+          dataAfterPagination?.map((reservation) => (
             <ReservationCard
               reservation={reservation}
               onActiveModalReview={props.onActiveModalReview}
@@ -52,7 +66,15 @@ const MyReservation = (props) => {
             />
           ))}
       </ul>
-
+      <div className="flex justify-end mt-5">
+        <Pagination
+          count={count}
+          variant="outlined"
+          color="primary"
+          page={page}
+          onChange={handlePagination}
+        />
+      </div>
       {data.length === 0 && (
         <div>
           <h3>You don't have any reservation yet.</h3>

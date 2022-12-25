@@ -95,7 +95,7 @@ public class RoomServiceImpl implements RoomService {
 	@Override
 	public RoomCreateDto findByRoomId(String roomId, String customerId) throws NotFoundException {
 		Room room = findById(roomId);
-		if (customerId != null) {
+		if (!Objects.equals(customerId, "none")) {
 			Optional<Behavior> behaviorOptional = behaviorRepository.findByCustomerIdAndRoomId(customerId, roomId);
 			if (behaviorOptional.isPresent()) {
 				Behavior behavior = behaviorOptional.get();
@@ -151,14 +151,14 @@ public class RoomServiceImpl implements RoomService {
 			}
 			roomCreateDto.setImages(imageDtos);
 		}
-//		} else {
-//			roomCreateDto.setImages(room.getImageStorage()
-//				.getImages()
-//				.parallelStream()
-//				.map(en -> imageMapper.imageToImageDto(en))
-//				.collect(
-//					Collectors.toList()));
-//		}
+		//		} else {
+		//			roomCreateDto.setImages(room.getImageStorage()
+		//				.getImages()
+		//				.parallelStream()
+		//				.map(en -> imageMapper.imageToImageDto(en))
+		//				.collect(
+		//					Collectors.toList()));
+		//		}
 		roomCreateDto.setImageStorageId(room.getImageStorage().getId());
 		roomRepository.save(roomMapper.roomCreateDtoToRoom(roomCreateDto));
 		return roomCreateDto;
@@ -225,51 +225,52 @@ public class RoomServiceImpl implements RoomService {
 	@Override public List<RoomListDto> favoriteRoom(String id) {
 		List<Room> roomIterable = roomRepository.findAll();
 		List<Customer> customers = roomDao.findAllByBehavior();
-//		List<Customer> customers = customerRepository.findAll();
+		//		List<Customer> customers = customerRepository.findAll();
 		var rooms = new ArrayList<>(roomIterable);
 
 		var matrix = generateRatingMatrix(rooms, customers);
 
 		var customerOptional = customerRepository.findById(id);
 
-		if (customerOptional.isEmpty()){
+		if (customerOptional.isEmpty()) {
 
 			return roomRepository.findTop6ByOrderByAverageRatingDesc().stream().map(room -> roomMapper.roomToRoomListDto(room)).collect(Collectors.toList());
 		}
 
 		var customer = customerOptional.get();
-//		int u = customers.indexOf(customer);
+		//		int u = customers.indexOf(customer);
 		int u = Customer.indexOf(customers, customer);
 		double aRU = getAverageRating(u, matrix);
 
 		List<Pair> userSimilarities = new ArrayList<>();
-		for (int v = 0; v < customers.size(); v++){
-			if (v != u){
+		for (int v = 0; v < customers.size(); v++) {
+			if (v != u) {
 				double aRV = getAverageRating(v, matrix);
 				var value = userSimilarityCaculate(u, aRU, v, aRV, matrix, rooms, customer, customers.get(v));
-				if (value != 0){
+				if (value != 0) {
 					userSimilarities.add(new Pair(v, value));
 				}
 			}
 		}
 		Collections.sort(userSimilarities);
 
-		if (userSimilarities.size() > 30){
+		if (userSimilarities.size() > 30) {
 			userSimilarities = userSimilarities.subList(0, 30);
 		}
 
 		var listItems = new ArrayList<Integer>();
 
 		userSimilarities.forEach(user -> {
-			for (int i = 0; i < matrix[0].length; i++){
-				if (matrix[user.getIndex()][i] != 0 && !listItems.contains(i)){
+			for (int i = 0; i < matrix[0].length; i++) {
+				if (matrix[user.getIndex()][i] != 0 && !listItems.contains(i)) {
 					listItems.add(i);
 				}
 			}
 		});
 
 		var prediction = predictionRating(aRU, userSimilarities, listItems, matrix);
-		var result = prediction.stream().sorted(Comparator.comparing(Pair::getValue)).map(pair -> rooms.get(pair.getIndex())).collect(Collectors.toList());
+		var result =
+			prediction.stream().sorted(Comparator.comparing(Pair::getValue)).map(pair -> rooms.get(pair.getIndex())).limit(10).collect(Collectors.toList());
 		if (result.isEmpty()) {
 			return roomRepository.findTop6ByOrderByAverageRatingDesc().stream().map(room -> roomMapper.roomToRoomListDto(room)).collect(Collectors.toList());
 		}
@@ -301,11 +302,16 @@ public class RoomServiceImpl implements RoomService {
 
 	private double getAverageRating(int indexOfUser, double[][] matrix) {
 		double sum = 0d;
-		if (matrix.length == 0) return 0;
+		int length = 0;
+		if (matrix.length == 0)
+			return 0;
 		for (int i = 0; i < matrix[0].length; i++) {
-			sum += matrix[indexOfUser][i];
+			if (matrix[indexOfUser][i] != 0) {
+				sum += matrix[indexOfUser][i];
+				length++;
+			}
 		}
-		return sum / matrix[0].length;
+		return sum / length;
 	}
 
 	private double userSimilarityCaculate(int u, Double aRU, int v, Double aRV, double[][] matrix, List<Room> rooms, Customer user, Customer user2) {
@@ -319,25 +325,28 @@ public class RoomServiceImpl implements RoomService {
 			numerator += (matrix[u][i] * wu - aRU) * (matrix[v][i] * wv - aRV);
 			denominator1 += (matrix[u][i] * wu - aRU) * (matrix[v][i] * wu - aRU);
 			denominator2 += (matrix[v][i] * wv - aRV) * (matrix[v][i] * wv - aRV);
+			//			numerator += (matrix[u][i] - aRU) * (matrix[v][i] - aRV);
+			//			denominator1 += (matrix[u][i] - aRU) * (matrix[v][i] - aRU);
+			//			denominator2 += (matrix[v][i] - aRV) * (matrix[v][i] - aRV);
 		}
 
 		return numerator / Math.sqrt(denominator1 * denominator2);
 	}
 
 	private double TF_IDF(Customer user, Room room, int userLength) {
-		var behaviorOptional = user.getBehaviors().stream().filter(b -> b.getRoom().equals(room)).findFirst();
+		Optional<Behavior> behaviorOptional = behaviorRepository.findByCustomerIdAndRoomId(user.getId(), room.getId());
 		if (behaviorOptional.isEmpty()) {
 			return 0;
 		}
 
 		Behavior behavior = behaviorOptional.get();
-		double total = user.getBehaviors().stream().map(Behavior::getTime).reduce(0, Integer::sum);
-		if (total == 0) {
+		var lengthBehavior = behaviorRepository.findByCustomerId(user.getId()).size();
+		if (lengthBehavior == 0) {
 			return 0;
 		}
 
-		var tf = behavior.getTime() / total;
-		var pop = room.getBehaviorItems().stream().map(Behavior::getTime).reduce(0, Integer::sum);
+		var tf = behavior.getTime() / lengthBehavior;
+		var pop = behaviorRepository.findByRoomId(room.getId()).size();
 		var idf = Math.log10((double) userLength / (1 + pop));
 		return tf * idf;
 	}
