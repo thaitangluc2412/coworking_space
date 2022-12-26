@@ -13,6 +13,7 @@ import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -85,6 +86,14 @@ public class ReservationController {
 	public ResponseEntity<ReservationListDto> getById(@PathVariable String id) {
 		ReservationListDto reservationListDto = reservationService.getById(id);
 		return new ResponseEntity<>(reservationListDto, HttpStatus.OK);
+	}
+
+	@DeleteMapping("/delete/{id}")
+	public  ResponseEntity<?> deleteById(@PathVariable String id){
+		Reservation reservation = reservationRepository.getById(id);
+		reservation.setEnable(false);
+		reservationRepository.save(reservation);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	@PutMapping("/{id}")

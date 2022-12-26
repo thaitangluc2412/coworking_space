@@ -57,14 +57,14 @@ const ModalPayment = (props) => {
               disabled={true}
             />
           </div>
-          <div className={classes.rentInfo}>
+          {/* <div className={classes.rentInfo}>
             <p>
               <span>
                 <BsCheckCircle className={classes.inline} />
               </span>{" "}
               Daily rent booked: <span>{props.reservation.quantity}</span>
             </p>
-          </div>
+          </div> */}
           <div className={classes.rentInfo}>
             <p>
               <span>

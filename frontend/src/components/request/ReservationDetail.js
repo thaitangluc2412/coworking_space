@@ -100,20 +100,20 @@ const ReservationDetail = () => {
           <div className={classes.wrapper}>
             <div className={classes.inforReservation}>
               <span>Reservation Information</span>
-              <div className={classes.rentInfo}>
+              {/* <div className={classes.rentInfo}>
                 <p>
                   <span>
                     <BsCheckCircle className={classes.inline} />
                   </span>{" "}
                   Daily rent booked: <span>{reservation.quantity}</span>
                 </p>
-              </div>
+              </div> */}
               <div className={classes.rentInfo}>
                 <p>
                   <span>
                     <BsPaypal className={classes.inline} />
                   </span>{" "}
-                  Amount: <span>{reservation.total} $</span>
+                  Deposit: <span>{reservation.total} $</span>
                 </p>
               </div>
               <div className={classes.rentInfo}>
@@ -260,6 +260,7 @@ const ReservationDetail = () => {
               <PayPalScriptProvider
                 options={{
                   "client-id": "test",
+                  currency: "PHP",
                 }}
               >
                 <PayPalButtons
@@ -276,7 +277,6 @@ const ReservationDetail = () => {
                       purchase_units: [
                         {
                           amount: {
-                            currency_code: "USD",
                             value: "" + reservation.total,
                             showSpinner: true,
                           },

@@ -6,8 +6,9 @@ import SearchBox from "../components/searchBox/SearchBox";
 import CardList from "../components/swiper/CardList";
 import FavoriteSpaces from "../components/swiper/FavoriteSpaces";
 import TypeRoom from "../components/typeRoom/TypeRoom";
-
+import { useAuth } from "../context/auth-context";
 const HomePage = () => {
+  const { user, setUser } = useAuth();
   return (
     <div>
       <section className="mb-[100px]">
@@ -33,17 +34,19 @@ const HomePage = () => {
         </div>
       </section>
       <TypeRoom></TypeRoom>
-      <section className="mb-10 pl-[70px]">
-        <h1 className="mb-2 text-3xl font-semibold">
-          Spaces that might be right for you
-        </h1>
-        <h2 className="mb-[80px] text-lg font-light text-grayCustom">
-          We have a solution for every needs
-        </h2>
-        <div className="ml-5">
-          <FavoriteSpaces></FavoriteSpaces>
-        </div>
-      </section>
+      {user.id && (
+        <section className="mb-10 pl-[70px]">
+          <h1 className="mb-2 text-3xl font-semibold">
+            Spaces that might be right for you
+          </h1>
+          <h2 className="mb-[80px] text-lg font-light text-grayCustom">
+            We have a solution for every needs
+          </h2>
+          <div className="ml-5">
+            <FavoriteSpaces></FavoriteSpaces>
+          </div>
+        </section>
+      )}
       <City />
     </div>
   );

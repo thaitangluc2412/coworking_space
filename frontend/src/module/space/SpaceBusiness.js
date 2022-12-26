@@ -68,10 +68,10 @@ const SpaceManage = () => {
     jump(page);
   };
 
-  const handleDelete = (roomId) => {
-    console.log("delete", roomId);
+  const handleDelete = (reservationId) => {
+    console.log("reservation  ", reservationId);
     http
-      .delete(`rooms/delete/${roomId}`)
+      .delete(`reservations/delete/${reservationId}`)
       .then((res) => {
         console.log("delete", res);
         toast.success("Delete Success");
@@ -79,6 +79,14 @@ const SpaceManage = () => {
       })
       .catch((err) => {
         console.log("err: ", err);
+      });
+    http
+      .put(
+        `reservations/${reservationId}?reservationStatusName=CANCELLED&email=${reservations.email}`
+      )
+      .then((res) => {
+        console.log("new reservation: ", res.data);
+        toast.success("You delete the reservation");
       });
   };
   const handleSearch = (e) => {
@@ -96,7 +104,7 @@ const SpaceManage = () => {
   return (
     <div>
       <h1 className="text-2xl font-bold text-primary mb-10">
-        Manage Your Business
+        Manage Your Request
       </h1>
       <div className="w-full h-full max-w-[1400px]">
         <div className="relative max-w-[300px] w-full ">

@@ -106,14 +106,6 @@ const ReservationRequest = () => {
             <div className={classes.rentInfo}>
               <p>
                 <span>
-                  <BsCheckCircle className={classes.inline} />
-                </span>{" "}
-                Daily rent booked: <span>{reservation.quantity}</span>
-              </p>
-            </div>
-            <div className={classes.rentInfo}>
-              <p>
-                <span>
                   <BsPaypal className={classes.inline} />
                 </span>{" "}
                 Deposit: <span>{reservation.total} $</span>

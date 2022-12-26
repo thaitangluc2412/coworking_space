@@ -92,9 +92,13 @@
             <a th:href="${homeUrl}" class="link-issue">Coworking-space /</a>
             <a th:href="${issueUrl}" class="link-issue">Reservation detail</a>
         </div>
+<!--        <p class="change-name">-->
+<!--            Changes on <b-->
+<!--                th:text="${#temporals.format(timeUpdate, 'yyyy-MM-dd HH:mm')}"></b>-->
+<!--        </p>-->
         <p class="change-name">
             Changes on <b
-                th:text="${#temporals.format(timeUpdate, 'dd-MM-yyyy HH:mm:ss')}"></b>
+                th:text="${timeUpdate}"></b>
         </p>
         <table class="properties">
             <tr>

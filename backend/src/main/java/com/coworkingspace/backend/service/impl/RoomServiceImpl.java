@@ -95,7 +95,7 @@ public class RoomServiceImpl implements RoomService {
 	@Override
 	public RoomCreateDto findByRoomId(String roomId, String customerId) throws NotFoundException {
 		Room room = findById(roomId);
-		if (!Objects.equals(customerId, "none")) {
+		if (customerId != null) {
 			Optional<Behavior> behaviorOptional = behaviorRepository.findByCustomerIdAndRoomId(customerId, roomId);
 			if (behaviorOptional.isPresent()) {
 				Behavior behavior = behaviorOptional.get();
@@ -114,7 +114,7 @@ public class RoomServiceImpl implements RoomService {
 
 	@Override
 	public List<RoomListDto> findByCustomerId(String id) {
-		return roomRepository.getByCustomerIdAndEnableIsTrue(id).stream().map(room -> roomMapper.roomToRoomListDto(room)).collect(Collectors.toList());
+		return roomRepository.getByCustomerIdAndEnableIsTrueOrderByTimeCreateDesc(id).stream().map(room -> roomMapper.roomToRoomListDto(room)).collect(Collectors.toList());
 	}
 
 	@Override

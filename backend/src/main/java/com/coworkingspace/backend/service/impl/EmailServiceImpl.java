@@ -1,6 +1,9 @@
 package com.coworkingspace.backend.service.impl;
 
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 
@@ -18,7 +21,10 @@ import org.thymeleaf.spring5.SpringTemplateEngine;
 
 import com.coworkingspace.backend.common.sdo.Email;
 import com.coworkingspace.backend.common.sdo.EmailProperty;
+import com.coworkingspace.backend.dao.entity.Reservation;
+import com.coworkingspace.backend.dao.repository.ReservationRepository;
 import com.coworkingspace.backend.dto.ReservationListDto;
+import com.coworkingspace.backend.mapper.ReservationMapper;
 import com.coworkingspace.backend.service.EmailService;
 import com.github.difflib.text.DiffRowGenerator;
 import com.coworkingspace.backend.common.utils.StringDiffUtil;
@@ -37,6 +43,8 @@ public class EmailServiceImpl implements EmailService {
 	private final DiffRowGenerator diffRowGenerator;
 	private final JavaMailSender emailSender;
 	private final SpringTemplateEngine templateEngine;
+	private final ReservationRepository reservationRepository;
+	private final ReservationMapper reservationMapper;
 
 	@Value("#{'${coworkingspace.fe.url}' + '/'}")
 	private String homeUrl;
@@ -95,7 +103,13 @@ public class EmailServiceImpl implements EmailService {
 		emailProperty.setProperty("endDate", oldReservationDto.getEndDate());
 		emailProperty.setProperty("reservationStatusName", oldReservationDto.getReservationStatusName(), reservationStatusNameNew);
 		emailProperty.setProperty("total", oldReservationDto.getTotal() + "$");
-		emailProperty.setProperty("timeUpdate", oldReservationDto.getTimeUpdate());
+
+		LocalDateTime date = LocalDateTime.now();
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
+		String formatDateTime = date.format(formatter);
+		System.out.println("date: " + formatDateTime);
+		emailProperty.setProperty("timeUpdate", formatDateTime);
 		emailProperty.setProperty("homeUrl", homeUrl);
 		emailProperty.setProperty("issueUrl", homeUrl + "reservation/" + oldReservationDto.getId());
 
@@ -106,5 +120,6 @@ public class EmailServiceImpl implements EmailService {
 			.subject(String.format(EMAIL_SUBJECT, oldReservationDto.getRoomName()))
 			.template(UPDATE_EMAIL_TEMPLATE)
 			.build());
-	}
 }
+
+	}

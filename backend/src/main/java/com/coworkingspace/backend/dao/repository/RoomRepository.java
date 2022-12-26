@@ -13,7 +13,7 @@ import java.util.Optional;
 @Repository
 public interface RoomRepository extends JpaRepository<Room, String> {
 	Optional<Room> findById(String id);
-	List<Room> getByCustomerIdAndEnableIsTrue(String id);
+	List<Room> getByCustomerIdAndEnableIsTrueOrderByTimeCreateDesc(String id);
 	List<Room> findTop6ByOrderByAverageRatingDesc();
 	Page<Room> findRoomByRoomNameContaining(String roomName, Pageable pageable);
 }
